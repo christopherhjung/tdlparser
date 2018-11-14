@@ -1,0 +1,56 @@
+import ich3.bin2.ein1.test
+
+
+public class Button extends View{
+
+    public client Consumer<View> onClick;
+    public server dirty boolean test;
+
+    public Button(){
+        test = false; //server dirty
+    }
+
+    public client void onClick( Consumer<View> consumer ){
+        onClick = consumer;
+    }
+
+    public server void serverCall(){
+        Test.TEST = 2;
+    }
+}
+
+public class Test{
+    public static server int TEST = 0
+
+    int test = 0
+
+    boolean lol
+
+    server Button button;
+
+    client void main(){
+
+    }
+
+    server void main(){
+
+    }
+
+    syncronized Lable test(){
+        button = new Button() // SERVER oder client
+        button.onClick((view) -> serverMethod(lable) SERVER or client) SERVER or client
+
+        Lable lable = new Lable("Hallo") // client or server
+        button.onClick((view) -> clientMethod(lable) CLIENT or server) CLIENT or server
+
+        return label;
+    }
+
+    client int clientMethod(View view){
+
+    }
+
+    server int serverMethod(View view){
+
+    }
+}
