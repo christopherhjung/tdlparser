@@ -12,13 +12,15 @@ public class Compiler
         test("elements", "value | value + , + elements");
         test("value", "string | number | object | array | true | false | null");
 
-        
 
     }
 
 
-    public void test(String a, String b)
+    public Rule test(String a, String b)
     {
+        RuleParser parser = new RuleParser();
+        Rule rule = parser.parse(b);
+        return rule;
 
     }
 }
