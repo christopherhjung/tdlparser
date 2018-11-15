@@ -11,7 +11,7 @@ public class State<T>
     public static int counter = 0;
     private int info = counter++;
 
-    private HashMap<T, State> next = new HashMap<>();
+    private HashMap<T, State<T>> next = new HashMap<>();
 
     private boolean accept;
 
@@ -30,12 +30,12 @@ public class State<T>
         return accept;
     }
 
-    public void put(T cha, State state)
+    public void put(T cha, State<T> state)
     {
         next.put(cha, state);
     }
 
-    public State propagate(char cha)
+    public State<T> propagate(T cha)
     {
         return next.get(cha);
     }
@@ -68,7 +68,7 @@ public class State<T>
         HashMap<HashSet<ValueNode<T>>, State<T>> states = new HashMap<>();
         State<T> state = compile(node.getFirstPositions(), states);
 
-        //System.out.println(new HashSet<>(states.values()));
+        System.out.println(new HashSet<>(states.values()));
 
         return state;
     }

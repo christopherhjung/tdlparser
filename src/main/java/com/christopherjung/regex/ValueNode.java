@@ -47,43 +47,6 @@ public class ValueNode<T> extends TreeNode<T>
         return value + "";
     }
 
-    public static Collection<TreeNode<Character>> fromTo(int from, int to)
-    {
-        HashSet<TreeNode<Character>> set = new HashSet<>();
-        fromTo(set, from, to);
-        return set;
-    }
-
-    public static Collection<Character> rawFromTo(int from, int to)
-    {
-        HashSet<Character> set = new HashSet<>();
-        for (int i = 0; i < to - from - 1; i++)
-        {
-            set.add((char) (from + i));
-        }
-        return set;
-    }
-
-    public static Collection<TreeNode> map(char... chars)
-    {
-        HashSet<TreeNode> result = new HashSet<>();
-        for (int i = 0; i < chars.length; i++)
-        {
-            result.add(new ValueNode<>(chars[i]));
-        }
-
-        return result;
-    }
-
-
-    public static void fromTo(Collection<TreeNode<Character>> collection, int from, int to)
-    {
-        for (int i = 0; i < to - from - 1; i++)
-        {
-            collection.add(new ValueNode<>((char) (from + i)));
-        }
-    }
-
     public static <T> void map(Collection<TreeNode<T>> collection, T... chars)
     {
         for (int i = 0; i < chars.length; i++)
@@ -107,14 +70,6 @@ public class ValueNode<T> extends TreeNode<T>
         HashSet<T> set = new HashSet<>();
         Collections.addAll(set, chars);
         return set;
-    }
-
-    public static void fromToChars(Collection<Character> collection, int from, int to)
-    {
-        for (int i = 0; i < to - from - 1; i++)
-        {
-            collection.add((char) (from + i));
-        }
     }
 
     public static <T> void range(Collection<T> collection, T... chars)

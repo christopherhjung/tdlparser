@@ -3,6 +3,7 @@ package com.christopherjung.parser;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Predicate;
 
 public abstract class Parser<T>
 {
@@ -37,6 +38,16 @@ public abstract class Parser<T>
     protected String fetch(int chars)
     {
         return reader.fetch(chars);
+    }
+
+    protected String fetchWhile(Predicate<Character> test)
+    {
+        return reader.fetchWhile(test);
+    }
+
+    protected int findNext(char cha)
+    {
+        return reader.findNext(cha);
     }
 
     protected char eat()

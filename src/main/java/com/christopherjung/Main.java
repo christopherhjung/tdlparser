@@ -1,25 +1,14 @@
 package com.christopherjung;
 
-import com.christopherjung.machine.Machine;
-import com.christopherjung.machine.Pattern;
+import com.christopherjung.compile.Compiler;
+import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
-import com.christopherjung.scanner.Token;
-
-import javax.crypto.Mac;
-import java.io.*;
-import java.util.List;
 
 public class Main
 {
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args)
     {
-       // InputStream stream = new ByteArrayInputStream("azuubuu".getBytes());
-
-        File file = new File(Main.class.getClassLoader().getResource("json").getFile());
-
-
-        long start2 = System.nanoTime();
 
         Scanner scanner = new Scanner();
         scanner.add("ignore", "\\s+");
@@ -34,16 +23,19 @@ public class Main
         scanner.add("}", "\\}");
         scanner.add("{", "\\{");
 
-        long end2 = System.nanoTime();
-
-        System.out.println("Compile: " + (end2 - start2)/1000000.0);
+        ScanResult scanResult = StreamUtils.loopFile("json2", scanner::scan);
 
 
-        InputStream stream = new FileInputStream(file);
-        List<Scanner.ScanResult> scan = scanner.scan(stream);
-        stream.close();
+        Compiler compiler = new Compiler();
+        compiler.addRule("start", "object  EOF");
+        compiler.addRule("object", "{ } | {  members  }");
+        compiler.addRule("members", "pair | pair  ,  members");
+        compiler.addRule("pair", "string  :  value");
+        compiler.addRule("array", "[  ] | [  elements  ]");
+        compiler.addRule("elements", "value | value  ,  elements");
+        compiler.addRule("value", "string | number | object | array | true | false | null");
 
-        System.out.println(scan);
+        compiler.compile(scanResult);
     }
 
 }

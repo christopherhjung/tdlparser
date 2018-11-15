@@ -3,6 +3,7 @@ package com.christopherjung.regex;
 import com.christopherjung.parser.Parser;
 import com.christopherjung.parser.ParserInputReader;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 public class RegExParser extends Parser<TreeNode<Character>>
@@ -117,7 +118,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
             }
             else if (eat('.'))
             {
-                return OrNode.all(ValueNode.rawFromTo(0, 127));
+                return OrNode.all(rawFromTo(0, 127));
             }
             else if (eat('['))
             {
@@ -131,7 +132,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
                 {
                     if (save != 255 && eat('-'))
                     {
-                        ValueNode.fromToChars(nodes, save, eat());
+                        fromToChars(nodes, save, eat());
                         save = 255;
                     }
                     else
@@ -153,7 +154,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
                 if (negate)
                 {
                     HashSet<Character> complement = new HashSet<>();
-                    ValueNode.fromToChars(complement, 0, 127);
+                    fromToChars(complement, 0, 127);
                     complement.removeAll(nodes);
                     nodes = complement;
                 }
@@ -164,7 +165,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
             {
                 if (eat('d'))
                 {
-                    return OrNode.all(ValueNode.rawFromTo('0', '9'));
+                    return OrNode.all(rawFromTo('0', '9'));
                 }
                 else if (eat('s'))
                 {
@@ -184,5 +185,49 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return null;
     }
 
+
+    public static Collection<TreeNode<Character>> fromTo(int from, int to)
+    {
+        HashSet<TreeNode<Character>> set = new HashSet<>();
+        fromTo(set, from, to);
+        return set;
+    }
+
+    public static Collection<Character> rawFromTo(int from, int to)
+    {
+        HashSet<Character> set = new HashSet<>();
+        for (int i = 0; i < to - from - 1; i++)
+        {
+            set.add((char) (from + i));
+        }
+        return set;
+    }
+
+    public static void fromTo(Collection<TreeNode<Character>> collection, int from, int to)
+    {
+        for (int i = 0; i < to - from - 1; i++)
+        {
+            collection.add(new ValueNode<>((char) (from + i)));
+        }
+    }
+
+    public static void fromToChars(Collection<Character> collection, int from, int to)
+    {
+        for (int i = 0; i < to - from - 1; i++)
+        {
+            collection.add((char) (from + i));
+        }
+    }
+
+    public static Collection<TreeNode<Character>> map(char... chars)
+    {
+        HashSet<TreeNode<Character>> result = new HashSet<>();
+        for (int i = 0; i < chars.length; i++)
+        {
+            result.add(new ValueNode<>(chars[i]));
+        }
+
+        return result;
+    }
 
 }

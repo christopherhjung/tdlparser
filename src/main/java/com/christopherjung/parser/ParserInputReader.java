@@ -2,6 +2,7 @@ package com.christopherjung.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Predicate;
 
 public class ParserInputReader
 {
@@ -31,6 +32,19 @@ public class ParserInputReader
         return (value + count) % bufferCapacity();
     }
 
+    public int findNext(char cha)
+    {
+        for (int i = 0; hasNext(); i++)
+        {
+            if (get(i) == cha)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public String fetch(int chars)
     {
         StringBuilder builder = new StringBuilder();
@@ -39,6 +53,18 @@ public class ParserInputReader
         {
             builder.append(eat());
             chars--;
+        }
+
+        return builder.toString();
+    }
+
+    public String fetchWhile(Predicate<Character> test)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        while (hasNext() && test.test(get()))
+        {
+            builder.append(eat());
         }
 
         return builder.toString();
