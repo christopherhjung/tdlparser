@@ -2,12 +2,12 @@ package com.christopherjung.regex;
 
 import java.util.Collection;
 
-public class OrNode extends TreeNode
+public class OrNode<T> extends TreeNode<T>
 {
-    private TreeNode left;
-    private TreeNode right;
+    private TreeNode<T> left;
+    private TreeNode<T> right;
 
-    public OrNode(TreeNode left, TreeNode right)
+    public OrNode(TreeNode<T> left, TreeNode<T> right)
     {
         this.left = left;
         this.right = right;
@@ -30,35 +30,18 @@ public class OrNode extends TreeNode
         sb.append(')');
     }
 
-    public static TreeNode all(Collection<Character> nodes)
+    public static <T> TreeNode<T> all(Collection<T> nodes)
     {
-        TreeNode result = null;
-        for (Character node : nodes)
+        TreeNode<T> result = null;
+        for (T node : nodes)
         {
             if (result == null)
             {
-                result = new ValueNode(node);
+                result = new ValueNode<>(node);
             }
             else
             {
-                result = new OrNode(result, new ValueNode(node));
-            }
-        }
-        return result;
-    }
-
-    public static TreeNode all(TreeNode... nodes)
-    {
-        TreeNode result = null;
-        for (TreeNode node : nodes)
-        {
-            if (result == null)
-            {
-                result = node;
-            }
-            else
-            {
-                result = new OrNode(result, node);
+                result = new OrNode<>(result, new ValueNode<>(node));
             }
         }
         return result;
@@ -68,6 +51,6 @@ public class OrNode extends TreeNode
     @Override
     public OrNode clone()
     {
-        return new OrNode(left.clone(),right.clone());
+        return new OrNode<>(left.clone(), right.clone());
     }
 }

@@ -1,10 +1,10 @@
 package com.christopherjung.regex;
 
-public class QuestNode extends TreeNode
+public class QuestNode<T> extends TreeNode<T>
 {
-    private TreeNode node;
+    private TreeNode<T> node;
 
-    public QuestNode(TreeNode node)
+    public QuestNode(TreeNode<T> node)
     {
         this.node = node;
 
@@ -23,8 +23,8 @@ public class QuestNode extends TreeNode
     }
 
     @Override
-    public QuestNode clone()
+    public QuestNode<T> clone()
     {
-        return new QuestNode(node.clone());
+        return new QuestNode<>(node.clone());
     }
 } 

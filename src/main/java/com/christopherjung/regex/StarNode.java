@@ -1,10 +1,12 @@
 package com.christopherjung.regex;
 
-public class StarNode extends TreeNode
-{
-    private TreeNode node;
+import java.util.HashSet;
 
-    public StarNode(TreeNode node)
+public class StarNode<T> extends TreeNode<T>
+{
+    private TreeNode<T> node;
+
+    public StarNode(TreeNode<T> node)
     {
         this.node = node;
 
@@ -13,7 +15,9 @@ public class StarNode extends TreeNode
         addFirstPositions(node.getFirstPositions());
         addLastPositions(node.getLastPositions());
 
-        for (TreeNode child : node.getLastPositions())
+        HashSet<ValueNode<T>> valueNode =  node.getLastPositions();
+
+        for (ValueNode<T> child : valueNode)
         {
             child.addFollowPositions(getFirstPositions());
         }

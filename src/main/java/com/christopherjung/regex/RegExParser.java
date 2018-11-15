@@ -5,62 +5,62 @@ import com.christopherjung.parser.ParserInputReader;
 
 import java.util.HashSet;
 
-public class RegExParser extends Parser<TreeNode>
+public class RegExParser extends Parser<TreeNode<Character>>
 {
     @Override
-    protected TreeNode parse()
+    protected TreeNode<Character> parse()
     {
-        return new ConcatNode(parseOr(), new ValueNode());
+        return new ConcatNode<>(parseOr(), new ValueNode<>());
     }
 
-    protected TreeNode parseOr()
+    protected TreeNode<Character> parseOr()
     {
-        TreeNode state = parseConcat();
+        TreeNode<Character> state = parseConcat();
 
         if (hasNext())
         {
             if (eat('|'))
             {
-                TreeNode right = parseOr();
-                return new OrNode(state, right);
+                TreeNode<Character> right = parseOr();
+                return new OrNode<>(state, right);
             }
         }
 
         return state;
     }
 
-    protected TreeNode parseConcat()
+    protected TreeNode<Character> parseConcat()
     {
-        TreeNode state = parseMultiplier();
+        TreeNode<Character> state = parseMultiplier();
 
         if (hasNext())
         {
             if (!is('|') && !is('*') && !is(')'))
             {
-                return new ConcatNode(state, parseConcat());
+                return new ConcatNode<>(state, parseConcat());
             }
         }
 
         return state;
     }
 
-    protected TreeNode parseMultiplier()
+    protected TreeNode<Character> parseMultiplier()
     {
-        TreeNode state = parseParenthesis();
+        TreeNode<Character> state = parseParenthesis();
 
         if (hasNext())
         {
             if (eat('*'))
             {
-                return new StarNode(state);
+                return new StarNode<>(state);
             }
             else if (eat('?'))
             {
-                return new QuestNode(state);
+                return new QuestNode<>(state);
             }
             else if (eat('+'))
             {
-                return new PlusNode(state);
+                return new PlusNode<>(state);
             }
             else if (eat('{'))
             {
@@ -72,17 +72,17 @@ public class RegExParser extends Parser<TreeNode>
                     throw new ParserInputReader.ParseException("no closing");
                 }
 
-                TreeNode temp = state;
+                TreeNode<Character> temp = state;
                 for (int i = 1; i < to; i++)
                 {
-                    TreeNode cloned = state.clone();
+                    TreeNode<Character> cloned = state.clone();
 
                     if (i >= from)
                     {
-                        cloned = new QuestNode(cloned);
+                        cloned = new QuestNode<>(cloned);
                     }
 
-                    temp = new ConcatNode(temp, cloned);
+                    temp = new ConcatNode<>(temp, cloned);
                 }
 
                 state = temp;
@@ -105,19 +105,19 @@ public class RegExParser extends Parser<TreeNode>
         return result;
     }
 
-    protected TreeNode parseParenthesis()
+    protected TreeNode<Character> parseParenthesis()
     {
         while (hasNext())
         {
             if (eat('('))
             {
-                TreeNode temp = parseOr();
+                TreeNode<Character> temp = parseOr();
                 next();
                 return temp;
             }
             else if (eat('.'))
             {
-                return OrNode.all(ValueNode.fromTo(0, 127));
+                return OrNode.all(ValueNode.rawFromTo(0, 127));
             }
             else if (eat('['))
             {
@@ -164,20 +164,20 @@ public class RegExParser extends Parser<TreeNode>
             {
                 if (eat('d'))
                 {
-                    return OrNode.all(ValueNode.fromTo('0', '9'));
+                    return OrNode.all(ValueNode.rawFromTo('0', '9'));
                 }
                 else if (eat('s'))
                 {
-                    return OrNode.all(ValueNode.map('\n', ' ', '\t', '\r'));
+                    return OrNode.all(ValueNode.rawOf('\n', ' ', '\t', '\r'));
                 }
                 else
                 {
-                    return new ValueNode(eat());
+                    return new ValueNode<>(eat());
                 }
             }
             else if (!is('|') && !is('*') && !is('+'))
             {
-                return new ValueNode(eat());
+                return new ValueNode<>(eat());
             }
         }
 

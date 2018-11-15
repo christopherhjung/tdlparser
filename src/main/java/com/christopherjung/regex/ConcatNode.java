@@ -1,11 +1,11 @@
 package com.christopherjung.regex;
 
-public class ConcatNode extends TreeNode
+public class ConcatNode<T> extends TreeNode<T>
 {
-    private TreeNode left;
-    private TreeNode right;
+    private TreeNode<T> left;
+    private TreeNode<T> right;
 
-    public ConcatNode(TreeNode left, TreeNode right)
+    public ConcatNode(TreeNode<T> left, TreeNode<T> right)
     {
         this.left = left;
         this.right = right;
@@ -24,7 +24,7 @@ public class ConcatNode extends TreeNode
             addLastPositions(left.getLastPositions());
         }
 
-        for (TreeNode child : left.getLastPositions())
+        for (TreeNode<T> child : left.getLastPositions())
         {
             child.addFollowPositions(right.getFirstPositions());
         }
@@ -42,6 +42,6 @@ public class ConcatNode extends TreeNode
     @Override
     public ConcatNode clone()
     {
-        return new ConcatNode(left.clone(),right.clone());
+        return new ConcatNode<>(left.clone(),right.clone());
     }
 }

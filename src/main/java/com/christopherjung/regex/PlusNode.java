@@ -1,10 +1,10 @@
 package com.christopherjung.regex;
 
-public class PlusNode extends TreeNode
+public class PlusNode<T> extends TreeNode<T>
 {
-    private TreeNode node;
+    private TreeNode<T> node;
 
-    public PlusNode(TreeNode node)
+    public PlusNode(TreeNode<T> node)
     {
         this.node = node;
 
@@ -28,8 +28,8 @@ public class PlusNode extends TreeNode
     }
 
     @Override
-    public PlusNode clone()
+    public PlusNode<T> clone()
     {
-        return new PlusNode(node.clone());
+        return new PlusNode<>(node.clone());
     }
 } 
