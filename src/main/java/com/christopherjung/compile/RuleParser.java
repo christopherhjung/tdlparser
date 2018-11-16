@@ -1,17 +1,20 @@
 package com.christopherjung.compile;
 
+
 import com.christopherjung.parser.Parser;
-import com.christopherjung.regex.ConcatNode;
-import com.christopherjung.regex.OrNode;
-import com.christopherjung.regex.TreeNode;
-import com.christopherjung.regex.ValueNode;
 
 public class RuleParser extends Parser<TreeNode<String>>
 {
     @Override
     protected TreeNode<String> parse()
     {
-        return new ConcatNode<>(parseOr(),new ValueNode<>());
+        return TreeNode.close(parseOr());
+    }
+
+    public TreeNode<String> parseRaw(String str)
+    {
+        reset(str);
+        return parseOr();
     }
 
     protected TreeNode<String> parseOr()

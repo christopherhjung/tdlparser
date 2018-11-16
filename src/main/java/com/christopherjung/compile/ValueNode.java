@@ -1,8 +1,5 @@
-package com.christopherjung.regex;
+package com.christopherjung.compile;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 
 public class ValueNode<T> extends TreeNode<T>
 {
@@ -45,13 +42,6 @@ public class ValueNode<T> extends TreeNode<T>
     public String toString()
     {
         return value + "";
-    }
-
-    public static <T> Collection<T> rawOf(T... chars)
-    {
-        HashSet<T> set = new HashSet<>();
-        Collections.addAll(set, chars);
-        return set;
     }
 
     @Override

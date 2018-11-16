@@ -10,22 +10,26 @@ public abstract class Parser<T>
     private ParserInputReader reader;
 
 
+    protected void reset(String str)
+    {
+        reset(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    protected void reset(InputStream inputStream)
+    {
+        this.reader = new ParserInputReader(inputStream);
+    }
+
     public T parse(String str)
     {
-        return parse(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+        reset(str);
+        return parse();
     }
 
     public T parse(InputStream stream)
     {
-        this.reader = new ParserInputReader(stream);
-        try
-        {
-            return parse();
-        } catch (ParserInputReader.ParseException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        reset(stream);
+        return parse();
     }
 
     protected abstract T parse();

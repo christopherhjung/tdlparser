@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.compile;
 
 public class ConcatNode<T> extends TreeNode<T>
 {
@@ -18,11 +18,11 @@ public class ConcatNode<T> extends TreeNode<T>
             addFirstPositions(right.getFirstPositions());
         }
 
-        addLastPositions(right.getLastPositions());
         if (right.isNullable())
         {
             addLastPositions(left.getLastPositions());
         }
+        addLastPositions(right.getLastPositions());
 
         for (TreeNode<T> child : left.getLastPositions())
         {
@@ -33,15 +33,11 @@ public class ConcatNode<T> extends TreeNode<T>
     @Override
     protected void toRegEx(StringBuilder sb)
     {
-        sb.append("(");
-        left.toRegEx(sb);
-        right.toRegEx(sb);
-        sb.append(')');
     }
 
     @Override
     public ConcatNode<T> clone()
     {
-        return new ConcatNode<>(left.clone(),right.clone());
+        return new ConcatNode<>(left.clone(), right.clone());
     }
 }

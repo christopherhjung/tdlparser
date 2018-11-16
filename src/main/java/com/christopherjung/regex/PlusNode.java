@@ -13,7 +13,7 @@ public class PlusNode<T> extends TreeNode<T>
         addFirstPositions(node.getFirstPositions());
         addLastPositions(node.getLastPositions());
 
-        for (TreeNode child : node.getLastPositions())
+        for (TreeNode<T> child : node.getLastPositions())
         {
             child.addFollowPositions(getFirstPositions());
         }

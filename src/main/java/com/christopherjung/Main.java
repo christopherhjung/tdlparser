@@ -25,16 +25,26 @@ public class Main
 
         ScanResult scanResult = StreamUtils.loopFile("json2", scanner::scan);
 
+        Compiler.Builder builder = new Compiler.Builder();
+        builder.addRootRule("object EOF");
+        builder.addRule("object", "{ }");
+        builder.addRule("object", "{ members }");
+        builder.addRule("members", "pair");
+        builder.addRule("members", "pair , members");
+        builder.addRule("pair", "string : value");
+        builder.addRule("array", "[ ]");
+        builder.addRule("array", "[ elements ]");
+        builder.addRule("elements", "value");
+        builder.addRule("elements", "value , elements");
+        builder.addRule("value", "string");
+        builder.addRule("value", "number");
+        builder.addRule("value", "object");
+        builder.addRule("value", "array");
+        builder.addRule("value", "true");
+        builder.addRule("value", "false");
+        builder.addRule("value", "null");
 
-        Compiler compiler = new Compiler();
-        compiler.addRule("start", "object  EOF");
-        compiler.addRule("object", "{ } | {  members  }");
-        compiler.addRule("members", "pair | pair  ,  members");
-        compiler.addRule("pair", "string  :  value");
-        compiler.addRule("array", "[  ] | [  elements  ]");
-        compiler.addRule("elements", "value | value  ,  elements");
-        compiler.addRule("value", "string | number | object | array | true | false | null");
-
+        Compiler compiler = builder.build();
         compiler.compile(scanResult);
     }
 

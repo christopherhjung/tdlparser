@@ -1,6 +1,5 @@
-package com.christopherjung.regex;
+package com.christopherjung.compile;
 
-import java.util.Collection;
 
 public class OrNode<T> extends TreeNode<T>
 {
@@ -23,30 +22,7 @@ public class OrNode<T> extends TreeNode<T>
     @Override
     protected void toRegEx(StringBuilder sb)
     {
-        sb.append("(");
-        left.toRegEx(sb);
-        sb.append('|');
-        right.toRegEx(sb);
-        sb.append(')');
     }
-
-    public static <T> TreeNode<T> all(Collection<T> nodes)
-    {
-        TreeNode<T> result = null;
-        for (T node : nodes)
-        {
-            if (result == null)
-            {
-                result = new ValueNode<>(node);
-            }
-            else
-            {
-                result = new OrNode<>(result, new ValueNode<>(node));
-            }
-        }
-        return result;
-    }
-
 
     @Override
     public OrNode<T> clone()

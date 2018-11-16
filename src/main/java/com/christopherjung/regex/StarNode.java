@@ -32,8 +32,8 @@ public class StarNode<T> extends TreeNode<T>
     }
 
     @Override
-    public StarNode clone()
+    public StarNode<T> clone()
     {
-        return new StarNode(node.clone());
+        return new StarNode<>(node.clone());
     }
 } 

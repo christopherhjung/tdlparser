@@ -1,8 +1,6 @@
 package com.christopherjung.compile;
 
-import com.christopherjung.regex.TreeNode;
 import com.christopherjung.scanner.ScanResult;
-import com.christopherjung.scanner.Scanner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,31 +8,89 @@ import java.util.List;
 
 public class Compiler
 {
-    HashMap<String, RuleState<String>> rules = new HashMap<>();
+    public static class Result
+    {
+
+    }
+
+    public static class Builder
+    {
+        HashMap<String, TreeNode<String>> rules = new HashMap<>();
+
+        public void addRootRule(String rule)
+        {
+            addRule("start", rule);
+        }
+
+        public void addRule(String name, String rule)
+        {
+            RuleParser parser = new RuleParser();
+            TreeNode<String> parsedRule = parser.parseRaw(rule);
+
+            if (rules.containsKey(name))
+            {
+                TreeNode<String> other = rules.get(name);
+
+                parsedRule = new OrNode<>(other, parsedRule);
+            }
+
+            rules.put(name, parsedRule);
+        }
+
+        public Compiler build()
+        {
+            HashMap<String, CompilerState<String>> compiled = new HashMap<>();
+
+            for (String name : rules.keySet())
+            {
+                TreeNode<String> treeNode = rules.get(name);
+                treeNode = TreeNode.close(treeNode);
+                CompilerState<String> compilerState = CompilerState.compile(treeNode);
+                compiled.put(name, compilerState);
+            }
+
+            return new Compiler(compiled);
+        }
+    }
+
+    HashMap<String, CompilerState<String>> rules;
     private ScanResult scanResult;
+
+
+    public Compiler(HashMap<String, CompilerState<String>> rules)
+    {
+        this.rules = rules;
+    }
+
+    public void addRootRule(String rule)
+    {
+        addRule("start", rule);
+    }
 
     public void addRule(String name, String rule)
     {
         RuleParser parser = new RuleParser();
         TreeNode<String> parsedRule = parser.parse(rule);
-        rules.put(name, RuleState.compile(parsedRule));
+        rules.put(name, CompilerState.compile(parsedRule));
     }
 
     public void compile(ScanResult scanResult)
     {
         this.scanResult = scanResult;
 
+        Rule rule = new Rule(0, rules.get("start"));
+
+        rule.propagate();
     }
 
     private int position = 0;
 
-    /*
     private class Rule
     {
-        private RuleState<String> state;
+        private CompilerState<String> state;
         private int position;
 
-        public Rule(int position, RuleState<String> state)
+        public Rule(int position, CompilerState<String> state)
         {
             this.state = state;
             this.position = position;
@@ -44,9 +100,9 @@ public class Compiler
         {
             List<Rule> rulesChain = new ArrayList<>();
             int currentPosition = position;
-            while (currentPosition < tokens.size())
+            while (currentPosition < scanResult.size())
             {
-                Scanner.ScanResult left = tokens.get(currentPosition);
+                ScanResult.Entry left = scanResult.get(currentPosition);
                 String token = left.getToken();
 
                 System.out.println(position + " " + token);
@@ -114,7 +170,7 @@ public class Compiler
 
             return -1;
         }
-    }*/
+    }
 
     /*public boolean test(int position, State<String> state)
     {
