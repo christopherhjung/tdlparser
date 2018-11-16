@@ -1,21 +1,21 @@
 package com.christopherjung.machine;
 
-public class Machine
+public class Machine<T>
 {
-    private State begin;
+    private State<T> begin;
 
-    public Machine(State begin)
+    public Machine(State<T> begin)
     {
         this.begin = begin;
     }
 
-    public boolean check(String str)
+    public boolean check(T... str)
     {
-        State current = begin;
+        State<T> current = begin;
 
-        for (char cha : str.toCharArray())
+        for (T key : str)
         {
-            current = current.propagate(cha);
+            current = current.propagate(key);
             if (current == null)
             {
                 return false;
@@ -25,9 +25,9 @@ public class Machine
         return current.isAccept();
     }
 
-    public static Machine compile(String regEx)
+    public static Machine<Character> compile(String regEx)
     {
-        return new Machine(Pattern.compile(regEx));
+        return new Machine<>(Pattern.compile(regEx));
     }
 
 }

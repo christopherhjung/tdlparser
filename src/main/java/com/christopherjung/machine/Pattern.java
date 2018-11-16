@@ -13,7 +13,6 @@ public class Pattern
     {
         RegExParser parser = new RegExParser();
         TreeNode<Character> parsed = parser.parse(regEx);
-        //System.out.println(parsed.toRegEx());
         return State.compile(parsed);
     }
 }

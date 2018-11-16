@@ -2,31 +2,21 @@ package com.christopherjung.regex;
 
 import java.util.Collection;
 
-public class OrNode<T> extends TreeNode<T>
+public class OrNode<T> extends BinaryNode<T>
 {
-    private TreeNode<T> left;
-    private TreeNode<T> right;
 
     public OrNode(TreeNode<T> left, TreeNode<T> right)
     {
-        this.left = left;
-        this.right = right;
-        setNullable(left.isNullable() || right.isNullable());
-
-        addFirstPositions(left.getFirstPositions());
-        addFirstPositions(right.getFirstPositions());
-
-        addLastPositions(left.getLastPositions());
-        addLastPositions(right.getLastPositions());
+        super(left,right);
     }
 
     @Override
     protected void toRegEx(StringBuilder sb)
     {
         sb.append("(");
-        left.toRegEx(sb);
+        getLeft().toRegEx(sb);
         sb.append('|');
-        right.toRegEx(sb);
+        getRight().toRegEx(sb);
         sb.append(')');
     }
 
@@ -51,6 +41,6 @@ public class OrNode<T> extends TreeNode<T>
     @Override
     public OrNode<T> clone()
     {
-        return new OrNode<>(left.clone(), right.clone());
+        return new OrNode<>(getLeft().clone(), getRight().clone());
     }
 }

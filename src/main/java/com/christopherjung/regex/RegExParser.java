@@ -14,6 +14,11 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return new ConcatNode<>(parseOr(), new ValueNode<>());
     }
 
+    public TreeNode<Character> parseRaw(String str){
+        reset(str);
+        return parseOr();
+    }
+
     protected TreeNode<Character> parseOr()
     {
         TreeNode<Character> state = parseConcat();

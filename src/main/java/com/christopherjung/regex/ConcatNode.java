@@ -1,47 +1,25 @@
 package com.christopherjung.regex;
 
-public class ConcatNode<T> extends TreeNode<T>
+public class ConcatNode<T> extends BinaryNode<T>
 {
-    private TreeNode<T> left;
-    private TreeNode<T> right;
 
     public ConcatNode(TreeNode<T> left, TreeNode<T> right)
     {
-        this.left = left;
-        this.right = right;
-
-        setNullable(left.isNullable() && right.isNullable());
-
-        addFirstPositions(left.getFirstPositions());
-        if (left.isNullable())
-        {
-            addFirstPositions(right.getFirstPositions());
-        }
-
-        addLastPositions(right.getLastPositions());
-        if (right.isNullable())
-        {
-            addLastPositions(left.getLastPositions());
-        }
-
-        for (TreeNode<T> child : left.getLastPositions())
-        {
-            child.addFollowPositions(right.getFirstPositions());
-        }
+        super(left, right);
     }
 
     @Override
     protected void toRegEx(StringBuilder sb)
     {
         sb.append("(");
-        left.toRegEx(sb);
-        right.toRegEx(sb);
+        getLeft().toRegEx(sb);
+        getRight().toRegEx(sb);
         sb.append(')');
     }
 
     @Override
     public ConcatNode<T> clone()
     {
-        return new ConcatNode<>(left.clone(),right.clone());
+        return new ConcatNode<>(getLeft().clone(), getRight().clone());
     }
 }

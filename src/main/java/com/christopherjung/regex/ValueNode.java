@@ -11,10 +11,6 @@ public class ValueNode<T> extends TreeNode<T>
     public ValueNode(T value)
     {
         this.value = value;
-        setNullable(false);
-
-        addFirstPosition(this);
-        addLastPosition(this);
     }
 
     public ValueNode()

@@ -1,8 +1,9 @@
 package com.christopherjung.machine;
 
+import com.christopherjung.nda.NDA;
 import com.christopherjung.regex.TreeNode;
-import com.christopherjung.regex.ValueNode;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -47,10 +48,11 @@ public class State<T>
 
         sb.append('(');
         sb.append(info);
-        if(accept) sb.append('!');
+        if (accept) sb.append('!');
         sb.append(')');
         sb.append("->");
-        for(T cha : next.keySet()){
+        for (T cha : next.keySet())
+        {
             sb.append(cha);
             sb.append(":");
             sb.append(next.get(cha).info);
@@ -61,19 +63,19 @@ public class State<T>
         return sb.toString();
     }
 
-
-
     public static <T> State<T> compile(TreeNode<T> node)
     {
-        HashMap<HashSet<ValueNode<T>>, State<T>> states = new HashMap<>();
-        State<T> state = compile(node.getFirstPositions(), states);
+        HashMap<Collection<Integer>, State<T>> states = new HashMap<>();
+        NDA<T> nda = new NDA<>();
+        nda.from(node);
 
-        System.out.println(new HashSet<>(states.values()));
+        State<T> state = compile(nda, nda.getFirstPositions(), states);
 
+        System.out.println(states.values());
         return state;
     }
 
-    private static <T> State<T> compile(HashSet<ValueNode<T>> set, HashMap<HashSet<ValueNode<T>>, State<T>> states)
+    private static <T> State<T> compile(NDA<T> nda, Collection<Integer> set, HashMap<Collection<Integer>, State<T>> states)
     {
         if (states.containsKey(set))
         {
@@ -81,13 +83,14 @@ public class State<T>
         }
 
         boolean isFinish = false;
-        HashMap<T, HashSet<ValueNode<T>>> next = new HashMap<>();
-        for (ValueNode<T> child : set)
+        HashMap<T, HashSet<Integer>> next = new HashMap<>();
+        for (Integer key : set)
         {
-            if (!child.isEpsilon())
+            T child = nda.getValues(key);
+            if (child != null)
             {
-                next.computeIfAbsent(child.getValue(), (key) -> new HashSet<>())
-                        .addAll(child.getFollowPositions());
+                next.computeIfAbsent(child, ($) -> new HashSet<>())
+                        .addAll(nda.getFollowPositions(key));
             }
             else
             {
@@ -97,9 +100,9 @@ public class State<T>
 
         State<T> state = new State<>(isFinish);
         states.put(set, state);
-        for (T cha : next.keySet())
+        for (T key : next.keySet())
         {
-            state.put(cha, compile(next.get(cha), states));
+            state.put(key, compile(nda, next.get(key), states));
         }
 
         return state;
