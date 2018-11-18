@@ -1,18 +1,16 @@
 package com.christopherjung.machine;
 
 import com.christopherjung.nda.NDA;
-import com.christopherjung.regex.TreeNode;
+import com.christopherjung.grammar.TreeNode;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class State<T>
 {
     public static int counter = 0;
     private int info = counter++;
 
-    private HashMap<T, State<T>> next = new HashMap<>();
+    private HashMap<T, State<T>> next = new LinkedHashMap<>();
 
     private boolean accept;
 
@@ -83,7 +81,7 @@ public class State<T>
         }
 
         boolean isFinish = false;
-        HashMap<T, HashSet<Integer>> next = new HashMap<>();
+        Map<T, HashSet<Integer>> next = new LinkedHashMap<>();
         for (Integer key : set)
         {
             T child = nda.getValues(key);

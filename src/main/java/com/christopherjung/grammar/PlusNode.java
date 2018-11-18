@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.grammar;
 
 public class PlusNode<T> extends UnaryNode<T>
 {
@@ -15,11 +15,5 @@ public class PlusNode<T> extends UnaryNode<T>
         sb.append("(");
         getValue().toRegEx(sb);
         sb.append(")*");
-    }
-
-    @Override
-    public PlusNode<T> clone()
-    {
-        return new PlusNode<>(getValue().clone());
     }
 } 

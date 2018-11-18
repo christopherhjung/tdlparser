@@ -1,6 +1,4 @@
-package com.christopherjung.regex;
-
-import java.util.HashSet;
+package com.christopherjung.grammar;
 
 public class StarNode<T> extends UnaryNode<T>
 {
@@ -17,9 +15,4 @@ public class StarNode<T> extends UnaryNode<T>
         sb.append(")*");
     }
 
-    @Override
-    public StarNode<T> clone()
-    {
-        return new StarNode<>(getValue().clone());
-    }
 } 

@@ -1,7 +1,4 @@
-package com.christopherjung.regex;
-
-import java.util.Collection;
-import java.util.HashSet;
+package com.christopherjung.grammar;
 
 public abstract class TreeNode<T> implements Cloneable
 {
@@ -14,5 +11,9 @@ public abstract class TreeNode<T> implements Cloneable
 
     protected abstract void toRegEx(StringBuilder sb);
 
-    public abstract TreeNode<T> clone();
+    public static <T> TreeNode<T> close(TreeNode<T> root)
+    {
+        return new ConcatNode<>(root, new ValueNode<>());
+    }
+
 }

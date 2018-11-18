@@ -1,5 +1,6 @@
 package com.christopherjung.regex;
 
+import com.christopherjung.grammar.*;
 import com.christopherjung.parser.Parser;
 import com.christopherjung.parser.ParserInputReader;
 
@@ -81,7 +82,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
                 TreeNode<Character> temp = state;
                 for (int i = 1; i < to; i++)
                 {
-                    TreeNode<Character> cloned = state.clone();
+                    TreeNode<Character> cloned = state;
 
                     if (i >= from)
                     {

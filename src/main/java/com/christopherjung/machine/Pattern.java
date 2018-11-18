@@ -1,11 +1,7 @@
 package com.christopherjung.machine;
 
 import com.christopherjung.regex.RegExParser;
-import com.christopherjung.regex.TreeNode;
-import com.christopherjung.regex.ValueNode;
-
-import java.util.HashMap;
-import java.util.HashSet;
+import com.christopherjung.grammar.TreeNode;
 
 public class Pattern
 {

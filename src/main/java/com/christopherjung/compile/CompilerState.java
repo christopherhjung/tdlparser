@@ -1,7 +1,8 @@
 package com.christopherjung.compile;
 
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CompilerState<T>
 {
@@ -60,48 +61,4 @@ public class CompilerState<T>
         return sb.toString();
     }
 
-    public static <T> CompilerState<T> compile(TreeNode<T> node)
-    {
-        HashMap<List<ValueNode<T>>, CompilerState<T>> states = new HashMap<>();
-        CompilerState<T> state = compile(new ArrayList<>(node.getFirstPositions()), states);
-
-        System.out.println("--------------------");
-        System.out.println(node.getFirstPositions());
-
-        System.out.println(new HashSet<>(states.values()));
-
-        return state;
-    }
-
-    private static <T> CompilerState<T> compile(List<ValueNode<T>> set, HashMap<List<ValueNode<T>>, CompilerState<T>> states)
-    {
-        if (states.containsKey(set))
-        {
-            return states.get(set);
-        }
-
-        boolean isFinish = false;
-        Map<T, List<ValueNode<T>>> next = new LinkedHashMap<>();
-        for (ValueNode<T> child : set)
-        {
-            if (!child.isEpsilon())
-            {
-                next.computeIfAbsent(child.getValue(), (key) -> new ArrayList<>())
-                        .addAll(child.getFollowPositions());
-            }
-            else
-            {
-                isFinish = true;
-            }
-        }
-
-        CompilerState<T> compilerState = new CompilerState<>(isFinish);
-        states.put(set, compilerState);
-        for (T key : next.keySet())
-        {
-            compilerState.put(key, compile(next.get(key), states));
-        }
-
-        return compilerState;
-    }
 }

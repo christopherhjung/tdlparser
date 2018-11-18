@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.grammar;
 
 import java.util.Collection;
 
@@ -35,12 +35,5 @@ public class OrNode<T> extends BinaryNode<T>
             }
         }
         return result;
-    }
-
-
-    @Override
-    public OrNode<T> clone()
-    {
-        return new OrNode<>(getLeft().clone(), getRight().clone());
     }
 }

@@ -9,7 +9,6 @@ public abstract class Parser<T>
 {
     private ParserInputReader reader;
 
-
     protected void reset(String str)
     {
         reset(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));

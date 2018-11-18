@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.grammar;
 
 public class ConcatNode<T> extends BinaryNode<T>
 {
@@ -15,11 +15,5 @@ public class ConcatNode<T> extends BinaryNode<T>
         getLeft().toRegEx(sb);
         getRight().toRegEx(sb);
         sb.append(')');
-    }
-
-    @Override
-    public ConcatNode<T> clone()
-    {
-        return new ConcatNode<>(getLeft().clone(), getRight().clone());
     }
 }

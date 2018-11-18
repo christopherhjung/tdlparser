@@ -1,5 +1,8 @@
 package com.christopherjung.compile;
 
+import com.christopherjung.grammar.OrNode;
+import com.christopherjung.grammar.TreeNode;
+import com.christopherjung.machine.State;
 import com.christopherjung.scanner.ScanResult;
 
 import java.util.ArrayList;
@@ -39,13 +42,13 @@ public class Compiler
 
         public Compiler build()
         {
-            HashMap<String, CompilerState<String>> compiled = new HashMap<>();
+            HashMap<String, State<String>> compiled = new HashMap<>();
 
             for (String name : rules.keySet())
             {
                 TreeNode<String> treeNode = rules.get(name);
                 treeNode = TreeNode.close(treeNode);
-                CompilerState<String> compilerState = CompilerState.compile(treeNode);
+                State<String> compilerState = State.compile(treeNode);
                 compiled.put(name, compilerState);
             }
 
@@ -53,11 +56,11 @@ public class Compiler
         }
     }
 
-    HashMap<String, CompilerState<String>> rules;
+    HashMap<String, State<String>> rules;
     private ScanResult scanResult;
 
 
-    public Compiler(HashMap<String, CompilerState<String>> rules)
+    public Compiler(HashMap<String, State<String>> rules)
     {
         this.rules = rules;
     }
@@ -71,7 +74,7 @@ public class Compiler
     {
         RuleParser parser = new RuleParser();
         TreeNode<String> parsedRule = parser.parse(rule);
-        rules.put(name, CompilerState.compile(parsedRule));
+        rules.put(name, State.compile(parsedRule));
     }
 
     public void compile(ScanResult scanResult)
@@ -87,10 +90,10 @@ public class Compiler
 
     private class Rule
     {
-        private CompilerState<String> state;
+        private State<String> state;
         private int position;
 
-        public Rule(int position, CompilerState<String> state)
+        public Rule(int position, State<String> state)
         {
             this.state = state;
             this.position = position;

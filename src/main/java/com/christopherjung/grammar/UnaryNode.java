@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.grammar;
 
 public abstract class UnaryNode<T> extends TreeNode<T>
 {

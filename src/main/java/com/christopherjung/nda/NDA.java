@@ -1,6 +1,6 @@
 package com.christopherjung.nda;
 
-import com.christopherjung.regex.*;
+import com.christopherjung.grammar.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,16 +39,17 @@ public class NDA<T>
 
     public void from(TreeNode<T> root)
     {
-        from2(root);
+        compute(root);
 
+/*
         System.out.println(values);
         System.out.println(firstPositions);
         System.out.println(followPositions);
 
-        System.out.println("-----------------");
+        System.out.println("-----------------");*/
     }
 
-    public int from2(TreeNode<T> root)
+    public int compute(TreeNode<T> root)
     {
         int index = position++;
 
@@ -59,13 +60,13 @@ public class NDA<T>
 
         if (root instanceof BinaryNode)
         {
-            BinaryNode<T> concatNode = (BinaryNode<T>) root;
+            BinaryNode<T> binaryNode = (BinaryNode<T>) root;
 
-            TreeNode<T> left = concatNode.getLeft();
-            TreeNode<T> right = concatNode.getRight();
+            TreeNode<T> left = binaryNode.getLeft();
+            TreeNode<T> right = binaryNode.getRight();
 
-            int leftIndex = from2(left);
-            int rightIndex = from2(right);
+            int leftIndex = compute(left);
+            int rightIndex = compute(right);
 
             if (root instanceof ConcatNode)
             {
@@ -77,11 +78,11 @@ public class NDA<T>
                     thisFirstPositions.addAll(firstPositions.get(rightIndex));
                 }
 
-                thisLastPositions.addAll(lastPositions.get(rightIndex));
                 if (nullifies.get(rightIndex))
                 {
                     thisLastPositions.addAll(lastPositions.get(leftIndex));
                 }
+                thisLastPositions.addAll(lastPositions.get(rightIndex));
 
                 for (int lastPosition : lastPositions.get(leftIndex))
                 {
@@ -101,11 +102,11 @@ public class NDA<T>
         }
         else if (root instanceof UnaryNode)
         {
-            UnaryNode<T> concatNode = (UnaryNode<T>) root;
+            UnaryNode<T> unaryNode = (UnaryNode<T>) root;
 
-            TreeNode<T> node = concatNode.getValue();
+            TreeNode<T> node = unaryNode.getValue();
 
-            int valueIndex = from2(node);
+            int valueIndex = compute(node);
 
             thisFirstPositions.addAll(firstPositions.get(valueIndex));
             thisLastPositions.addAll(lastPositions.get(valueIndex));

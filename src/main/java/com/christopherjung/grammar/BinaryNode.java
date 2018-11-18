@@ -1,12 +1,23 @@
 package com.christopherjung.grammar;
 
-public class BinaryNode<T> extends Node<T>
+public abstract class BinaryNode<T> extends TreeNode<T>
 {
+    private TreeNode<T> left;
+    private TreeNode<T> right;
 
-    private Node<T> left;
-    private Node<T> right;
+    public BinaryNode(TreeNode<T> left, TreeNode<T> right)
+    {
+        this.left = left;
+        this.right = right;
+    }
 
+    public TreeNode<T> getLeft()
+    {
+        return left;
+    }
 
-
-
+    public TreeNode<T> getRight()
+    {
+        return right;
+    }
 }

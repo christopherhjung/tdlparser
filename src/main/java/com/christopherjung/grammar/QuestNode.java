@@ -1,4 +1,4 @@
-package com.christopherjung.regex;
+package com.christopherjung.grammar;
 
 public class QuestNode<T> extends UnaryNode<T>
 {
@@ -16,9 +16,4 @@ public class QuestNode<T> extends UnaryNode<T>
         sb.append(")?");
     }
 
-    @Override
-    public QuestNode<T> clone()
-    {
-        return new QuestNode<>(getValue().clone());
-    }
 } 
