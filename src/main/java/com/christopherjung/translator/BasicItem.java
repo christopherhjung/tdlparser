@@ -5,7 +5,6 @@ public class BasicItem
     private Rule rule;
     private int dotIndex;
 
-
     public BasicItem(int dotIndex, Rule rule)
     {
         this.rule = rule;
@@ -15,6 +14,11 @@ public class BasicItem
     public String getNextKey()
     {
         return rule.getKey(dotIndex);
+    }
+
+    public Rule getRule()
+    {
+        return rule;
     }
 
     public BasicItem next()

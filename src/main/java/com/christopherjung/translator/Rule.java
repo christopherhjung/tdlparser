@@ -4,13 +4,20 @@ import java.util.Arrays;
 
 public class Rule
 {
+    private int id;
     private final String name;
     private final String[] keys;
 
-    public Rule(String name, String[] keys)
+    public Rule(int id, String name, String[] keys)
     {
+        this.id = id;
         this.name = name;
         this.keys = keys;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 
     public String getName()
@@ -31,18 +38,17 @@ public class Rule
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return true;
-        if(!(obj instanceof Rule)) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Rule)) return false;
         Rule rule = (Rule) obj;
 
-        return name.equals(rule.name) && Arrays.equals(keys,rule.keys);
+        return name.equals(rule.name) && Arrays.equals(keys, rule.keys);
     }
-
 
 
     @Override
     public String toString()
     {
-        return name + "->" + String.join(" ",keys);
+        return name + "->" + String.join(" ", keys);
     }
 }

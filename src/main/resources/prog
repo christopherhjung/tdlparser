@@ -1,13 +1,13 @@
-import ich3.bin2.ein1.test
+import ich3.bin2.ein1.entry
 
 
 public class Button extends View{
 
     public client Consumer<View> onClick;
-    public server dirty boolean test;
+    public server dirty boolean entry;
 
     public Button(){
-        test = false; //server dirty
+        entry = false; //server dirty
     }
 
     public client void onClick( Consumer<View> consumer ){
@@ -22,7 +22,7 @@ public class Button extends View{
 public class Test{
     public static server int TEST = 0
 
-    int test = 0
+    int entry = 0
 
     boolean lol
 
@@ -36,7 +36,7 @@ public class Test{
 
     }
 
-    syncronized Lable test(){
+    syncronized Lable entry(){
         button = new Button() // SERVER oder client
         button.onClick((view) -> serverMethod(lable) SERVER or client) SERVER or client
 

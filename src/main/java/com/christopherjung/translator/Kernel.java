@@ -9,76 +9,98 @@ public class Kernel
     private int index;
     private Set<BasicItem> items;
     private HashMap<String, Kernel> closure;
+    private ClosureTable closureTable;
 
-    public Kernel(int index, BasicItem item, Grammar grammar)
+    public Kernel(Set<BasicItem> items, ClosureTable closureTable)
     {
-        this.index = index;
-        this.grammar = grammar;
+        this.closureTable = closureTable;
+        grammar = closureTable.getGrammar();
+        this.items = items;
+    }
 
-        closure = new HashMap<>();
-
+    public Kernel(BasicItem item, ClosureTable closureTable)
+    {
+        this.closureTable = closureTable;
+        grammar = closureTable.getGrammar();
         items = new HashSet<>();
         items.add(item);
     }
 
-    public Kernel(int index, Set<BasicItem> items, Grammar grammar)
+    public Set<BasicItem> getItems()
     {
-        this.index = index;
-        this.grammar = grammar;
-        this.items = items;
+        return items;
     }
 
-    public void addItem(BasicItem item)
+    public Rule getFinished()
     {
-        items.add(item);
-    }
-
-    public HashMap<String, Set<BasicItem>> getClosure()
-    {
-        HashMap<String, Set<BasicItem>> result = new HashMap<>();
-        Collection<BasicItem> copy = items;
-
-        loop:
-        for (;;)
+        for (BasicItem item : items)
         {
-            for (BasicItem item : copy)
+            if (item.isFinished())
             {
-                if (item.isFinished())
-                {
-                    continue;
-                }
-
-                String key = item.getNextKey();
-                BasicItem next = item.next();
-
-                result.computeIfAbsent(key, ($) -> new HashSet<>())
-                        .add(next);
-
-                if (grammar.contains(key))
-                {
-                    Set<BasicItem> test = new HashSet<>();
-                    for (Rule rule : grammar.getRule(key))
-                    {
-                        BasicItem basicItem = new BasicItem(0, rule);
-
-                        test.add(basicItem);
-                    }
-                    copy = test;
-                    continue loop;
-                }
+                return item.getRule();
             }
+        }
+        return null;
+    }
 
-            break;
+    public HashMap<String, Kernel> getClosure()
+    {
+        if (closure == null)
+        {
+            initClosure();
         }
 
-        return result;
+        return closure;
+    }
+
+    public void initClosure()
+    {
+        HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
+        HashSet<BasicItem> visited = new HashSet<>(items);
+        LinkedList<BasicItem> current = new LinkedList<>(items);
+
+        for (; !current.isEmpty(); )
+        {
+            BasicItem item = current.remove();
+            if (item.isFinished())
+            {
+                continue;
+            }
+
+            String key = item.getNextKey();
+            BasicItem nextItem = item.next();
+
+            result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
+
+            if (grammar.contains(key))
+            {
+                for (Rule rule : grammar.getRule(key))
+                {
+                    BasicItem newItem = new BasicItem(0, rule);
+                    if (!visited.contains(newItem))
+                    {
+                        current.add(newItem);
+                        visited.add(newItem);
+                    }
+                }
+            }
+        }
+
+        HashMap<String, Kernel> transform = new HashMap<>();
+
+        for (String symbol : result.keySet())
+        {
+            transform.put(symbol, closureTable.getOrCreateKernel(result.get(symbol)));
+        }
+
+        closure = transform;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return true;
-        if(!(obj instanceof Kernel)) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Kernel)) return false;
         Kernel kernel = (Kernel) obj;
 
         return items.equals(kernel.items);
@@ -94,10 +116,6 @@ public class Kernel
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("(");
-        sb.append(index);
-        sb.append(")");
 
         int i = 0;
         for (BasicItem item : items)

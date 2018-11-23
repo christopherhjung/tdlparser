@@ -9,35 +9,33 @@ import com.christopherjung.translator.Grammar;
 import com.christopherjung.translator.ParserTable;
 import com.christopherjung.translator.TDLParser;
 
-public class Main
+public class Main2
 {
 
     public static void main(String[] args)
     {
         Scanner scanner = new Scanner();
-        scanner.add("ignore", "\\s+");
-        scanner.add("number", "[-+]?[0-9]+(.[0-9]+)?([eE][+-]?[0-9]+)?");
-        scanner.add("string", "\"[^\"]*\"");
-        scanner.add("null", "null");
-        scanner.add("false", "false");
-        scanner.add("]", "\\]");
-        scanner.add("[", "\\[");
-        scanner.add(":", "\\:");
-        scanner.add(",", "\\,");
-        scanner.add("}", "\\}");
-        scanner.add("{", "\\{");
 
-        ScanResult scanResult = StreamUtils.loopFileWithResult("test.json", scanner::scan);
+        StreamUtils.loopFile("java.scanner", scanner::addAll);
+        ScanResult scanResult = StreamUtils.loopFileWithResult("test.java", scanner::scan);
+
+        for(var token : scanResult){
+            System.out.println(token);
+        }
 
         Grammar.Builder builder = new Grammar.Builder();
-
-        StreamUtils.loopFile("json.tdl", builder::addRules);
+        StreamUtils.loopFile("java.tdl", builder::addRules);
 
         Grammar grammar = builder.build();
+
+        System.out.println("grammar build");
 
         ClosureTable closureTable = new ClosureTable(grammar);
 
         ParserTable table = closureTable.getTable();
+
+
+        System.out.println("parserTable build");
 
         DataTable dataTable = new DataTable();
         dataTable.addColumn("state", Integer.class);
@@ -93,12 +91,12 @@ public class Main
             dataTable.addRow(row);
         }
 
-
         System.out.println(dataTable);
 
+/*
         TDLParser parser = new TDLParser(table);
 
-        parser.test(scanResult);
+        parser.test(scanResult);*/
     }
 
 }

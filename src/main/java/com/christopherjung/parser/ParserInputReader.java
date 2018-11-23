@@ -2,6 +2,7 @@ package com.christopherjung.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ParserInputReader
@@ -53,6 +54,31 @@ public class ParserInputReader
         {
             builder.append(eat());
             chars--;
+        }
+
+        return builder.toString();
+    }
+
+    public String fetchUntil(String limiter)
+    {
+        StringBuilder builder = new StringBuilder();
+        char[] array = limiter.toCharArray();
+
+        int pos = 0;
+        for (int i = 0; pos < array.length && hasNext(); i++)
+        {
+            if (get(i) == array[pos])
+            {
+                pos++;
+            }
+            else
+            {
+                builder.append(array, 0, pos);
+                next(pos);
+                builder.append(eat());
+                i=-1;
+                pos = 0;
+            }
         }
 
         return builder.toString();
@@ -167,7 +193,8 @@ public class ParserInputReader
             try
             {
                 stream.skip(count - bufferCapacity());
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new ParseException("Not possible to skip", e);
             }
@@ -210,7 +237,8 @@ public class ParserInputReader
             try
             {
                 buffer[head] = (char) stream.read();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new ParseException("Not possible to read", e);
             }
@@ -220,10 +248,16 @@ public class ParserInputReader
 
     public boolean hasNext()
     {
+        return hasNext(0);
+    }
+
+    public boolean hasNext(int pos)
+    {
         try
         {
-            return get() < 255 && (stream.available() > 0 || bufferSize() > 0);
-        } catch (Exception e)
+            return get(pos) < 255 && (stream.available() > 0 || bufferSize() > 0);
+        }
+        catch (Exception e)
         {
             throw new ParseException("avail", e);
         }

@@ -7,7 +7,7 @@ public class OrNode<T> extends BinaryNode<T>
 
     public OrNode(TreeNode<T> left, TreeNode<T> right)
     {
-        super(left,right);
+        super(left, right);
     }
 
     @Override
@@ -32,6 +32,24 @@ public class OrNode<T> extends BinaryNode<T>
             else
             {
                 result = new OrNode<>(result, new ValueNode<>(node));
+            }
+        }
+        return result;
+    }
+
+
+    public static <T> TreeNode<T> all(TreeNode<T>... nodes)
+    {
+        TreeNode<T> result = null;
+        for (TreeNode<T> node : nodes)
+        {
+            if (result == null)
+            {
+                result = node;
+            }
+            else
+            {
+                result = new OrNode<>(result, node);
             }
         }
         return result;

@@ -4,10 +4,12 @@ import com.christopherjung.grammar.OrNode;
 import com.christopherjung.grammar.TreeNode;
 import com.christopherjung.machine.State;
 import com.christopherjung.scanner.ScanResult;
+import com.christopherjung.scanner.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 public class Compiler
 {
@@ -23,6 +25,11 @@ public class Compiler
         public void addRootRule(String rule)
         {
             addRule("start", rule);
+        }
+
+        public void addRule(String name, String regEx, Function<Compiler, Object> mapper)
+        {
+
         }
 
         public void addRule(String name, String rule)
@@ -105,8 +112,8 @@ public class Compiler
             int currentPosition = position;
             while (currentPosition < scanResult.size())
             {
-                ScanResult.Entry left = scanResult.get(currentPosition);
-                String token = left.getToken();
+                Token left = scanResult.get(currentPosition);
+                String token = left.getName();
 
                 System.out.println(position + " " + token);
                 System.out.println(rules);
@@ -175,16 +182,16 @@ public class Compiler
         }
     }
 
-    /*public boolean test(int position, State<String> state)
+    /*public boolean fetch(int position, State<String> state)
     {
         while (position < tokens.size())
         {
             Scanner.ScanResult left = tokens.get(position);
-            String token = left.getToken();
+            String token = left.getName();
 
             if (rules.containsKey(token))
             {
-                if (!test(position, rules.get(token)))
+                if (!fetch(position, rules.get(token)))
                 {
                     return false;
                 }
@@ -201,7 +208,7 @@ public class Compiler
             }
             else if (state.isAccept())
             {
-                if (test(position, rules.get(token)))
+                if (fetch(position, rules.get(token)))
                 {
                     return true;
                 }

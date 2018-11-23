@@ -69,7 +69,7 @@ public class State<T>
 
         State<T> state = compile(nda, nda.getFirstPositions(), states);
 
-        System.out.println(states.values());
+        //System.out.println(states.values());
         return state;
     }
 

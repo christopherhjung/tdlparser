@@ -1,0 +1,29 @@
+CLASS class
+FOR for
+WHILE while
+NEW new
+IMPORT import
+IF if
+INTERFACE interface
+PROTECTED protected
+PRIVATE private
+PUBLIC public
+
+SPACE \s+
+NAME \w+
+NUMBER \d+
+STRING \"[^\"]\"
+PFAD (\w+\.)+\w+
+
+: :
+\ \\
+* \*
+= =
+- \-
++ \+
+) \)
+( \(
+, ,
+} \}
+{ \{
+; ;

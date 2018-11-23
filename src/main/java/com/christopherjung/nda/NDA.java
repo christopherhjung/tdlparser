@@ -2,10 +2,7 @@ package com.christopherjung.nda;
 
 import com.christopherjung.grammar.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class NDA<T>
@@ -18,8 +15,8 @@ public class NDA<T>
     private Map<Integer, T> values = new HashMap<>();
     private Map<Integer, Boolean> nullifies = new HashMap<>();
 
-    private Map<Integer, Collection<Integer>> firstPositions = mapSupplier.get();
-    private Map<Integer, Collection<Integer>> lastPositions = mapSupplier.get();
+    private List<Collection<Integer>> firstPositions = new ArrayList<>();
+    private List<Collection<Integer>> lastPositions = new ArrayList<>();
     private Map<Integer, Collection<Integer>> followPositions = mapSupplier.get();
 
     public T getValues(int key)
@@ -55,8 +52,8 @@ public class NDA<T>
 
         Collection<Integer> thisFirstPositions = supplier.get();
         Collection<Integer> thisLastPositions = supplier.get();
-        firstPositions.put(index, thisFirstPositions);
-        lastPositions.put(index, thisLastPositions);
+        firstPositions.add(thisFirstPositions);
+        lastPositions.add(thisLastPositions);
 
         if (root instanceof BinaryNode)
         {

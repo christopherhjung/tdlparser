@@ -1,0 +1,6 @@
+ADD -> ADD + MUL
+ADD -> MUL
+MUL -> MUL * SEGMENT
+MUL -> SEGMENT
+SEGMENT -> ( ADD )
+SEGMENT -> id

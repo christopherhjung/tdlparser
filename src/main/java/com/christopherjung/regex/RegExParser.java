@@ -15,7 +15,8 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return new ConcatNode<>(parseOr(), new ValueNode<>());
     }
 
-    public TreeNode<Character> parseRaw(String str){
+    public TreeNode<Character> parseRaw(String str)
+    {
         reset(str);
         return parseOr();
     }
@@ -132,18 +133,18 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
                 HashSet<Character> nodes = new HashSet<>();
 
-                char save = 255;
+                Character save = null;
 
                 while (true)
                 {
-                    if (save != 255 && eat('-'))
+                    if (save != null && eat('-'))
                     {
                         fromToChars(nodes, save, eat());
-                        save = 255;
+                        save = null;
                     }
                     else
                     {
-                        if (save != 255)
+                        if (save != null)
                         {
                             nodes.add(save);
                         }
@@ -176,6 +177,10 @@ public class RegExParser extends Parser<TreeNode<Character>>
                 else if (eat('s'))
                 {
                     return OrNode.all(ValueNode.rawOf('\n', ' ', '\t', '\r'));
+                }
+                else if (eat('w'))
+                {
+                    return OrNode.all(OrNode.all(rawFromTo('a', 'z')), OrNode.all(rawFromTo('A', 'Z')), new ValueNode<>('_'));
                 }
                 else
                 {

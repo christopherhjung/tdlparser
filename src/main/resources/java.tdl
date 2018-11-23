@@ -1,0 +1,52 @@
+Start -> Imports SpaceOrNone Class
+Imports -> Import Imports | ''
+Import -> IMPORT SPACE PFAD ;
+Class -> Visibility CLASS SpaceOrNone NAME SpaceOrNone ClassBlock
+ClassBlock -> { SpaceOrNone ClassContents SpaceOrNone }
+Visibility -> PRIVATE SPACE
+Visibility -> PROTECTED SPACE
+Visibility -> PUBLIC SPACE
+Visibility -> ''
+SpaceOrNone -> SPACE
+SpaceOrNone -> ''
+ClassContents -> ClassContent SpaceOrNone ClassContents
+ClassContents -> ''
+ClassContent -> Member
+ClassContent -> Method
+Member -> Visibility DeclareVariable ;
+DeclareVariable -> NAME SPACE NAME AssignOrNot
+AssignOrNot -> SpaceOrNone
+AssignOrNot -> SpaceOrNone = SpaceOrNone StatementLevel0 SpaceOrNone
+Method -> Visibility NAME SPACE NAME SpaceOrNone ( DeclareVariables SpaceOrNone ) SpaceOrNone ExpressionBlock
+MethodCall -> PathOrName SpaceOrNone ( Statements )
+Statements -> StatementLevel0 , Statements
+Statements -> StatementLevel0
+Statements -> ''
+DeclareVariables -> DeclareVariable SpaceOrNone , SpaceOrNone DeclareVariables
+DeclareVariables -> ''
+Expressions -> Expressions SpaceOrNone Expression
+Expressions -> ''
+Expression -> DeclareVariable SpaceOrNone AssignOrNot ;
+Expression -> AssignVariable
+Expression -> If
+Expression -> While
+ExpressionBlock -> { SpaceOrNone Expressions SpaceOrNone }
+Statement -> NAME
+Statement -> STRING
+Statement -> NEW SPACE MethodCall
+Statement -> MethodCall
+StatementLevel0 -> StatementLevel1 = StatementLevel0
+StatementLevel0 -> StatementLevel1
+StatementLevel1 -> StatementLevel2 + StatementLevel1
+StatementLevel1 -> StatementLevel2 - StatementLevel1
+StatementLevel1 -> StatementLevel2
+StatementLevel2 -> Statement * StatementLevel2
+StatementLevel2 -> Statement / StatementLevel2
+StatementLevel2 -> Statement
+StatementLevel2 -> StatementParenthesis
+PathOrName -> PATH
+PathOrName -> NAME
+AssignVariable -> NAME SPACE = SpaceOrNone StatementLevel0 ;
+StatementParenthesis -> ( SpaceOrNone StatementLevel0 SpaceOrNone )
+If -> IF SpaceOrNone ( SpaceOrNone StatementLevel0 SpaceOrNone ) SpaceOrNone ExpressionBlock
+

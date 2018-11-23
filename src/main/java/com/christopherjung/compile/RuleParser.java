@@ -42,23 +42,22 @@ public class RuleParser extends Parser<TreeNode<String>>
 
         while (hasNext() && !is('|'))
         {
-            TreeNode<String> token = parseToken();
+            TreeNode<String> key = parseKey();
 
             if (rule == null)
             {
-                rule = token;
+                rule = key;
             }
             else
             {
-                rule = new ConcatNode<>(rule, token);
+                rule = new ConcatNode<>(rule, key);
             }
         }
-
 
         return rule;
     }
 
-    protected TreeNode<String> parseToken()
+    protected TreeNode<String> parseKey()
     {
         ValueNode<String> valueNode = new ValueNode<>(fetchWhile(cha -> cha != ' ' && cha != '|'));
         eatWhitespace();
