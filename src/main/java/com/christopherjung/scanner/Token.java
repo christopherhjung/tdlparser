@@ -1,57 +1,36 @@
 package com.christopherjung.scanner;
 
-import com.christopherjung.machine.Pattern;
-import com.christopherjung.machine.State;
-import com.christopherjung.parser.ParserInputReader;
-
 public class Token
 {
+    private TokenDescriptor descriptor;
+    private String value;
     private String name;
-    private State begin;
 
-    private Token(String name, State begin)
+    public Token(String name, String value)
     {
         this.name = name;
-        this.begin = begin;
+        this.value = value;
+    }
+
+    public Token(String value, TokenDescriptor descriptor)
+    {
+        this.descriptor = descriptor;
+        this.value = value;
     }
 
     public String getName()
     {
-        return name;
+        return descriptor == null ? name : descriptor.getName();
     }
 
-    public String test(ParserInputReader inputStream)
+    public String getValue()
     {
-        State current = begin;
-
-        int length = -1;
-
-        for (int i = 0; ; )
-        {
-            char cha = inputStream.get(i++);
-            current = current.propagate(cha);
-
-            if (current == null)
-            {
-                break;
-            }
-            else if (current.isAccept())
-            {
-                length = i;
-            }
-        }
-
-        if (length >= 0)
-        {
-            return inputStream.fetch(length);
-        }
-
-        return null;
+        return value;
     }
 
-
-    public static Token create(String name, String regEx)
+    @Override
+    public String toString()
     {
-        return new Token(name, Pattern.compile(regEx));
+        return String.format("[%s:%s]", getName(), value.replaceAll("\\s+"," "));
     }
 }

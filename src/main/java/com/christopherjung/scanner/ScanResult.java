@@ -1,15 +1,15 @@
 package com.christopherjung.scanner;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ScanResult
+public class ScanResult implements Iterable<Token>
 {
-    private List<Entry> result = new ArrayList<>();
+    private List<Token> result;
 
-    public void addResult(String token, String value)
+    public ScanResult(List<Token> result)
     {
-        result.add(new Entry(token, value));
+        this.result = result;
     }
 
     public int size()
@@ -17,46 +17,21 @@ public class ScanResult
         return result.size();
     }
 
-    public Entry get(int pos)
+    public Token get(int pos)
     {
         return result.get(pos);
     }
 
-    public static class Entry
+
+    @Override
+    public Iterator<Token> iterator()
     {
-        String token;
-        String value;
+        return result.iterator();
+    }
 
-        public Entry(String token, String value)
-        {
-            this.token = token;
-            this.value = value;
-        }
-
-        public String getToken()
-        {
-            return token;
-        }
-
-        public void setToken(String token)
-        {
-            this.token = token;
-        }
-
-        public String getValue()
-        {
-            return value;
-        }
-
-        public void setValue(String value)
-        {
-            this.value = value;
-        }
-
-        @Override
-        public String toString()
-        {
-            return String.format("[%s:%s]", token, value);
-        }
+    @Override
+    public String toString()
+    {
+        return result.toString();
     }
 }
