@@ -2,6 +2,7 @@ package com.christopherjung.translator;
 
 import com.christopherjung.datatable.DataTable;
 import com.christopherjung.datatable.DataTableRow;
+import com.christopherjung.grammar.Grammar;
 
 public class TDLUtils
 {
@@ -21,7 +22,6 @@ public class TDLUtils
             dataTable.addColumn(symbol, String.class);
         }
 
-        dataTable.addColumn("$", String.class);
         for (String name : grammar.getRuleNames())
         {
             dataTable.addColumn(name, Integer.class);
@@ -37,7 +37,7 @@ public class TDLUtils
             {
                 if (test.getRestoreActions() == 0)
                 {
-                    row.set("$", "acc");
+                    row.set("EOF", "r" + test.getRestoreActions());
                 }
                 else
                 {

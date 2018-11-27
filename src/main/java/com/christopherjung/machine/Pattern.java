@@ -1,7 +1,7 @@
 package com.christopherjung.machine;
 
 import com.christopherjung.regex.RegExParser;
-import com.christopherjung.grammar.TreeNode;
+import com.christopherjung.container.TreeNode;
 
 public class Pattern
 {

@@ -9,31 +9,21 @@ import java.util.List;
 
 public class Scanner
 {
-    private List<TokenDescriptor> tokenDescriptors = new ArrayList<>();
+    private List<TokenDescriptor> tokenDescriptors;
+    private char[] structureChars;
 
-    public void addAll(InputStream stream)
+    public Scanner(List<TokenDescriptor> tokenDescriptors)
     {
-        ParserInputReader inputReader = new ParserInputReader(stream);
-        while (inputReader.hasNext())
-        {
-            inputReader.eatWhitespace();
-
-            String token = inputReader.fetchUntil(" ");
-            inputReader.eatWhitespace();
-            String regEx = inputReader.fetchWhile( cha -> !Character.isWhitespace(cha));
-
-            add(token, regEx);
-        }
+        this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
     }
 
-    public void add(String token, String regEx)
-    {
-        add(TokenDescriptor.create(token, regEx));
-    }
 
-    public void add(TokenDescriptor tokenDescriptor)
+    public Scanner(List<TokenDescriptor> tokenDescriptors, String structureChars)
     {
-        tokenDescriptors.add(tokenDescriptor);
+        this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
+        this.structureChars = structureChars.toCharArray();
+
+        Arrays.sort(this.structureChars);
     }
 
     public ScanResult scan(InputStream inputStream)
@@ -45,6 +35,18 @@ public class Scanner
         loop:
         while (reader.hasNext())
         {
+            if (structureChars != null)
+            {
+                int index = Arrays.binarySearch(structureChars, reader.get());
+
+                if (index >= 0)
+                {
+                    String name = String.valueOf(reader.eat());
+                    tokens.add(new Token(name, name));
+                    continue;
+                }
+            }
+
             for (TokenDescriptor tokenDescriptor : tokenDescriptors)
             {
                 Token token = tokenDescriptor.fetchToken(reader);
@@ -59,8 +61,11 @@ public class Scanner
                     continue loop;
                 }
             }
-            break;
+
+            throw new RuntimeException("Scanner error :" + reader.fetch(20) + "..." );
         }
+
+        tokens.add(new Token("EOF", (String)null));
 
         return new ScanResult(tokens);
     }
@@ -70,5 +75,47 @@ public class Scanner
     public String toString()
     {
         return tokenDescriptors.toString();
+    }
+
+    public static class Builder
+    {
+
+        private List<TokenDescriptor> tokenDescriptors = new ArrayList<>();
+        private StringBuilder structureCharsBuilder = new StringBuilder();
+
+        public void addAll(InputStream stream)
+        {
+            ParserInputReader inputReader = new ParserInputReader(stream);
+            while (inputReader.hasNext())
+            {
+                inputReader.eatWhitespace();
+
+                String token = inputReader.fetchUntil(" ");
+                inputReader.eatWhitespace();
+                String regEx = inputReader.fetchWhile(cha -> !Character.isWhitespace(cha));
+
+                add(token, regEx);
+            }
+        }
+
+        public void addStructureChars(String structureChars)
+        {
+            structureCharsBuilder.append(structureChars);
+        }
+
+        public void add(String token, String regEx)
+        {
+            add(TokenDescriptor.create(token, regEx));
+        }
+
+        public void add(TokenDescriptor tokenDescriptor)
+        {
+            tokenDescriptors.add(tokenDescriptor);
+        }
+
+        public Scanner build()
+        {
+            return new Scanner(tokenDescriptors, structureCharsBuilder.toString());
+        }
     }
 }

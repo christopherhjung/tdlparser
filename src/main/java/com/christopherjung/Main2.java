@@ -1,102 +1,46 @@
 package com.christopherjung;
 
-import com.christopherjung.datatable.DataTable;
-import com.christopherjung.datatable.DataTableRow;
+import com.christopherjung.grammar.Grammar;
+import com.christopherjung.grammar.Modifier;
+import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
-import com.christopherjung.translator.ClosureTable;
-import com.christopherjung.translator.Grammar;
-import com.christopherjung.translator.ParserTable;
-import com.christopherjung.translator.TDLParser;
+import com.christopherjung.translator.*;
 
 public class Main2
 {
 
     public static void main(String[] args)
     {
-        Scanner scanner = new Scanner();
+        Scanner.Builder scannerBuilder = new Scanner.Builder();
 
-        StreamUtils.loopFile("java.scanner", scanner::addAll);
+        StreamUtils.loopFile("java.scanner", scannerBuilder::addAll);
+
+        Scanner scanner = scannerBuilder.build();
         ScanResult scanResult = StreamUtils.loopFileWithResult("test.java", scanner::scan);
-
-        for(var token : scanResult){
-            System.out.println(token);
-        }
 
         Grammar.Builder builder = new Grammar.Builder();
         StreamUtils.loopFile("java.tdl", builder::addRules);
 
         Grammar grammar = builder.build();
 
-        System.out.println("grammar build");
+        System.out.println("container build");
 
         ClosureTable closureTable = new ClosureTable(grammar);
 
         ParserTable table = closureTable.getTable();
 
 
-        System.out.println("parserTable build");
+        System.out.println(TDLUtils.toString(table));
 
-        DataTable dataTable = new DataTable();
-        dataTable.addColumn("state", Integer.class);
+        ModifierSource source = new ModifierSource();
 
-        for (String symbol : grammar.getAlphabet())
-        {
-            dataTable.addColumn(symbol, String.class);
-        }
+        source.setDefaultModifier(Modifier.CONCAT);
 
-        dataTable.addColumn("$", String.class);
-        for (String name : grammar.getRuleNames())
-        {
-            dataTable.addColumn(name, String.class);
-        }
-        dataTable.addColumn("restore", String.class);
-
-        int i = 0;
-        for (ParserTable.Entry test : table.getEntries())
-        {
-            DataTableRow row = dataTable.newRow();
-
-            if (test.getRestoreActions() != -1)
-            {
-                if (test.getRestoreActions() == 0)
-                {
-                    row.set("$", "acc");
-                }
-                else
-                {
-                    for (String symbol : grammar.getAlphabet())
-                    {
-                        row.set(symbol, "r" + test.getRestoreActions());
-                    }
-                    //row.set("$", "r" + test.getRestoreActions());
-                }
-
-                row.set("restore", test.getRule().toString());
-            }
+        TDLParser parser = new TDLParser(table, source);
 
 
-            row.set("state", i++);
-
-            for (var entry : test.getActions().entrySet())
-            {
-                row.set(entry.getKey(), "s" + entry.getValue());
-            }
-
-            for (var entry : test.getGoTos().entrySet())
-            {
-                row.set(entry.getKey(), entry.getValue().toString());
-            }
-
-            dataTable.addRow(row);
-        }
-
-        System.out.println(dataTable);
-
-/*
-        TDLParser parser = new TDLParser(table);
-
-        parser.test(scanResult);*/
+        parser.parse(scanResult);
     }
 
 }

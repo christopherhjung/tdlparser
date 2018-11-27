@@ -1,6 +1,9 @@
 package com.christopherjung.datatable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class DataTable
 {
@@ -60,12 +63,7 @@ public class DataTable
         for (String name : columns.keySet())
         {
             headers[index] = name;
-
-            if (lengths[index] < name.length())
-            {
-                lengths[index] = name.length();
-            }
-
+            lengths[index] = Math.max(lengths[index], name.length());
             index++;
         }
 
@@ -84,12 +82,7 @@ public class DataTable
                 }
 
                 values[rowIndex][colIndex] = value;
-
-                if (lengths[colIndex] < value.length())
-                {
-                    lengths[colIndex] = value.length();
-                }
-
+                lengths[colIndex] = Math.max(lengths[colIndex], value.length());
                 colIndex++;
             }
             rowIndex++;
@@ -113,6 +106,17 @@ public class DataTable
 
         StringBuilder builder = new StringBuilder();
 
+
+        for (int i = 0; i < lengths.length; i++)
+        {
+            for (int j = lengths[i]; j >= 0; j--)
+            {
+                builder.append('_');
+            }
+        }
+
+        builder.append("_\n");
+
         for (int col = 0; col < headers.length; col++)
         {
             builder.append('|');
@@ -120,6 +124,21 @@ public class DataTable
             for (int i = lengths[col] - headers[col].length(); i > 0; i--)
             {
                 builder.append(' ');
+            }
+        }
+        builder.append("|\n");
+
+
+        builder.append('|');
+        for (int i = 0; i < lengths.length; i++)
+        {
+            if (i > 0)
+            {
+                builder.append('-');
+            }
+            for (int j = lengths[i]; j > 0; j--)
+            {
+                builder.append('-');
             }
         }
         builder.append("|\n");
@@ -137,6 +156,16 @@ public class DataTable
             }
             builder.append("|\n");
         }
+
+        for (int i = 0; i < lengths.length; i++)
+        {
+            for (int j = lengths[i]; j > 0; j--)
+            {
+                builder.append("̅");
+            }
+            builder.append("̅");
+        }
+        builder.append("̅\n");
 
 
         return builder.toString();

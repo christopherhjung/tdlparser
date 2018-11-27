@@ -49,6 +49,6 @@ public class Rule
     @Override
     public String toString()
     {
-        return name + "->" + String.join(" ", keys);
+        return name + "->" + (keys.length == 0 ? "''" : String.join(" ", keys));
     }
 }

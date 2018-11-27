@@ -1,10 +1,11 @@
-package com.christopherjung.grammar;
+package com.christopherjung.container;
 
-public class StarNode<T> extends UnaryNode<T>
+public class QuestNode<T> extends UnaryNode<T>
 {
-    public StarNode(TreeNode<T> node)
+    public QuestNode(TreeNode<T> node)
     {
         super(node);
+
     }
 
     @Override
@@ -12,7 +13,7 @@ public class StarNode<T> extends UnaryNode<T>
     {
         sb.append("(");
         getValue().toRegEx(sb);
-        sb.append(")*");
+        sb.append(")?");
     }
 
 } 

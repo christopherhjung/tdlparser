@@ -1,6 +1,7 @@
-package com.christopherjung.translator;
+package com.christopherjung.grammar;
 
 import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.translator.Rule;
 
 import java.io.InputStream;
 import java.util.*;
@@ -16,6 +17,8 @@ public class Grammar
         this.rules = new HashMap<>(rules);
         this.alphabet = new HashSet<>(alphabet);
         this.root = root;
+
+        this.alphabet.add("EOF");
     }
 
     public Set<String> getAlphabet()
@@ -33,7 +36,7 @@ public class Grammar
         return root;
     }
 
-    public Set<Rule> getRule(String name)
+    public Set<Rule> getChildRules(String name)
     {
         return rules.get(name);
     }
@@ -43,12 +46,34 @@ public class Grammar
         return rules.containsKey(name);
     }
 
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (var entry : rules.entrySet())
+        {
+            for (var rule : entry.getValue())
+            {
+                if (sb.length() > 0)
+                {
+                    sb.append('\n');
+                }
+
+                sb.append(rule);
+            }
+        }
+
+        return sb.toString();
+    }
+
     public static class Builder
     {
         private HashMap<String, Set<Rule>> rules;
         private HashSet<String> alphabet;
 
-        private String root;
+        private Rule root;
         private int index;
 
         public Builder()
@@ -58,14 +83,9 @@ public class Grammar
             index = 1;
         }
 
-        public void setRootRule(String root)
+        public Rule setRootRule(String root)
         {
-            if (root.contains(" "))
-            {
-                throw new RuntimeException("Runtime");
-            }
-
-            this.root = root;
+            return this.root = new Rule(0, "__start__", root.split("\\s+"));
         }
 
         public void addRules(String rules)
@@ -85,7 +105,7 @@ public class Grammar
             {
                 String name = inputReader.fetchUntil("->").trim();
                 inputReader.next("->".length());
-                String rule = inputReader.fetchUntil("\n");
+                String rule = inputReader.fetchLine();
 
                 if (!hasRoot)
                 {
@@ -96,31 +116,42 @@ public class Grammar
                 addRule(name, rule);
                 inputReader.eatWhitespace();
             }
-
         }
 
-        public void addRule(String rule)
+        public Rule addRule(String rule)
         {
             String[] parts = rule.split("->");
-            addRule(parts[0].trim(), parts[1].trim());
+            return addRule(parts[0].trim(), parts[1].trim());
         }
 
-        public void addRule(String name, String ruleDescriptor)
+        public Rule addRule(String name, String ruleDescriptor)
         {
-            String[] symbols = ruleDescriptor.trim().split("\\s+");
+            ruleDescriptor = ruleDescriptor.trim();
 
-            Set<String> symbolSet = new HashSet<>(Set.of(symbols));
+            if (ruleDescriptor.isEmpty())
+            {
+                throw new RuntimeException("No Rule for " + name);
+            }
+
+
+            ruleDescriptor = ruleDescriptor.replaceAll("''", "");
+
+            String[] symbols = ruleDescriptor.split("\\s+");
+
+            Set<String> symbolSet = new HashSet<>(List.of(symbols));
             alphabet.addAll(symbolSet);
 
             Rule rule = new Rule(index++, name, symbols);
             rules.computeIfAbsent(name, ($) -> new HashSet<>()).add(rule);
 
             alphabet.removeAll(rules.keySet());
+
+            return rule;
         }
 
         public Grammar build()
         {
-            return new Grammar(rules, alphabet, new Rule(0, "__start__", new String[]{root}));
+            return new Grammar(rules, alphabet, root);
         }
     }
 

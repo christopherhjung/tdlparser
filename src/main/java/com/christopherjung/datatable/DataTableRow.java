@@ -17,10 +17,23 @@ public class DataTableRow
     {
         DataTableColumn column = dataTable.getColumn(name);
 
+        if(column == null)
+            return;
+
+
+
         if (!column.getType().isAssignableFrom(obj.getClass()))
         {
-            throw new RuntimeException("test");
+            if (Number.class.isAssignableFrom(obj.getClass()))
+            {
+                obj = NumberUtils.cast((Number) obj, column.getType());
+            }
+            else
+            {
+                throw new RuntimeException(column.getType() + " is not Assignable from " + obj.getClass());
+            }
         }
+
 
         values.put(column, obj);
     }

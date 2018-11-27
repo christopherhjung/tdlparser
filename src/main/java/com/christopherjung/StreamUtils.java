@@ -37,6 +37,7 @@ public class StreamUtils
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             return null;
         }
     }

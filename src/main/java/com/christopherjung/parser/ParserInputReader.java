@@ -2,7 +2,6 @@ package com.christopherjung.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ParserInputReader
@@ -59,6 +58,16 @@ public class ParserInputReader
         return builder.toString();
     }
 
+    public String fetchLine()
+    {
+        String str = fetchWhile(cha -> cha != '\n' && cha != '\r');
+
+        eat('\r');
+        eat('\n');
+
+        return str;
+    }
+
     public String fetchUntil(String limiter)
     {
         StringBuilder builder = new StringBuilder();
@@ -76,7 +85,7 @@ public class ParserInputReader
                 builder.append(array, 0, pos);
                 next(pos);
                 builder.append(eat());
-                i=-1;
+                i = -1;
                 pos = 0;
             }
         }

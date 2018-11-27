@@ -1,5 +1,7 @@
 package com.christopherjung.translator;
 
+import com.christopherjung.grammar.Grammar;
+
 import java.util.*;
 
 public class Kernel
@@ -61,7 +63,7 @@ public class Kernel
 
         for (; !current.isEmpty(); )
         {
-            BasicItem item = current.remove();
+            BasicItem item = current.pop();
             if (item.isFinished())
             {
                 continue;
@@ -74,12 +76,12 @@ public class Kernel
 
             if (grammar.contains(key))
             {
-                for (Rule rule : grammar.getRule(key))
+                for (Rule rule : grammar.getChildRules(key))
                 {
                     BasicItem newItem = new BasicItem(0, rule);
                     if (!visited.contains(newItem))
                     {
-                        current.add(newItem);
+                        current.push(newItem);
                         visited.add(newItem);
                     }
                 }

@@ -1,12 +1,14 @@
 package com.christopherjung.scanner;
 
+import java.util.Objects;
+
 public class Token
 {
     private TokenDescriptor descriptor;
-    private String value;
+    private Object value;
     private String name;
 
-    public Token(String name, String value)
+    public Token(String name, Object value)
     {
         this.name = name;
         this.value = value;
@@ -23,7 +25,7 @@ public class Token
         return descriptor == null ? name : descriptor.getName();
     }
 
-    public String getValue()
+    public Object getValue()
     {
         return value;
     }
@@ -31,6 +33,6 @@ public class Token
     @Override
     public String toString()
     {
-        return String.format("[%s:%s]", getName(), value.replaceAll("\\s+"," "));
+        return String.format("[%s:%s]", getName(), Objects.toString(value).replaceAll("\\s+"," "));
     }
 }

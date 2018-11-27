@@ -1,5 +1,7 @@
 package com.christopherjung.translator;
 
+import com.christopherjung.grammar.Grammar;
+
 import java.util.*;
 
 public class ClosureTable
@@ -26,6 +28,7 @@ public class ClosureTable
         closures.add(rootClosure);
         map.put(0, rootClosure);
 
+
         int counter = 1;
         for (int i = 0; i < closures.size(); i++)
         {
@@ -33,6 +36,7 @@ public class ClosureTable
             for (String key : closure.keySet())
             {
                 Kernel kernel = closure.get(key);
+
 
                 if (kernels.contains(kernel))
                 {
@@ -73,6 +77,7 @@ public class ClosureTable
                 test.put(str, index);
             }
         }
+
 
         table = new ParserTable(grammar);
         for (int layer : map2.keySet())

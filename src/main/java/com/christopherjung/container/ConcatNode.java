@@ -1,4 +1,4 @@
-package com.christopherjung.grammar;
+package com.christopherjung.container;
 
 public class ConcatNode<T> extends BinaryNode<T>
 {

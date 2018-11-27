@@ -1,7 +1,7 @@
 package com.christopherjung.compile;
 
-import com.christopherjung.grammar.OrNode;
-import com.christopherjung.grammar.TreeNode;
+import com.christopherjung.container.OrNode;
+import com.christopherjung.container.TreeNode;
 import com.christopherjung.machine.State;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;

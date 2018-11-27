@@ -1,12 +1,10 @@
-package com.christopherjung.grammar;
+package com.christopherjung.container;
 
 public class PlusNode<T> extends UnaryNode<T>
 {
-
     public PlusNode(TreeNode<T> node)
     {
         super(node);
-
     }
 
     @Override

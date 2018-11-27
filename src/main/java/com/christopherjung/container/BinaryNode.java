@@ -1,9 +1,15 @@
-package com.christopherjung.grammar;
+package com.christopherjung.container;
 
 public abstract class BinaryNode<T> extends TreeNode<T>
 {
+    public enum Type
+    {
+        CONCAT, OR
+    }
+
     private TreeNode<T> left;
     private TreeNode<T> right;
+    private Type type;
 
     public BinaryNode(TreeNode<T> left, TreeNode<T> right)
     {

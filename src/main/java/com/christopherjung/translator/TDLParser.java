@@ -1,5 +1,9 @@
 package com.christopherjung.translator;
 
+import com.christopherjung.grammar.Grammar;
+import com.christopherjung.grammar.Modifier;
+import com.christopherjung.grammar.ModifierSource;
+import com.christopherjung.grammar.ModifySet;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;
 
@@ -11,24 +15,32 @@ import java.util.List;
 public class TDLParser
 {
     private ParserTable table;
+    private ModifierSource source;
     private LinkedList<Integer> path;
     private LinkedList<Token> tokens;
 
-    public TDLParser(ParserTable table)
+    public TDLParser(ParserTable table, ModifierSource source)
     {
         this.table = table;
+        this.source = source;
 
         path = new LinkedList<>();
         tokens = new LinkedList<>();
     }
 
-    public void test(ScanResult result)
+    public Object parse(ScanResult result)
     {
         int pos = 0;
 
         path.push(pos);
 
         Iterator<Token> inputIterator = result.iterator();
+
+        if (!inputIterator.hasNext())
+        {
+            throw new TLDParseException("No Input tokens provided");
+        }
+
         Token current = inputIterator.next();
 
         for (; ; )
@@ -50,7 +62,7 @@ public class TDLParser
                 else if (entry.getRestoreActions() >= 0)
                 {
                     Rule restoreRule = entry.getRule();
-                    List<Token> tokenList = new ArrayList<>(restoreRule.size());
+                    List<Object> objects = new ArrayList<>(restoreRule.size());
 
                     for (int i = restoreRule.size() - 1; i >= 0; i--)
                     {
@@ -59,22 +71,28 @@ public class TDLParser
 
                         if (!restoreToken.getName().equals(key))
                         {
-                            throw new RuntimeException("baaaaa");
+                            throw new TLDParseException("Parser Table wrong");
                         }
 
-                        tokenList.add(0, restoreToken);
+                        objects.add(0, restoreToken.getValue());
                         path.pop();
                     }
 
                     pos = path.peekFirst();
 
-                    String replace = tokenList.stream().map(Token::getValue).reduce("", (a, b) -> a + b);
-                    if (restoreRule.toString().equals("E->E + T") || restoreRule.toString().equals("T->T * F"))
+                    Modifier modifier = source.getModifier(restoreRule);
+                    Object modifiedToken;
+                    if (modifier != null)
                     {
-                        replace = "(" + replace + ")";
+                        ModifySet modifySet = new ModifySet(objects);
+                        modifiedToken = modifier.modify(modifySet);
+                    }
+                    else
+                    {
+                        modifiedToken = objects.stream().reduce("", (a, b) -> a + "" + b);
                     }
 
-                    tokens.push(new Token(restoreRule.getName(), replace));
+                    tokens.push(new Token(restoreRule.getName(), modifiedToken));
                 }
                 else
                 {
@@ -90,12 +108,7 @@ public class TDLParser
 
                 if (nextPosition == null)
                 {
-                    if (tokens.peekFirst().getName().equals("__start__"))
-                    {
-                        break;
-                    }
-
-                    throw new RuntimeException("dskbdik " + pos);
+                    break;
                 }
 
                 path.push(nextPosition);
@@ -104,6 +117,19 @@ public class TDLParser
             }
         }
 
-        System.out.println(tokens.pop().getValue());
+        if (tokens.size() == 1)
+        {
+            Grammar grammar = table.getGrammar();
+            Token top = tokens.peekFirst();
+
+            if (!top.getName().equals(grammar.getRootRule().getName()))
+            {
+                throw new RuntimeException("False End Token " + top.getName());
+            }
+
+            return top.getValue();
+        }
+
+        throw new TLDParseException("Token result size not equals 1 " + tokens);
     }
 }

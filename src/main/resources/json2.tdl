@@ -1,9 +1,9 @@
 start -> object
 object -> { }
 object -> { members }
-members -> pair
-members -> pair , members
-pair -> string : value
+members -> JSONPair
+members -> JSONPair , members
+JSONPair -> string : value
 array -> [ ]
 array -> [ elements ]
 elements -> value
@@ -18,8 +18,8 @@ value -> null
 
 start -> object EOF
 object -> { } | { members }
-members -> pair | pair , members
-pair -> string : value
-array -> [ ] | [ elements ]
+members -> JSONPair | JSONPair , members
+JSONPair -> string : value
+array -> [ ] | [ elements ] ::=
 elements -> value | value , elements
 value -> string | number | object | array | true | false | null

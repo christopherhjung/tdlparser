@@ -1,5 +1,7 @@
 package com.christopherjung.translator;
 
+import com.christopherjung.grammar.Grammar;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +19,11 @@ public class ParserTable
     public void addEntry(Entry entry)
     {
         entries.add(entry);
+    }
+
+    public Grammar getGrammar()
+    {
+        return grammar;
     }
 
     public ArrayList<Entry> getEntries()
@@ -57,6 +64,12 @@ public class ParserTable
         public Rule getRule()
         {
             return rule;
+        }
+
+        @Override
+        public String toString()
+        {
+            return goTos.toString();
         }
     }
 }

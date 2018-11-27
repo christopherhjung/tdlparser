@@ -1,9 +1,9 @@
 start -> object
 object -> { }
 object -> { members }
-members -> pair
-members -> pair , members
-pair -> string : value
+members -> JSONPair
+members -> JSONPair , members
+JSONPair -> string : value
 array -> [ ]
 array -> [ elements ]
 elements -> value
