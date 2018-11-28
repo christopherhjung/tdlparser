@@ -4,6 +4,8 @@ import com.christopherjung.grammar.Grammar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ParserTable
 {
@@ -35,15 +37,17 @@ public class ParserTable
     {
         private HashMap<String, Integer> actions;
         private HashMap<String, Integer> goTos;
+        private Set<String> ignores;
         private int restoreActions;
         private Rule rule;
 
-        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions)
+        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions, Set<String> ignores)
         {
             this.rule = rule;
             this.actions = actions;
             this.goTos = goTos;
             this.restoreActions = restoreActions;
+            this.ignores = ignores;
         }
 
         public HashMap<String, Integer> getActions()
@@ -56,7 +60,12 @@ public class ParserTable
             return goTos;
         }
 
-        public int getRestoreActions()
+        public boolean isIgnore(String rule)
+        {
+            return ignores.contains(rule);
+        }
+
+        public int getRestoreAction()
         {
             return restoreActions;
         }

@@ -13,6 +13,11 @@ public class ClosureTable
 
     public ClosureTable(Grammar grammar)
     {
+        this(grammar, new HashSet<>());
+    }
+
+    public ClosureTable(Grammar grammar, Set<String> ignores)
+    {
         this.grammar = grammar;
         kernelHashMap = new LinkedHashMap<>();
         kernels = new ArrayList<>();
@@ -102,11 +107,9 @@ public class ClosureTable
                 }
             }
 
-            ParserTable.Entry entry = new ParserTable.Entry(finished,actions, goTos, restore);
+            ParserTable.Entry entry = new ParserTable.Entry(finished, actions, goTos, restore, ignores);
             table.addEntry(entry);
         }
-
-
     }
 
     public ParserTable getTable()

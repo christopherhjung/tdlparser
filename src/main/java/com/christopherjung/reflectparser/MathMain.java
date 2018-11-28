@@ -5,14 +5,14 @@ import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.TDLParser;
 
-public class Main
+public class MathMain
 {
     public static void main(String[] args) throws Exception
     {
-        TDLParser parser = new ReflectTLDGenerator().generate(XMLParser.class);
-        Scanner scanner = ReflectScannerGenerator.generate(XMLParser.class);
+        TDLParser parser = new ReflectTLDGenerator().generate(MathParser.class);
+        Scanner scanner = ReflectScannerGenerator.generate(MathParser.class);
 
-        ScanResult scanResult = StreamUtils.loopFileWithResult("test.xml", scanner::scan);
+        ScanResult scanResult = StreamUtils.loopFileWithResult("test.math", scanner::scan);
 
         Object o = "No Data";
         try

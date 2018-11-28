@@ -50,6 +50,7 @@ public class Scanner
             for (TokenDescriptor tokenDescriptor : tokenDescriptors)
             {
                 Token token = tokenDescriptor.fetchToken(reader);
+                //System.out.println(reader.get() + " " + tokenDescriptor + " " + token);
 
                 if (token != null)
                 {

@@ -6,7 +6,8 @@ import com.christopherjung.grammar.Grammar;
 
 public class TDLUtils
 {
-    private TDLUtils(){
+    private TDLUtils()
+    {
 
     }
 
@@ -33,17 +34,25 @@ public class TDLUtils
         {
             DataTableRow row = dataTable.newRow();
 
-            if (test.getRestoreActions() != -1)
+            for (String symbol : grammar.getAlphabet())
             {
-                if (test.getRestoreActions() == 0)
+                if (test.isIgnore(symbol))
                 {
-                    row.set("EOF", "r" + test.getRestoreActions());
+                    row.set(symbol, "igno");
+                }
+            }
+
+            if (test.getRestoreAction() != -1)
+            {
+                if (test.getRestoreAction() == 0)
+                {
+                    row.set("EOF", "r" + test.getRestoreAction());
                 }
                 else
                 {
                     for (String symbol : grammar.getAlphabet())
                     {
-                        row.set(symbol, "r" + test.getRestoreActions());
+                        row.set(symbol, "r" + test.getRestoreAction());
                     }
                 }
 

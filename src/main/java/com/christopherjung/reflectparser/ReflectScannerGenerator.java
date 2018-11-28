@@ -23,8 +23,11 @@ public class ReflectScannerGenerator
         String ignore = getIgnore(ignoreFields);
 
         Scanner.Builder builder = new Scanner.Builder();
+        if (ignore != null)
+        {
+            builder.add("ignore", ignore);
+        }
 
-        builder.add("ignore", ignore);
         builder.addStructureChars(structure);
         for (String name : tokens.keySet())
         {
@@ -37,6 +40,11 @@ public class ReflectScannerGenerator
 
     public static String getIgnore(List<Field> ignores)
     {
+        if (ignores.size() == 0)
+        {
+            return null;
+        }
+
         StringBuilder sb = new StringBuilder();
 
         try
@@ -86,7 +94,16 @@ public class ReflectScannerGenerator
         {
             for (Field field : tokenFields)
             {
-                result.put(field.getName(), field.get(null).toString());
+                ScannerToken token = field.getAnnotation(ScannerToken.class);
+
+                String name = token.value();
+
+                if (name.isEmpty())
+                {
+                    name = field.getName();
+                }
+
+                result.put(name, field.get(null).toString());
             }
         }
         catch (Exception e)

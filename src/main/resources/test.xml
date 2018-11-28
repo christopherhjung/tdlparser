@@ -1,14 +1,6 @@
 <test>
-    <haalllo>
-        <div>
-            test
-            <neee>
-
-            </neee>
-        </div>
-        <div>
-            lolipop
-        </div>
-    </haalllo>
-
+    <div test="pimmel" lol="pudel">
+        Das ist ein Test
+        <neee></neee>
+    </div>
 </test>

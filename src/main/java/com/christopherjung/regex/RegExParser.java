@@ -173,14 +173,10 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
                 if (negate)
                 {
-                    System.out.println(nodes);
                     HashSet<Character> complement = new HashSet<>();
                     fromToChars(complement, 0, 127);
                     complement.removeAll(nodes);
                     nodes = complement;
-
-                    System.out.println("------");
-                    System.out.println("----" + nodes);
                 }
 
                 return OrNode.all(nodes);

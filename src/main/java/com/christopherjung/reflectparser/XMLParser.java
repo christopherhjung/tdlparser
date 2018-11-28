@@ -8,9 +8,6 @@ public class XMLParser
     @ScannerStructure
     public static String structureChars = "</>=.";
 
-    @ScannerIgnore
-    public static String ignore = "\\s+";
-
     @ScannerToken
     public static String word = "\\w";
 
@@ -18,7 +15,32 @@ public class XMLParser
     public static String digit = "\\d";
 
     @ScannerToken
+    public static String string = "\"[^\"]+\"";
+
+    @ParserIgnore
+    @ScannerToken
+    public static String space = "\\s+";
+
+    @ScannerToken
     public static String rest = ".";
+
+    static class XMLAttribute
+    {
+        private String key;
+        private String value;
+
+        public XMLAttribute(String key, String value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public String toString()
+        {
+            return key + "=" + value + "";
+        }
+    }
 
     static class XMLElement
     {
@@ -33,17 +55,32 @@ public class XMLParser
         {
             this.value = value;
         }
+
+        @Override
+        public String toString()
+        {
+            return value;
+        }
     }
 
     static class XMLNode extends XMLElement
     {
         private String name;
         private List<XMLElement> children;
+        private List<XMLAttribute> attributes;
 
         public XMLNode(String name, List<XMLElement> children)
         {
             this.name = name;
             this.children = new ArrayList<>(children);
+            this.attributes = new ArrayList<>();
+        }
+
+        public XMLNode(String name, List<XMLAttribute> attributes, List<XMLElement> children)
+        {
+            this.name = name;
+            this.children = attributes == null ? new ArrayList<>() : children;
+            this.attributes = attributes == null ? new ArrayList<>() : attributes;
         }
 
         public XMLNode(String name)
@@ -58,6 +95,13 @@ public class XMLParser
 
             sb.append('<');
             sb.append(name);
+
+            for (XMLAttribute attribute : attributes)
+            {
+                sb.append(' ');
+                sb.append(attribute.toString());
+            }
+
             sb.append('>');
 
             for (Object node : children)
@@ -85,21 +129,62 @@ public class XMLParser
         return new XMLNode(name, elements);
     }
 
-    @Node("node -> text")
+    @Node("node -> < name space attributes > elements < / name >")
+    public static XMLNode nonEmptyNode(String name, List<XMLAttribute> attributes, List<XMLElement> elements)
+    {
+        return new XMLNode(name, attributes, elements);
+    }
+
+    @Node("element -> text")
     public static XMLElement nonEmptyNode(String text)
     {
         return new XMLText(text);
     }
 
-    @Node("element -> < name > < / name >")
-    @Node("element -> < name / >")
+    @Node("node -> < name space attributes > < / name >")
+    @Node("node -> < name space attributes / >")
+    public static XMLNode emptyNode(String name, List<XMLAttribute> attributes)
+    {
+        return new XMLNode(name, attributes, null);
+    }
+
+    @Node("node -> < name > < / name >")
+    @Node("node -> < name / >")
     public static XMLNode emptyNode(String name)
     {
         return new XMLNode(name);
     }
 
+    @Node("element -> node")
+    public static XMLElement emptyNode(XMLNode node)
+    {
+        return node;
+    }
+
+    @Node("attributes -> attribute")
+    public static List<XMLAttribute> attrib(XMLAttribute attribute)
+    {
+        List<XMLAttribute> attributes = new ArrayList<>();
+        attributes.add(attribute);
+
+        return attributes;
+    }
+
+    @Node("attributes -> attributes space attribute")
+    public static List<XMLAttribute> attrib(XMLAttribute attribute, List<XMLAttribute> attributes)
+    {
+        attributes.add(attribute);
+        return attributes;
+    }
+
+    @Node("attribute -> key:name = value:string ")
+    public static XMLAttribute attrib(String key, String value)
+    {
+        return new XMLAttribute(key, value);
+    }
+
     @Node("elements -> elements element")
-    public static List<XMLElement> multiNode(XMLNode element, List<XMLElement> elements)
+    public static List<XMLElement> multiNode(XMLElement element, List<XMLElement> elements)
     {
         elements.add(element);
         return elements;
@@ -147,7 +232,7 @@ public class XMLParser
 
     //######################################TEXT
     @Node("text -> textBuilder")
-    public static String text(Object textBuilder)
+    public static String text(StringBuilder textBuilder)
     {
         return textBuilder.toString();
     }
@@ -170,6 +255,7 @@ public class XMLParser
     @Node("sign -> sign:digit")
     @Node("sign -> sign:word")
     @Node("sign -> sign:rest")
+    @Node("sign -> sign:space")
     public static String text233(String sign)
     {
         return sign;

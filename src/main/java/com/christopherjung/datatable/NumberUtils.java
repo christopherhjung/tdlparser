@@ -5,7 +5,6 @@ public class NumberUtils
 
     public static Number cast(Number src, Class<?> target){
 
-        System.out.println(src+" "+target);
         if (target == Double.class)
         {
             src = src.doubleValue();

@@ -115,9 +115,6 @@ public class Compiler
                 Token left = scanResult.get(currentPosition);
                 String token = left.getName();
 
-                System.out.println(position + " " + token);
-                System.out.println(rules);
-
                 boolean fail = false;
                 if (rules.containsKey(token))
                 {
@@ -137,9 +134,7 @@ public class Compiler
                 }
                 else
                 {
-                    System.out.println(position + " " + token + " " + state);
                     state = state.propagate(token);
-                    System.out.println(state);
 
                     if (state == null)
                     {
