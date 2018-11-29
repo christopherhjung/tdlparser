@@ -30,6 +30,9 @@ public class TDLParser
     {
         int currentPosition = 0;
 
+        path.clear();
+        tokens.clear();
+
         path.push(currentPosition);
 
 
@@ -133,6 +136,6 @@ public class TDLParser
             return top.getValue();
         }
 
-        throw new TLDParseException("Token result size not equals 1 " + tokens);
+        throw new TLDParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(Token::getName).toArray()));
     }
 }

@@ -4,15 +4,11 @@ import com.christopherjung.scanner.Scanner;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class ReflectScannerGenerator
 {
-
-    public static Scanner generate(Class<?> clazz) throws Exception
+    public static Scanner generate(Class<?> clazz)
     {
         List<Field> structureFields = getAnnotatedFields(clazz, ScannerStructure.class);
         List<Field> ignoreFields = getAnnotatedFields(clazz, ScannerIgnore.class);

@@ -162,29 +162,25 @@ public class JSONParser
         return object;
     }
 
-    @ParserRule("object -> { }")
-    public static JSONObject emptyObject()
-    {
-        return new JSONObject();
-    }
-
-    @ParserRule("object -> { members }")
+    @ParserRule("object -> { members? }")
     public static JSONObject nonEmptyObject(List<JSONPair> members)
     {
+        if (members == null)
+        {
+            members = new ArrayList<>();
+        }
+
         return new JSONObject(members);
     }
 
-    @ParserRule("members -> pair")
-    public static List<JSONPair> singlePair(JSONPair pair)
-    {
-        List<JSONPair> pairs = new ArrayList<>();
-        pairs.add(pair);
-        return pairs;
-    }
-
-    @ParserRule("members -> members , pair")
+    @ParserRule("members -> (members ,)? pair")
     public static List<JSONPair> multiplePairs(JSONPair pair, List<JSONPair> members)
     {
+        if (members == null)
+        {
+            members = new ArrayList<>();
+        }
+
         members.add(pair);
         return members;
     }
@@ -195,31 +191,39 @@ public class JSONParser
         return new JSONPair(key, value);
     }
 
-    @ParserRule("array -> [ ]")
-    public static JSONList emptyArray()
-    {
-        return new JSONList();
-    }
-
-    @ParserRule("array -> [ elements ]")
+    @ParserRule("array -> [ elements? ]")
     public static JSONList nonEmptyArray(List<JSONValue> elements)
     {
+        if (elements == null)
+        {
+            elements = new ArrayList<>();
+        }
+
         return new JSONList(elements);
     }
 
-    @ParserRule("elements -> value")
-    public static List<JSONValue> singleValue(JSONValue value)
-    {
-        List<JSONValue> values = new ArrayList<>();
-        values.add(value);
-        return values;
-    }
-
-    @ParserRule("elements -> elements , value")
+    @ParserRule("elements -> (elements ,)? value")
     public static List<JSONValue> multipleValues(JSONValue value, List<JSONValue> elements)
     {
+        if (elements == null)
+        {
+            elements = new ArrayList<>();
+        }
+
         elements.add(value);
         return elements;
+    }
+
+    @ParserRule("value -> object")
+    public static JSONValue objectValue(JSONObject object)
+    {
+        return object;
+    }
+
+    @ParserRule("value -> array")
+    public static JSONValue arrayValue(JSONList array)
+    {
+        return array;
     }
 
     @ParserRule("value -> string")
@@ -229,27 +233,15 @@ public class JSONParser
     }
 
     @ParserRule("value -> number")
-    public static JSONNumber numberValue(String number)
+    public static JSONValue numberValue(String number)
     {
         return new JSONNumber(Double.parseDouble(number));
     }
 
-    @ParserRule("value -> object")
-    public static JSONObject objectValue(JSONObject object)
-    {
-        return object;
-    }
-
-    @ParserRule("value -> array")
-    public static JSONList arrayValue(JSONList array)
-    {
-        return array;
-    }
-
     @ParserRule("value -> bool")
-    public static JSONBoolean boolValue(boolean bool)
+    public static JSONValue boolValue(String bool)
     {
-        return new JSONBoolean(bool);
+        return new JSONBoolean(Boolean.parseBoolean(bool));
     }
 
     @ParserRule("value -> null")

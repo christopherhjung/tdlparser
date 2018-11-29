@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ReflectTLDGenerator
 {
-    private static final Pattern nullablePattern = Pattern.compile("(\\S+)\\?");
+    private static final Pattern nullablePattern = Pattern.compile("(?:([^(\\s]+)|\\(([^()]+)\\))\\?");
 
     private HashMap<Rule, Modifier> modifiers;
     private Grammar.Builder builder;
@@ -155,7 +155,7 @@ public class ReflectTLDGenerator
 
                 if (!param.getType().isAssignableFrom(right))
                 {
-                    throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + returnTypes.get(valueSet[i]).getSimpleName());
+                    throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + valueSet[i] + " " + returnTypes);
                 }
             }
         }
@@ -265,7 +265,7 @@ public class ReflectTLDGenerator
 
         if (matcher.find())
         {
-            set.addAll(getRulePermutations(matcher.replaceFirst("$1")));
+            set.addAll(getRulePermutations(matcher.replaceFirst("$1$2")));
             set.addAll(getRulePermutations(matcher.replaceFirst("")));
         }
         else

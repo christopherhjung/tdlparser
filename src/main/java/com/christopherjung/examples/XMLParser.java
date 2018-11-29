@@ -8,7 +8,19 @@ import java.util.List;
 public class XMLParser
 {
     @ScannerStructure
-    public static String structureChars = "</>=.";
+    public static String structureChars = "=";
+
+    @ScannerToken("</")
+    public static String closeBegin = "</";
+
+    @ScannerToken("/>")
+    public static String shortClosing = "/>";
+
+    @ScannerToken(">")
+    public static String greater = ">";
+
+    @ScannerToken("<")
+    public static String smaller = "<";
 
     @ScannerToken
     public static String word = "\\w";
@@ -81,7 +93,7 @@ public class XMLParser
         public XMLNode(String name, List<XMLAttribute> attributes, List<XMLElement> children)
         {
             this.name = name;
-            this.children = attributes == null ? new ArrayList<>() : children;
+            this.children = children == null ? new ArrayList<>() : children;
             this.attributes = attributes == null ? new ArrayList<>() : attributes;
         }
 
@@ -125,13 +137,8 @@ public class XMLParser
         return node;
     }
 
-    @ParserRule("node -> < name > elements < / name >")
-    public static XMLNode nonEmptyNode(String name, List<XMLElement> elements)
-    {
-        return new XMLNode(name, elements);
-    }
-
-    @ParserRule("node -> < name space attributes > elements < / name >")
+    @ParserRule("node -> < name attributes? />")
+    @ParserRule("node -> < name attributes? > elements? </ name >")
     public static XMLNode nonEmptyNode(String name, List<XMLAttribute> attributes, List<XMLElement> elements)
     {
         return new XMLNode(name, attributes, elements);
@@ -143,39 +150,22 @@ public class XMLParser
         return new XMLText(text);
     }
 
-    @ParserRule("node -> < name space attributes > < / name >")
-    @ParserRule("node -> < name space attributes / >")
-    public static XMLNode emptyNode(String name, List<XMLAttribute> attributes)
-    {
-        return new XMLNode(name, attributes, null);
-    }
-
-    @ParserRule("node -> < name > < / name >")
-    @ParserRule("node -> < name / >")
-    public static XMLNode emptyNode(String name)
-    {
-        return new XMLNode(name);
-    }
-
     @ParserRule("element -> node")
     public static XMLElement emptyNode(XMLNode node)
     {
         return node;
     }
 
-    @ParserRule("attributes -> attribute")
-    public static List<XMLAttribute> attrib(XMLAttribute attribute)
-    {
-        List<XMLAttribute> attributes = new ArrayList<>();
-        attributes.add(attribute);
-
-        return attributes;
-    }
-
-    @ParserRule("attributes -> attributes space attribute")
+    @ParserRule("attributes -> attributes? attribute")
     public static List<XMLAttribute> attrib(XMLAttribute attribute, List<XMLAttribute> attributes)
     {
+        if (attributes == null)
+        {
+            attributes = new ArrayList<>();
+        }
+
         attributes.add(attribute);
+
         return attributes;
     }
 
@@ -185,19 +175,16 @@ public class XMLParser
         return new XMLAttribute(key, value);
     }
 
-    @ParserRule("elements -> elements element")
+    @ParserRule("elements -> elements? element")
     public static List<XMLElement> multiNode(XMLElement element, List<XMLElement> elements)
     {
+        if (elements == null)
+        {
+            elements = new ArrayList<>();
+        }
+
         elements.add(element);
         return elements;
-    }
-
-    @ParserRule("elements -> element")
-    public static List<XMLElement> multiNode(XMLElement element)
-    {
-        List<XMLElement> nodes = new ArrayList<>();
-        nodes.add(element);
-        return nodes;
     }
 
     //######################################NAME
@@ -207,21 +194,17 @@ public class XMLParser
         return nameBuilder.toString();
     }
 
-    @ParserRule("nameBuilder -> sign:word nameWithDigits")
-    @ParserRule("nameWithDigits -> sign:wordOrDigit nameWithDigits")
+    @ParserRule("nameBuilder -> sign:word nameWithDigits?")
+    @ParserRule("nameWithDigits -> sign:wordOrDigit nameWithDigits?")
     public static StringBuilder nameWithDigits(Object sign, StringBuilder nameWithDigits)
     {
+        if (nameWithDigits == null)
+        {
+            nameWithDigits = new StringBuilder();
+        }
+
         nameWithDigits.insert(0, sign.toString());
         return nameWithDigits;
-    }
-
-    @ParserRule("nameBuilder -> sign:word")
-    @ParserRule("nameWithDigits -> sign:wordOrDigit")
-    public static StringBuilder nameWithDigits(String sign)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sign);
-        return sb;
     }
 
     @ParserRule("wordOrDigit -> sign:digit")
@@ -236,22 +219,19 @@ public class XMLParser
     @ParserRule("text -> textBuilder")
     public static String text(StringBuilder textBuilder)
     {
-        return textBuilder.toString();
+        return textBuilder.toString().trim();
     }
 
-    @ParserRule("textBuilder -> textBuilder sign")
+    @ParserRule("textBuilder -> textBuilder? sign")
     public static StringBuilder text(Object sign, StringBuilder textBuilder)
     {
+        if (textBuilder == null)
+        {
+            textBuilder = new StringBuilder();
+        }
+
         textBuilder.append(sign.toString());
         return textBuilder;
-    }
-
-    @ParserRule("textBuilder -> sign")
-    public static StringBuilder text(String sign)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sign);
-        return sb;
     }
 
     @ParserRule("sign -> sign:digit")
