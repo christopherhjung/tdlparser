@@ -3,6 +3,7 @@ package com.christopherjung;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
+import com.christopherjung.scanner.ScanJob;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.ClosureTable;
@@ -30,7 +31,7 @@ public class NullableMain
         Scanner.Builder scannerBuilder = new Scanner.Builder();
         StreamUtils.loopFile("nullable.scanner", scannerBuilder::addAll);
         Scanner scanner = scannerBuilder.build();
-        ScanResult scanResult = StreamUtils.loopFileWithResult("nullable.test", scanner::scan);
+        ScanJob scanResult = StreamUtils.loopFileWithResult("test.xml", stream -> new ScanJob(scanner,stream));
 
         System.out.println(TDLUtils.toString(table));
         System.out.println(scanResult);

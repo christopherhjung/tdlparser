@@ -4,6 +4,7 @@ import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.grammar.ModifySet;
+import com.christopherjung.scanner.ScanJob;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;
 
@@ -28,20 +29,19 @@ public class TDLParser
         tokens = new LinkedList<>();
     }
 
-    public Object parse(ScanResult result)
+    public Object parse(ScanJob job)
     {
         int pos = 0;
 
         path.push(pos);
 
-        Iterator<Token> inputIterator = result.iterator();
 
-        if (!inputIterator.hasNext())
+        if (!job.hasNext())
         {
             throw new TLDParseException("No Input tokens provided");
         }
 
-        Token current = inputIterator.next();
+        Token current = job.next();
 
         for (; ; )
         {
@@ -57,7 +57,7 @@ public class TDLParser
 
                     path.push(pos);
                     tokens.push(current);
-                    current = inputIterator.hasNext() ? inputIterator.next() : null;
+                    current = job.hasNext() ? job.next() : null;
                 }
                 else
                 {
@@ -99,7 +99,7 @@ public class TDLParser
                     else if (current != null && entry.isIgnore(current.getName()))
                     {
                         System.out.println(current);
-                        current = inputIterator.hasNext() ? inputIterator.next() : null;
+                        current = job.hasNext() ? job.next() : null;
                         System.out.println(current);
                     }
                     else

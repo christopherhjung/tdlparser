@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class ReflectTLDGenerator
 {
+    private static final Pattern nullablePattern = Pattern.compile("(\\S+)\\?");
 
     private HashMap<Rule, Modifier> modifiers;
     private Grammar.Builder builder;
@@ -97,8 +98,9 @@ public class ReflectTLDGenerator
 
     public void addModifier(Function<String, Rule> ruleFunction, Method method, String nodeValue)
     {
-        String rawRule = removeKeys(nodeValue);
         Modifier modifier = createModifier(method, nodeValue);
+
+        String rawRule = removeKeys(nodeValue);
         Rule rule = ruleFunction.apply(rawRule);
         modifiers.put(rule, modifier);
     }
@@ -125,21 +127,27 @@ public class ReflectTLDGenerator
         return String.class;
     }
 
-    private void checkMethodForModifier(Method method, int[][] mapping, String ruleSet)
+    private void checkMethodForModifier(Method method, int[] keyMap, int[][] mapping, String ruleSet)
     {
         String[] valueSet = getValueSet(ruleSet);
 
         Parameter[] parameter = method.getParameters();
 
-        if (parameter.length != mapping.length || mapping.length > valueSet.length)
+        if (parameter.length < mapping.length || mapping.length > valueSet.length)
         {
-            //throw new RuntimeException("Wrong Parameter Size " + method.getName() + " with " + Arrays.toString(parameter) + " " + Arrays.deepToString(mapping) + " " + Arrays.toString(valueSet));
+            throw new RuntimeException("Wrong Parameter Size " + method.getName() + " with " + Arrays.toString(parameter) + " " + Arrays.deepToString(mapping) + " " + Arrays.toString(valueSet));
         }
 
-        /*
-        for (int i = parameter.length - 1; i >= 0; i--)
+        for (int i = keyMap.length - 1; i >= 0; i--)
         {
-            Parameter param = parameter[i];
+            int paramIndex = keyMap[i];
+
+            if (paramIndex >= parameter.length)
+            {
+                throw new RuntimeException("Index " + paramIndex + " not inside parameter List");
+            }
+
+            Parameter param = parameter[paramIndex];
 
             for (int j = 0; j < mapping[i].length; j++)
             {
@@ -150,24 +158,7 @@ public class ReflectTLDGenerator
                     throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + returnTypes.get(valueSet[i]).getSimpleName());
                 }
             }
-        }*/
-    }
-
-    private int[][] getEqualsCheck()
-    {
-        return null;
-    }
-
-    public HashMap<Integer, String> getRuleMap(Method method, String[] keySet)
-    {
-        HashMap<Integer, String> ruleMap = new HashMap<>();
-
-        for (Parameter parameter : method.getParameters())
-        {
-
         }
-
-        return ruleMap;
     }
 
     private Modifier createModifier(Method method, String ruleSet)
@@ -175,15 +166,14 @@ public class ReflectTLDGenerator
         String[] keySet = getKeySet(ruleSet);
 
         Set<String> ruleNames = Arrays.stream(keySet).collect(Collectors.toSet());
-        List<String> usedParameters = Arrays.stream(method.getParameters()).map(Parameter::getName).filter(ruleNames::contains).collect(Collectors.toList());
+        Set<String> usedParameters = Arrays.stream(method.getParameters()).map(Parameter::getName).filter(ruleNames::contains).collect(Collectors.toSet());
 
         int[] keyMapping = getKeyMapping(method, usedParameters);
 
         HashMap<String, List<Integer>> route = getRoute(usedParameters, keySet);
         int[][] valueMapping = getValueMapping(method, route);
 
-        checkMethodForModifier(method, valueMapping, ruleSet);
-
+        checkMethodForModifier(method, keyMapping, valueMapping, ruleSet);
 
         return set -> {
 
@@ -191,12 +181,14 @@ public class ReflectTLDGenerator
 
             for (int i = 0; i < keyMapping.length; i++)
             {
-                objs[keyMapping[i]] = set.get(valueMapping[i][0]);
+                int objIndex = keyMapping[i];
+
+                objs[objIndex] = set.get(valueMapping[i][0]);
 
                 //equals check if more than one common key
                 for (int j = 1; j < valueMapping[i].length; j++)
                 {
-                    if (!objs[keyMapping[i]].equals(set.get(valueMapping[i][j])))
+                    if (!objs[objIndex].equals(set.get(valueMapping[i][j])))
                     {
                         throw new RuntimeException("Not equals " + objs[i] + " " + set.get(valueMapping[i][j]));
                     }
@@ -269,8 +261,7 @@ public class ReflectTLDGenerator
     {
         HashSet<String> set = new HashSet<>();
 
-        Pattern pattern = Pattern.compile("(\\S+)\\?");
-        Matcher matcher = pattern.matcher(node);
+        Matcher matcher = nullablePattern.matcher(node);
 
         if (matcher.find())
         {
@@ -310,7 +301,7 @@ public class ReflectTLDGenerator
     }
 
 
-    public int[] getKeyMapping(Method method, List<String> usedParameters)
+    public int[] getKeyMapping(Method method, Set<String> usedParameters)
     {
         int[] keyMap = new int[usedParameters.size()];
 
@@ -399,7 +390,7 @@ public class ReflectTLDGenerator
     }
 
 
-    public HashMap<String, List<Integer>> getRoute(List<String> parameters, String[] keySet)
+    public HashMap<String, List<Integer>> getRoute(Set<String> parameters, String[] keySet)
     {
         HashMap<String, List<Integer>> route = new HashMap<>();
 

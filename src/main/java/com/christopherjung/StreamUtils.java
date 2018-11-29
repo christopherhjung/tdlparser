@@ -9,6 +9,19 @@ import java.util.function.Function;
 
 public class StreamUtils
 {
+    public static InputStream getFileStream(String filename)
+    {
+        try
+        {
+            File file = new File(Main.class.getClassLoader().getResource(filename).getFile());
+            return new FileInputStream(file);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static <T> T loopStringWithResult(String src, Function<InputStream, T> supplier)
     {

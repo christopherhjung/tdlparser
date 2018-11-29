@@ -1,7 +1,7 @@
 package com.christopherjung.reflectparser;
 
 import com.christopherjung.StreamUtils;
-import com.christopherjung.scanner.ScanResult;
+import com.christopherjung.scanner.ScanJob;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.TDLParser;
 
@@ -12,12 +12,12 @@ public class Main
         TDLParser parser = new ReflectTLDGenerator().generate(XMLParser2.class);
         Scanner scanner = ReflectScannerGenerator.generate(XMLParser2.class);
 
-        ScanResult scanResult = StreamUtils.loopFileWithResult("test.xml", scanner::scan);
+        ScanJob scanJob = new ScanJob(scanner, StreamUtils.getFileStream("test.xml"));
 
         Object o = "No Data";
         try
         {
-            o = parser.parse(scanResult);
+            o = parser.parse(scanJob);
         }
         catch (Exception e)
         {
@@ -25,7 +25,7 @@ public class Main
         }
 
         System.out.println("-----------------------");
-        System.out.println(scanResult);
+        System.out.println(scanJob);
         System.out.println(o);
 
     }

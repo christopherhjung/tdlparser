@@ -30,47 +30,32 @@ public class Scanner
     {
         List<Token> tokens = new ArrayList<>();
 
-        ParserInputReader reader = new ParserInputReader(inputStream);
+        ScanJob job = new ScanJob(this,inputStream);
 
-        loop:
-        while (reader.hasNext())
+        while (true)
         {
-            if (structureChars != null)
+            Token token = job.next();
+
+            tokens.add(token);
+
+            if (token == Token.EOF)
             {
-                int index = Arrays.binarySearch(structureChars, reader.get());
-
-                if (index >= 0)
-                {
-                    String name = String.valueOf(reader.eat());
-                    tokens.add(new Token(name, name));
-                    continue;
-                }
+                break;
             }
-
-            for (TokenDescriptor tokenDescriptor : tokenDescriptors)
-            {
-                Token token = tokenDescriptor.fetchToken(reader);
-                //System.out.println(reader.get() + " " + tokenDescriptor + " " + token);
-
-                if (token != null)
-                {
-                    if (!tokenDescriptor.getName().equalsIgnoreCase("ignore"))
-                    {
-                        tokens.add(token);
-                    }
-
-                    continue loop;
-                }
-            }
-
-            throw new RuntimeException("Scanner error :" + reader.fetch(20) + "..." );
         }
-
-        tokens.add(Token.EOF);
 
         return new ScanResult(tokens);
     }
 
+    public char[] getStructureChars()
+    {
+        return structureChars;
+    }
+
+    public List<TokenDescriptor> getTokenDescriptors()
+    {
+        return tokenDescriptors;
+    }
 
     @Override
     public String toString()
@@ -80,7 +65,6 @@ public class Scanner
 
     public static class Builder
     {
-
         private List<TokenDescriptor> tokenDescriptors = new ArrayList<>();
         private StringBuilder structureCharsBuilder = new StringBuilder();
 

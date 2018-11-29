@@ -192,21 +192,17 @@ public class XMLParser2
         return nameBuilder.toString();
     }
 
-    @ParserRule("nameBuilder -> sign:word nameWithDigits")
-    @ParserRule("nameWithDigits -> sign:wordOrDigit nameWithDigits")
+    @ParserRule("nameBuilder -> sign:word nameWithDigits?")
+    @ParserRule("nameWithDigits -> sign:wordOrDigit nameWithDigits?")
     public static StringBuilder nameWithDigits(Object sign, StringBuilder nameWithDigits)
     {
+        if (nameWithDigits == null)
+        {
+            nameWithDigits = new StringBuilder();
+        }
+
         nameWithDigits.insert(0, sign.toString());
         return nameWithDigits;
-    }
-
-    @ParserRule("nameBuilder -> sign:word")
-    @ParserRule("nameWithDigits -> sign:wordOrDigit")
-    public static StringBuilder nameWithDigits(String sign)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sign);
-        return sb;
     }
 
     @ParserRule("wordOrDigit -> sign:digit")
@@ -221,22 +217,19 @@ public class XMLParser2
     @ParserRule("text -> textBuilder")
     public static String text(StringBuilder textBuilder)
     {
-        return textBuilder.toString();
+        return textBuilder.toString().trim();
     }
 
-    @ParserRule("textBuilder -> textBuilder sign")
+    @ParserRule("textBuilder -> textBuilder? sign")
     public static StringBuilder text(Object sign, StringBuilder textBuilder)
     {
+        if (textBuilder == null)
+        {
+            textBuilder = new StringBuilder();
+        }
+
         textBuilder.append(sign.toString());
         return textBuilder;
-    }
-
-    @ParserRule("textBuilder -> sign")
-    public static StringBuilder text(String sign)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sign);
-        return sb;
     }
 
     @ParserRule("sign -> sign:digit")

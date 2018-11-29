@@ -22,6 +22,18 @@ public class ParserInputReader
         tail = 0;
     }
 
+    public void close()
+    {
+        try
+        {
+            stream.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public long getPosition()
     {
         return position;
@@ -68,7 +80,8 @@ public class ParserInputReader
         return str;
     }
 
-    public String fetchOver(String stepOver){
+    public String fetchOver(String stepOver)
+    {
         String result = fetchUntil(stepOver);
         next(stepOver.length());
         return result;
