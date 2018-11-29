@@ -68,6 +68,12 @@ public class ParserInputReader
         return str;
     }
 
+    public String fetchOver(String stepOver){
+        String result = fetchUntil(stepOver);
+        next(stepOver.length());
+        return result;
+    }
+
     public String fetchUntil(String limiter)
     {
         StringBuilder builder = new StringBuilder();

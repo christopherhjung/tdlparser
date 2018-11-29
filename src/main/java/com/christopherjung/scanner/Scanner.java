@@ -66,7 +66,7 @@ public class Scanner
             throw new RuntimeException("Scanner error :" + reader.fetch(20) + "..." );
         }
 
-        tokens.add(new Token("EOF", (String)null));
+        tokens.add(Token.EOF);
 
         return new ScanResult(tokens);
     }

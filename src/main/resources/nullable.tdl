@@ -1,4 +1,4 @@
-S -> B
+S -> B EOF
 B -> A A
-A -> A A
-A -> b
+A -> a
+A -> ''

@@ -26,10 +26,7 @@ public class Main2
 
         System.out.println("container build");
 
-        ClosureTable closureTable = new ClosureTable(grammar);
-
-        ParserTable table = closureTable.getTable();
-
+        ParserTable table  = new ClosureTable().generate(grammar);
 
         System.out.println(TDLUtils.toString(table));
 

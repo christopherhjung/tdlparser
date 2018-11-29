@@ -154,25 +154,25 @@ public class JSONParser
         }
     }
 
-    @RootNode("object EOF")
+    @ParserRoot("object EOF")
     public static JSONObject start(JSONObject object)
     {
         return object;
     }
 
-    @Node("object -> { }")
+    @ParserRule("object -> { }")
     public static JSONObject emptyObject()
     {
         return new JSONObject();
     }
 
-    @Node("object -> { members }")
+    @ParserRule("object -> { members }")
     public static JSONObject nonEmptyObject(List<JSONPair> members)
     {
         return new JSONObject(members);
     }
 
-    @Node("members -> pair")
+    @ParserRule("members -> pair")
     public static List<JSONPair> singlePair(JSONPair pair)
     {
         List<JSONPair> pairs = new ArrayList<>();
@@ -180,32 +180,32 @@ public class JSONParser
         return pairs;
     }
 
-    @Node("members -> members , pair")
+    @ParserRule("members -> members , pair")
     public static List<JSONPair> multiplePairs(JSONPair pair, List<JSONPair> members)
     {
         members.add(pair);
         return members;
     }
 
-    @Node("pair -> key:string : value")
+    @ParserRule("pair -> key:string : value")
     public static JSONPair pair(String key, JSONValue value)
     {
         return new JSONPair(key, value);
     }
 
-    @Node("array -> [ ]")
+    @ParserRule("array -> [ ]")
     public static JSONList emptyArray()
     {
         return new JSONList();
     }
 
-    @Node("array -> [ elements ]")
+    @ParserRule("array -> [ elements ]")
     public static JSONList nonEmptyArray(List<JSONValue> elements)
     {
         return new JSONList(elements);
     }
 
-    @Node("elements -> value")
+    @ParserRule("elements -> value")
     public static List<JSONValue> singleValue(JSONValue value)
     {
         List<JSONValue> values = new ArrayList<>();
@@ -213,44 +213,44 @@ public class JSONParser
         return values;
     }
 
-    @Node("elements -> elements , value")
+    @ParserRule("elements -> elements , value")
     public static List<JSONValue> multipleValues(JSONValue value, List<JSONValue> elements)
     {
         elements.add(value);
         return elements;
     }
 
-    @Node("value -> string")
+    @ParserRule("value -> string")
     public static JSONString stringValue(String string)
     {
         return new JSONString(string);
     }
 
-    @Node("value -> number")
+    @ParserRule("value -> number")
     public static JSONNumber numberValue(String number)
     {
         return new JSONNumber(Double.parseDouble(number));
     }
 
-    @Node("value -> object")
+    @ParserRule("value -> object")
     public static JSONObject objectValue(JSONObject object)
     {
         return object;
     }
 
-    @Node("value -> array")
+    @ParserRule("value -> array")
     public static JSONList arrayValue(JSONList array)
     {
         return array;
     }
 
-    @Node("value -> bool")
+    @ParserRule("value -> bool")
     public static JSONBoolean boolValue(boolean bool)
     {
         return new JSONBoolean(bool);
     }
 
-    @Node("value -> null")
+    @ParserRule("value -> null")
     public static JSONValue nullValue()
     {
         return new JSONValue();

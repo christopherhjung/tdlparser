@@ -9,8 +9,8 @@ public class Main
 {
     public static void main(String[] args) throws Exception
     {
-        TDLParser parser = new ReflectTLDGenerator().generate(XMLParser.class);
-        Scanner scanner = ReflectScannerGenerator.generate(XMLParser.class);
+        TDLParser parser = new ReflectTLDGenerator().generate(XMLParser2.class);
+        Scanner scanner = ReflectScannerGenerator.generate(XMLParser2.class);
 
         ScanResult scanResult = StreamUtils.loopFileWithResult("test.xml", scanner::scan);
 

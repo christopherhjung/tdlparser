@@ -21,9 +21,7 @@ public class Main
         StreamUtils.loopFile("json.tdl", builder::addRules);
         Grammar grammar = builder.build();
 
-        ClosureTable closureTable = new ClosureTable(grammar);
-
-        ParserTable table = closureTable.getTable();
+        ParserTable table = new ClosureTable().generate(grammar);
 
         System.out.println(TDLUtils.toString(table));
 

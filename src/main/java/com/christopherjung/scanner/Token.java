@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class Token
 {
+    public static final Token EOF = new Token("EOF", (String)null);
+
     private TokenDescriptor descriptor;
     private Object value;
     private String name;

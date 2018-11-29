@@ -7,7 +7,10 @@ public interface Modifier
 
         for (Object element : set)
         {
-            stringBuilder.append(element);
+            if (element != null)
+            {
+                stringBuilder.append(element);
+            }
         }
         return stringBuilder.toString();
     };

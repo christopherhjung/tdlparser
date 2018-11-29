@@ -13,17 +13,17 @@ public class Kernel
     private HashMap<String, Kernel> closure;
     private ClosureTable closureTable;
 
-    public Kernel(Set<BasicItem> items, ClosureTable closureTable)
+    public Kernel(Set<BasicItem> items, ClosureTable closureTable, Grammar grammar)
     {
         this.closureTable = closureTable;
-        grammar = closureTable.getGrammar();
+        this.grammar = grammar;
         this.items = items;
     }
 
-    public Kernel(BasicItem item, ClosureTable closureTable)
+    public Kernel(BasicItem item, ClosureTable closureTable, Grammar grammar)
     {
         this.closureTable = closureTable;
-        grammar = closureTable.getGrammar();
+        this.grammar = grammar;
         items = new HashSet<>();
         items.add(item);
     }

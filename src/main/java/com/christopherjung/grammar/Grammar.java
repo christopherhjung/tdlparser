@@ -1,6 +1,7 @@
 package com.christopherjung.grammar;
 
 import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.scanner.Token;
 import com.christopherjung.translator.Rule;
 
 import java.io.InputStream;
@@ -17,8 +18,6 @@ public class Grammar
         this.rules = new HashMap<>(rules);
         this.alphabet = new HashSet<>(alphabet);
         this.root = root;
-
-        this.alphabet.add("EOF");
     }
 
     public Set<String> getAlphabet()
@@ -103,8 +102,7 @@ public class Grammar
             boolean hasRoot = false;
             while (inputReader.hasNext())
             {
-                String name = inputReader.fetchUntil("->").trim();
-                inputReader.next("->".length());
+                String name = inputReader.fetchOver("->").trim();
                 String rule = inputReader.fetchLine();
 
                 if (!hasRoot)
@@ -133,10 +131,16 @@ public class Grammar
                 throw new RuntimeException("No Rule for " + name);
             }
 
+            String[] symbols;
 
-            ruleDescriptor = ruleDescriptor.replaceAll("''", "");
-
-            String[] symbols = ruleDescriptor.split("\\s+");
+            if (ruleDescriptor.contains("''"))
+            {
+                symbols = new String[0];
+            }
+            else
+            {
+                symbols = ruleDescriptor.split("\\s+");
+            }
 
             Set<String> symbolSet = new HashSet<>(List.of(symbols));
             alphabet.addAll(symbolSet);
@@ -151,7 +155,18 @@ public class Grammar
 
         public Grammar build()
         {
+            alphabet.add(Token.EOF.getName());
             return new Grammar(rules, alphabet, root);
+        }
+
+        public void removeEpsilon()
+        {
+            for (String ruleName : rules.keySet())
+            {
+                Set<Rule> children = rules.get(ruleName);
+
+
+            }
         }
     }
 

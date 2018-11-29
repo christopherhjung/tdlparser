@@ -11,6 +11,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ReflectTLDGenerator
 {
@@ -23,7 +26,7 @@ public class ReflectTLDGenerator
     {
         modifiers = new HashMap<>();
 
-        HashMap<Node, Method> nodeMethods = getNodeMethods(clazz);
+        HashMap<String, Method> nodeMethods = getNodeMethods(clazz);
 
         Method rootMethod = getRootMethod(clazz);
 
@@ -39,8 +42,7 @@ public class ReflectTLDGenerator
         List<Field> structureFields = getAnnotatedFields(clazz, ParserIgnore.class);
         Set<String> parserIgnores = getIgnores(structureFields);
 
-        ClosureTable closureTable = new ClosureTable(grammar, parserIgnores);
-        ParserTable table = closureTable.getTable();
+        ParserTable table = new ClosureTable().generate(grammar, parserIgnores);
 
         System.out.println(TDLUtils.toString(table));
 
@@ -80,16 +82,16 @@ public class ReflectTLDGenerator
 
     public void addRootModifier(Method rootMethod)
     {
-        RootNode rootNode = getRootRule(rootMethod);
-        addModifier(builder::setRootRule, rootMethod, rootNode.value());
+        ParserRoot parserRoot = getRootRule(rootMethod);
+        addModifier(builder::setRootRule, rootMethod, parserRoot.value());
     }
 
-    public void addNodeModifiers(HashMap<Node, Method> nodeMethods)
+    public void addNodeModifiers(HashMap<String, Method> nodeMethods)
     {
-        for (Node node : nodeMethods.keySet())
+        for (String node : nodeMethods.keySet())
         {
             Method method = nodeMethods.get(node);
-            addModifier(builder::addRule, method, node.value());
+            addModifier(builder::addRule, method, node);
         }
     }
 
@@ -101,13 +103,13 @@ public class ReflectTLDGenerator
         modifiers.put(rule, modifier);
     }
 
-    private RootNode getRootRule(Method method)
+    private ParserRoot getRootRule(Method method)
     {
-        RootNode[] nodes = method.getAnnotationsByType(RootNode.class);
+        ParserRoot[] nodes = method.getAnnotationsByType(ParserRoot.class);
 
         if (nodes.length != 1 && nodes[0] != null)
         {
-            throw new RuntimeException("No Root Node found");
+            throw new RuntimeException("No Root ParserRule found");
         }
 
         return nodes[0];
@@ -131,9 +133,10 @@ public class ReflectTLDGenerator
 
         if (parameter.length != mapping.length || mapping.length > valueSet.length)
         {
-            throw new RuntimeException("Wrong Parameter Size " + method.getName());
+            //throw new RuntimeException("Wrong Parameter Size " + method.getName() + " with " + Arrays.toString(parameter) + " " + Arrays.deepToString(mapping) + " " + Arrays.toString(valueSet));
         }
 
+        /*
         for (int i = parameter.length - 1; i >= 0; i--)
         {
             Parameter param = parameter[i];
@@ -147,7 +150,7 @@ public class ReflectTLDGenerator
                     throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + returnTypes.get(valueSet[i]).getSimpleName());
                 }
             }
-        }
+        }*/
     }
 
     private int[][] getEqualsCheck()
@@ -155,29 +158,47 @@ public class ReflectTLDGenerator
         return null;
     }
 
+    public HashMap<Integer, String> getRuleMap(Method method, String[] keySet)
+    {
+        HashMap<Integer, String> ruleMap = new HashMap<>();
+
+        for (Parameter parameter : method.getParameters())
+        {
+
+        }
+
+        return ruleMap;
+    }
+
     private Modifier createModifier(Method method, String ruleSet)
     {
         String[] keySet = getKeySet(ruleSet);
 
-        HashMap<String, List<Integer>> route = getRoute(keySet);
-        int[][] mapping = getMapping(method, route);
+        Set<String> ruleNames = Arrays.stream(keySet).collect(Collectors.toSet());
+        List<String> usedParameters = Arrays.stream(method.getParameters()).map(Parameter::getName).filter(ruleNames::contains).collect(Collectors.toList());
 
-        checkMethodForModifier(method, mapping, ruleSet);
+        int[] keyMapping = getKeyMapping(method, usedParameters);
+
+        HashMap<String, List<Integer>> route = getRoute(usedParameters, keySet);
+        int[][] valueMapping = getValueMapping(method, route);
+
+        checkMethodForModifier(method, valueMapping, ruleSet);
+
 
         return set -> {
 
             Object[] objs = new Object[method.getParameterCount()];
 
-            for (int i = 0; i < objs.length; i++)
+            for (int i = 0; i < keyMapping.length; i++)
             {
-                objs[i] = set.get(mapping[i][0]);
+                objs[keyMapping[i]] = set.get(valueMapping[i][0]);
 
                 //equals check if more than one common key
-                for (int j = 1; j < mapping[i].length; j++)
+                for (int j = 1; j < valueMapping[i].length; j++)
                 {
-                    if (!objs[i].equals(set.get(mapping[i][j])))
+                    if (!objs[keyMapping[i]].equals(set.get(valueMapping[i][j])))
                     {
-                        throw new RuntimeException("Not equals " + objs[i] + " " + set.get(mapping[i][j]));
+                        throw new RuntimeException("Not equals " + objs[i] + " " + set.get(valueMapping[i][j]));
                     }
                 }
             }
@@ -213,9 +234,9 @@ public class ReflectTLDGenerator
         Method rootMethod = null;
         for (Method method : clazz.getMethods())
         {
-            RootNode[] rootNodes = method.getAnnotationsByType(RootNode.class);
+            ParserRoot[] parserRoots = method.getAnnotationsByType(ParserRoot.class);
 
-            if (rootNodes.length == 1)
+            if (parserRoots.length == 1)
             {
                 rootMethod = method;
                 break;
@@ -225,31 +246,53 @@ public class ReflectTLDGenerator
         return rootMethod;
     }
 
-    public HashMap<Node, Method> getNodeMethods(Class<?> clazz)
+    public HashMap<String, Method> getNodeMethods(Class<?> clazz)
     {
-        HashMap<Node, Method> nodeMethods = new HashMap<>();
+        HashMap<String, Method> nodeMethods = new HashMap<>();
         Method[] methods = clazz.getMethods();
 
         for (Method method : methods)
         {
-            for (Node node : method.getAnnotationsByType(Node.class))
+            for (ParserRule parserRule : method.getAnnotationsByType(ParserRule.class))
             {
-                nodeMethods.put(node, method);
+                for (String perm : getRulePermutations(parserRule.value()))
+                {
+                    nodeMethods.put(perm, method);
+                }
             }
         }
+
         return nodeMethods;
     }
 
-    public HashMap<String, Class<?>> getReturnTypes(Map<Node, Method> nodeMethods)
+    public HashSet<String> getRulePermutations(String node)
+    {
+        HashSet<String> set = new HashSet<>();
+
+        Pattern pattern = Pattern.compile("(\\S+)\\?");
+        Matcher matcher = pattern.matcher(node);
+
+        if (matcher.find())
+        {
+            set.addAll(getRulePermutations(matcher.replaceFirst("$1")));
+            set.addAll(getRulePermutations(matcher.replaceFirst("")));
+        }
+        else
+        {
+            set.add(node);
+        }
+
+        return set;
+    }
+
+    public HashMap<String, Class<?>> getReturnTypes(Map<String, Method> nodeMethods)
     {
         HashMap<String, Class<?>> returnTypes = new HashMap<>();
 
         for (var entry : nodeMethods.entrySet())
         {
             Method method = entry.getValue();
-            Node node = entry.getKey();
-
-            String value = node.value();
+            String value = entry.getKey();
 
             String key = value.substring(0, value.indexOf("->")).trim();
 
@@ -266,28 +309,47 @@ public class ReflectTLDGenerator
         return returnTypes;
     }
 
-    public int[][] getMapping(Method method, HashMap<String, List<Integer>> route)
+
+    public int[] getKeyMapping(Method method, List<String> usedParameters)
     {
-        int[][] mapping = new int[method.getParameterCount()][];
+        int[] keyMap = new int[usedParameters.size()];
 
         int i = 0;
-        for (Parameter param : method.getParameters())
+        int j = 0;
+        for (Parameter parameter : method.getParameters())
         {
-            if (!route.containsKey(param.getName()))
+            if (usedParameters.contains(parameter.getName()))
             {
-                throw new RuntimeException("no " + param.getName());
+                keyMap[i++] = j;
             }
 
-            List<Integer> routingList = route.get(param.getName());
-            mapping[i] = new int[routingList.size()];
+            j++;
+        }
 
-            int j = 0;
-            for (int index : routingList)
+        return keyMap;
+    }
+
+    public int[][] getValueMapping(Method method, HashMap<String, List<Integer>> route)
+    {
+        int[][] mapping = new int[route.size()][];
+
+        int i = 0;
+        for (Parameter parameter : method.getParameters())
+        {
+            List<Integer> routingList = route.get(parameter.getName());
+
+            if (routingList != null)
             {
-                mapping[i][j++] = index;
-            }
+                mapping[i] = new int[routingList.size()];
 
-            i++;
+                int j = 0;
+                for (int index : routingList)
+                {
+                    mapping[i][j++] = index;
+                }
+
+                i++;
+            }
         }
 
         return mapping;
@@ -336,18 +398,17 @@ public class ReflectTLDGenerator
         return ruleNames.split("\\s+");
     }
 
-    public HashMap<String, List<Integer>> getRoute(String ruleNames)
-    {
-        return getRoute(getKeySet(ruleNames));
-    }
 
-    public HashMap<String, List<Integer>> getRoute(String[] keySet)
+    public HashMap<String, List<Integer>> getRoute(List<String> parameters, String[] keySet)
     {
         HashMap<String, List<Integer>> route = new HashMap<>();
 
         for (int i = 0; i < keySet.length; i++)
         {
-            route.computeIfAbsent(keySet[i], (key) -> new ArrayList<>()).add(i);
+            if (parameters.contains(keySet[i]))
+            {
+                route.computeIfAbsent(keySet[i], (key) -> new ArrayList<>()).add(i);
+            }
         }
 
         return route;

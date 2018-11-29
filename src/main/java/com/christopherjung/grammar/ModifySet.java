@@ -27,4 +27,10 @@ public class ModifySet implements Iterable<Object>
     {
         return collection.iterator();
     }
+
+    @Override
+    public String toString()
+    {
+        return collection.toString();
+    }
 }

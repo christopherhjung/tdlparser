@@ -20,9 +20,7 @@ public class NullableMain
         StreamUtils.loopFile("nullable.tdl", builder::addRules);
         Grammar grammar = builder.build();
 
-        ClosureTable closureTable = new ClosureTable(grammar);
-
-        ParserTable table = closureTable.getTable();
+        ParserTable table  = new ClosureTable().generate(grammar);
 
         ModifierSource source = new ModifierSource();
         source.setDefaultModifier(Modifier.CONCAT);
@@ -35,6 +33,7 @@ public class NullableMain
         ScanResult scanResult = StreamUtils.loopFileWithResult("nullable.test", scanner::scan);
 
         System.out.println(TDLUtils.toString(table));
+        System.out.println(scanResult);
         System.out.println(parser.parse(scanResult));
     }
 
