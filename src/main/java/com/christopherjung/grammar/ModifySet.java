@@ -1,36 +1,37 @@
 package com.christopherjung.grammar;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class ModifySet implements Iterable<Object>
 {
-    private List<Object> collection;
+    private Object[] tokens;
 
-    public ModifySet(List<Object> collection)
+    public ModifySet(Object[] tokens)
     {
-        this.collection = collection;
+        this.tokens = tokens;
     }
 
     public int size()
     {
-        return collection.size();
+        return tokens.length;
     }
 
     public Object get(int pos)
     {
-        return collection.get(pos);
+        return tokens[pos];
     }
 
     @Override
     public Iterator<Object> iterator()
     {
-        return collection.iterator();
+        return List.of(tokens).iterator();
     }
 
     @Override
     public String toString()
     {
-        return collection.toString();
+        return Arrays.toString(tokens);
     }
 }

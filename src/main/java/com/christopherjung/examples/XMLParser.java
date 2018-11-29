@@ -1,4 +1,6 @@
-package com.christopherjung.reflectparser;
+package com.christopherjung.examples;
+
+import com.christopherjung.reflectparser.*;
 
 import java.util.ArrayList;
 import java.util.List;

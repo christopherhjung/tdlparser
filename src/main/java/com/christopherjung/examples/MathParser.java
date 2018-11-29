@@ -1,4 +1,6 @@
-package com.christopherjung.reflectparser;
+package com.christopherjung.examples;
+
+import com.christopherjung.reflectparser.*;
 
 public class MathParser
 {

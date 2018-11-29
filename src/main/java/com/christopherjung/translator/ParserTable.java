@@ -4,7 +4,6 @@ import com.christopherjung.grammar.Grammar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class ParserTable
@@ -68,6 +67,11 @@ public class ParserTable
         public int getRestoreAction()
         {
             return restoreActions;
+        }
+
+        public boolean hasRestoreRule()
+        {
+            return restoreActions >= 0;
         }
 
         public Rule getRule()

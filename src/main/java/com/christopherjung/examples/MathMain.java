@@ -1,8 +1,10 @@
-package com.christopherjung.reflectparser;
+package com.christopherjung.examples;
 
 import com.christopherjung.StreamUtils;
+import com.christopherjung.examples.MathParser;
+import com.christopherjung.reflectparser.ReflectScannerGenerator;
+import com.christopherjung.reflectparser.ReflectTLDGenerator;
 import com.christopherjung.scanner.ScanJob;
-import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.TDLParser;
 

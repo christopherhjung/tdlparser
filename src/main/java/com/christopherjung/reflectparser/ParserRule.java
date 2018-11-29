@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Nodes.class)
-@interface ParserRule
+public @interface ParserRule
 {
     String value();
 }

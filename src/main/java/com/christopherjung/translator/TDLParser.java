@@ -5,13 +5,10 @@ import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.grammar.ModifySet;
 import com.christopherjung.scanner.ScanJob;
-import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TDLParser
 {
@@ -31,9 +28,9 @@ public class TDLParser
 
     public Object parse(ScanJob job)
     {
-        int pos = 0;
+        int currentPosition = 0;
 
-        path.push(pos);
+        path.push(currentPosition);
 
 
         if (!job.hasNext())
@@ -41,30 +38,30 @@ public class TDLParser
             throw new TLDParseException("No Input tokens provided");
         }
 
-        Token current = job.next();
+        Token currentToken = job.next();
 
         for (; ; )
         {
-            ParserTable.Entry entry = table.getEntries().get(pos);
+            ParserTable.Entry entry = table.getEntries().get(currentPosition);
 
             if (path.size() > tokens.size())
             {
-                Integer nextPosition = current == null ? null : entry.getActions().get(current.getName());
+                Integer nextPosition = currentToken == null ? null : entry.getActions().get(currentToken.getName());
 
                 if (nextPosition != null)
                 {
-                    pos = nextPosition;
+                    currentPosition = nextPosition;
 
-                    path.push(pos);
-                    tokens.push(current);
-                    current = job.hasNext() ? job.next() : null;
+                    path.push(currentPosition);
+                    tokens.push(currentToken);
+                    currentToken = job.hasNext() ? job.next() : null;
                 }
                 else
                 {
-                    if (entry.getRestoreAction() >= 0)
+                    if (entry.hasRestoreRule())
                     {
                         Rule restoreRule = entry.getRule();
-                        List<Object> objects = new ArrayList<>(restoreRule.size());
+                        Object[] objects = new Object[restoreRule.size()];
 
                         for (int i = restoreRule.size() - 1; i >= 0; i--)
                         {
@@ -76,11 +73,11 @@ public class TDLParser
                                 throw new TLDParseException("Parser Table wrong");
                             }
 
-                            objects.add(0, restoreToken.getValue());
+                            objects[i] = restoreToken.getValue();
                             path.pop();
                         }
 
-                        pos = path.peekFirst();
+                        currentPosition = path.peekFirst();
 
                         Modifier modifier = source.getModifier(restoreRule);
                         Object modifiedToken;
@@ -91,16 +88,14 @@ public class TDLParser
                         }
                         else
                         {
-                            modifiedToken = objects.stream().reduce("", (a, b) -> a + "" + b);
+                            modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
                         }
 
                         tokens.push(new Token(restoreRule.getName(), modifiedToken));
                     }
-                    else if (current != null && entry.isIgnore(current.getName()))
+                    else if (currentToken != null && entry.isIgnore(currentToken.getName()))
                     {
-                        System.out.println(current);
-                        current = job.hasNext() ? job.next() : null;
-                        System.out.println(current);
+                        currentToken = job.hasNext() ? job.next() : null;
                     }
                     else
                     {
@@ -110,9 +105,9 @@ public class TDLParser
             }
             else
             {
-                Token test = tokens.peekFirst();
+                Token ruleName = tokens.peekFirst();
 
-                Integer nextPosition = entry.getGoTos().get(test.getName());
+                Integer nextPosition = entry.getGoTos().get(ruleName.getName());
 
                 if (nextPosition == null)
                 {
@@ -121,7 +116,7 @@ public class TDLParser
 
                 path.push(nextPosition);
 
-                pos = nextPosition;
+                currentPosition = nextPosition;
             }
         }
 
