@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JSONParser
 {
-    @ScannerStructure
+    @ScannerSingle
     public static String structureChars = "[]{},:";
 
     @ScannerIgnore

@@ -81,7 +81,6 @@ public class ClosureTable
         ParserTable table = new ParserTable(grammar);
         for (int layer : map2.keySet())
         {
-
             HashMap<String, Integer> goTos = map2.get(layer);
             HashMap<String, Integer> actions = new HashMap<>();
 

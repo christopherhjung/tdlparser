@@ -4,7 +4,7 @@ import com.christopherjung.reflectparser.*;
 
 public class MathParser
 {
-    @ScannerStructure
+    @ScannerSingle
     public static String structureChars = "+-/*()";
 
     @ScannerToken

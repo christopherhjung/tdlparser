@@ -7,7 +7,7 @@ import java.util.List;
 
 public class XMLParser
 {
-    @ScannerStructure
+    @ScannerSingle
     public static String structureChars = "=";
 
     @ScannerToken("</")

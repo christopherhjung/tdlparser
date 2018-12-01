@@ -7,13 +7,13 @@ import com.christopherjung.scanner.ScanJob;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.TDLParser;
 
+
 public class Main
 {
     public static void main(String[] args) throws Exception
     {
         TDLParser parser = new ReflectTLDGenerator().generate(JSONParser.class);
         Scanner scanner = ReflectScannerGenerator.generate(JSONParser.class);
-
 
         Object o = "No Data";
         long count = 0;

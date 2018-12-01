@@ -10,7 +10,7 @@ public class ReflectScannerGenerator
 {
     public static Scanner generate(Class<?> clazz)
     {
-        List<Field> structureFields = getAnnotatedFields(clazz, ScannerStructure.class);
+        List<Field> structureFields = getAnnotatedFields(clazz, ScannerSingle.class);
         List<Field> ignoreFields = getAnnotatedFields(clazz, ScannerIgnore.class);
         List<Field> tokenFields = getAnnotatedFields(clazz, ScannerToken.class);
 
