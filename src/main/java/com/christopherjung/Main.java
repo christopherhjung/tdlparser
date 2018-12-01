@@ -4,7 +4,6 @@ import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.scanner.ScanJob;
-import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
 import com.christopherjung.translator.*;
 
@@ -22,7 +21,7 @@ public class Main
         StreamUtils.loopFile("json.tdl", builder::addRules);
         Grammar grammar = builder.build();
 
-        ParserTable table = new ClosureTable().generate(grammar);
+        ParserTable table = new ParserTableGenerator().generate(grammar);
 
         System.out.println(TDLUtils.toString(table));
 

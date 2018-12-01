@@ -43,7 +43,7 @@ public class ReflectTLDGenerator
         List<Field> structureFields = getAnnotatedFields(clazz, ParserIgnore.class);
         Set<String> parserIgnores = getIgnores(structureFields);
 
-        ParserTable table = new ClosureTable().generate(grammar, parserIgnores);
+        ParserTable table = new ParserTableGenerator().generate(grammar, parserIgnores);
 
         System.out.println(TDLUtils.toString(table));
 

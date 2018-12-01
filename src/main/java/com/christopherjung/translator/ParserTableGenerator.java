@@ -4,7 +4,7 @@ import com.christopherjung.grammar.Grammar;
 
 import java.util.*;
 
-public class ClosureTable
+public class ParserTableGenerator
 {
     private Grammar grammar;
     private HashMap<Set<BasicItem>, Kernel> kernelHashMap;
@@ -17,17 +17,18 @@ public class ClosureTable
     public ParserTable generate(Grammar grammar, Set<String> ignores)
     {
         this.grammar = grammar;
+
+        Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule()));
+
         kernelHashMap = new LinkedHashMap<>();
-        List<Kernel> kernels = new ArrayList<>();
-
-        Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule()), this, grammar);
-
         kernelHashMap.put(root.getItems(), root);
 
+        List<Kernel> kernels = new ArrayList<>();
+        kernels.add(root);
+
+        var rootClosure = createClosure(root);
         List<HashMap<String, Kernel>> closures = new ArrayList<>();
         HashMap<Integer, HashMap<String, Kernel>> map = new HashMap<>();
-        kernels.add(root);
-        var rootClosure = root.getClosure();
         closures.add(rootClosure);
         map.put(0, rootClosure);
 
@@ -47,13 +48,13 @@ public class ClosureTable
 
                 kernels.add(kernel);
 
-                var temp = kernel.getClosure();
+                var childClosures = createClosure(kernel);
 
-                map.put(counter, temp);
+                map.put(counter, childClosures);
 
-                if (temp.size() > 0)
+                if (childClosures.size() > 0)
                 {
-                    closures.add(temp);
+                    closures.add(childClosures);
                 }
 
                 counter++;
@@ -78,7 +79,7 @@ public class ClosureTable
             }
         }
 
-        ParserTable table = new ParserTable(grammar);
+        ParserTable table = new ParserTable(grammar, ignores);
         for (int layer : map2.keySet())
         {
             HashMap<String, Integer> goTos = map2.get(layer);
@@ -100,14 +101,57 @@ public class ClosureTable
                 }
             }
 
-            table.addEntry(new ParserTable.Entry(finished, actions, goTos, restore, ignores));
+            table.addEntry(new ParserTable.Entry(finished, actions, goTos, restore));
         }
 
         return table;
     }
 
+    public HashMap<String, Kernel> createClosure(Kernel kernel)
+    {
+        HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
+        HashSet<BasicItem> visited = new HashSet<>(kernel.getItems());
+        LinkedList<BasicItem> current = new LinkedList<>(kernel.getItems());
+
+        for (; !current.isEmpty(); )
+        {
+            BasicItem item = current.pop();
+            if (item.isFinished())
+            {
+                continue;
+            }
+
+            String key = item.getNextKey();
+            BasicItem nextItem = item.next();
+
+            result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
+
+            if (grammar.contains(key))
+            {
+                for (Rule rule : grammar.getChildRules(key))
+                {
+                    BasicItem newItem = new BasicItem(0, rule);
+                    if (!visited.contains(newItem))
+                    {
+                        current.push(newItem);
+                        visited.add(newItem);
+                    }
+                }
+            }
+        }
+
+        HashMap<String, Kernel> transform = new HashMap<>();
+
+        for (String symbol : result.keySet())
+        {
+            transform.put(symbol, getOrCreateKernel(result.get(symbol)));
+        }
+
+        return transform;
+    }
+
     public Kernel getOrCreateKernel(Set<BasicItem> items)
     {
-        return kernelHashMap.computeIfAbsent(items, ($) -> new Kernel(items, this, grammar));
+        return kernelHashMap.computeIfAbsent(items, ($) -> new Kernel(items));
     }
 }

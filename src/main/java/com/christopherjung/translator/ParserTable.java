@@ -10,9 +10,11 @@ public class ParserTable
 {
     private Grammar grammar;
     private ArrayList<Entry> entries;
+    private Set<String> ignores;
 
-    public ParserTable(Grammar grammar)
+    public ParserTable(Grammar grammar, Set<String> ignores)
     {
+        this.ignores = ignores;
         this.grammar = grammar;
         this.entries = new ArrayList<>();
     }
@@ -32,6 +34,11 @@ public class ParserTable
         return entries;
     }
 
+    public boolean isIgnore(String rule)
+    {
+        return ignores.contains(rule);
+    }
+
     public static class Entry
     {
         private HashMap<String, Integer> actions;
@@ -40,7 +47,7 @@ public class ParserTable
         private int restoreActions;
         private Rule rule;
 
-        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions, Set<String> ignores)
+        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions)
         {
             this.rule = rule;
             this.actions = actions;
@@ -57,11 +64,6 @@ public class ParserTable
         public HashMap<String, Integer> getGoTos()
         {
             return goTos;
-        }
-
-        public boolean isIgnore(String rule)
-        {
-            return ignores.contains(rule);
         }
 
         public int getRestoreAction()

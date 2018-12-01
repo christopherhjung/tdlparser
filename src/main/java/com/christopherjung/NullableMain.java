@@ -4,9 +4,8 @@ import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.scanner.ScanJob;
-import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Scanner;
-import com.christopherjung.translator.ClosureTable;
+import com.christopherjung.translator.ParserTableGenerator;
 import com.christopherjung.translator.ParserTable;
 import com.christopherjung.translator.TDLParser;
 import com.christopherjung.translator.TDLUtils;
@@ -21,7 +20,7 @@ public class NullableMain
         StreamUtils.loopFile("nullable.tdl", builder::addRules);
         Grammar grammar = builder.build();
 
-        ParserTable table  = new ClosureTable().generate(grammar);
+        ParserTable table  = new ParserTableGenerator().generate(grammar);
 
         ModifierSource source = new ModifierSource();
         source.setDefaultModifier(Modifier.CONCAT);

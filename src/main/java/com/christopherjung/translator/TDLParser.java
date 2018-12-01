@@ -96,7 +96,7 @@ public class TDLParser
 
                         tokens.push(new Token(restoreRule.getName(), modifiedToken));
                     }
-                    else if (currentToken != null && entry.isIgnore(currentToken.getName()))
+                    else if (currentToken != null && table.isIgnore(currentToken.getName()))
                     {
                         currentToken = job.hasNext() ? job.next() : null;
                     }

@@ -36,7 +36,7 @@ public class TDLUtils
 
             for (String symbol : grammar.getAlphabet())
             {
-                if (test.isIgnore(symbol))
+                if (table.isIgnore(symbol))
                 {
                     row.set(symbol, "igno");
                 }

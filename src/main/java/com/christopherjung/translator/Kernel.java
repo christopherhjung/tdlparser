@@ -6,24 +6,15 @@ import java.util.*;
 
 public class Kernel
 {
-    private Grammar grammar;
-
-    private int index;
     private Set<BasicItem> items;
-    private HashMap<String, Kernel> closure;
-    private ClosureTable closureTable;
 
-    public Kernel(Set<BasicItem> items, ClosureTable closureTable, Grammar grammar)
+    public Kernel(Set<BasicItem> items)
     {
-        this.closureTable = closureTable;
-        this.grammar = grammar;
         this.items = items;
     }
 
-    public Kernel(BasicItem item, ClosureTable closureTable, Grammar grammar)
+    public Kernel(BasicItem item)
     {
-        this.closureTable = closureTable;
-        this.grammar = grammar;
         items = new HashSet<>();
         items.add(item);
     }
@@ -45,58 +36,6 @@ public class Kernel
         return null;
     }
 
-    public HashMap<String, Kernel> getClosure()
-    {
-        if (closure == null)
-        {
-            initClosure();
-        }
-
-        return closure;
-    }
-
-    public void initClosure()
-    {
-        HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
-        HashSet<BasicItem> visited = new HashSet<>(items);
-        LinkedList<BasicItem> current = new LinkedList<>(items);
-
-        for (; !current.isEmpty(); )
-        {
-            BasicItem item = current.pop();
-            if (item.isFinished())
-            {
-                continue;
-            }
-
-            String key = item.getNextKey();
-            BasicItem nextItem = item.next();
-
-            result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
-
-            if (grammar.contains(key))
-            {
-                for (Rule rule : grammar.getChildRules(key))
-                {
-                    BasicItem newItem = new BasicItem(0, rule);
-                    if (!visited.contains(newItem))
-                    {
-                        current.push(newItem);
-                        visited.add(newItem);
-                    }
-                }
-            }
-        }
-
-        HashMap<String, Kernel> transform = new HashMap<>();
-
-        for (String symbol : result.keySet())
-        {
-            transform.put(symbol, closureTable.getOrCreateKernel(result.get(symbol)));
-        }
-
-        closure = transform;
-    }
 
     @Override
     public boolean equals(Object obj)
