@@ -19,6 +19,11 @@ public class ScanJob
 
     public Token next()
     {
+        if (finished)
+        {
+            return Token.EOF;
+        }
+
         loop:
         while (reader.hasNext())
         {
@@ -51,8 +56,8 @@ public class ScanJob
             throw new RuntimeException("Scanner error :" + reader.fetch(20) + "...");
         }
 
-        reader.close();
         finished = true;
+        reader.close();
         return Token.EOF;
     }
 

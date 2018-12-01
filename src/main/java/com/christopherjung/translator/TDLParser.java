@@ -45,72 +45,64 @@ public class TDLParser
 
         for (; ; )
         {
-            ParserTable.Entry entry = table.getEntries().get(currentPosition);
+            ParserTable.Entry entry = table.getEntry(currentPosition);
 
             if (path.size() > tokens.size())
             {
-                Integer nextPosition = currentToken == null ? null : entry.getActions().get(currentToken.getName());
+                Integer nextPosition = entry.getAction(currentToken);
 
                 if (nextPosition != null)
                 {
                     currentPosition = nextPosition;
-
                     path.push(currentPosition);
                     tokens.push(currentToken);
-                    currentToken = job.hasNext() ? job.next() : null;
+                    currentToken = job.next();
                 }
-                else
+                else if (entry.hasRestoreRule())
                 {
-                    if (entry.hasRestoreRule())
+                    Rule restoreRule = entry.getRule();
+                    Object[] objects = new Object[restoreRule.size()];
+
+                    for (int i = restoreRule.size() - 1; i >= 0; i--)
                     {
-                        Rule restoreRule = entry.getRule();
-                        Object[] objects = new Object[restoreRule.size()];
+                        String key = restoreRule.getKey(i);
+                        Token restoreToken = tokens.pop();
 
-                        for (int i = restoreRule.size() - 1; i >= 0; i--)
+                        if (!restoreToken.getName().equals(key))
                         {
-                            String key = restoreRule.getKey(i);
-                            Token restoreToken = tokens.pop();
-
-                            if (!restoreToken.getName().equals(key))
-                            {
-                                throw new TLDParseException("Parser Table wrong");
-                            }
-
-                            objects[i] = restoreToken.getValue();
-                            path.pop();
+                            throw new TLDParseException("Parser Table wrong");
                         }
 
-                        currentPosition = path.peekFirst();
-
-                        Modifier modifier = source.getModifier(restoreRule);
-                        Object modifiedToken;
-                        if (modifier != null)
-                        {
-                            ModifySet modifySet = new ModifySet(objects);
-                            modifiedToken = modifier.modify(modifySet);
-                        }
-                        else
-                        {
-                            modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
-                        }
-
-                        tokens.push(new Token(restoreRule.getName(), modifiedToken));
+                        objects[i] = restoreToken.getValue();
+                        path.pop();
                     }
-                    else if (currentToken != null && table.isIgnore(currentToken.getName()))
+
+                    currentPosition = path.peekFirst();
+
+                    Modifier modifier = source.getModifier(restoreRule);
+                    Object modifiedToken;
+                    if (modifier != null)
                     {
-                        currentToken = job.hasNext() ? job.next() : null;
+                        ModifySet modifySet = new ModifySet(objects);
+                        modifiedToken = modifier.modify(modifySet);
                     }
                     else
                     {
-                        break;
+                        modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
                     }
+
+                    tokens.push(new Token(restoreRule.getName(), modifiedToken));
                 }
+                else if (table.isIgnore(currentToken.getName()))
+                {
+                    currentToken = job.next();
+                }
+                else break;
             }
             else
             {
                 Token ruleName = tokens.peekFirst();
-
-                Integer nextPosition = entry.getGoTos().get(ruleName.getName());
+                Integer nextPosition = entry.getGoTo(ruleName);
 
                 if (nextPosition == null)
                 {
@@ -118,7 +110,6 @@ public class TDLParser
                 }
 
                 path.push(nextPosition);
-
                 currentPosition = nextPosition;
             }
         }

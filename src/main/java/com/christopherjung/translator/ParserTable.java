@@ -1,6 +1,7 @@
 package com.christopherjung.translator;
 
 import com.christopherjung.grammar.Grammar;
+import com.christopherjung.scanner.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,11 @@ public class ParserTable
         return entries;
     }
 
+    public Entry getEntry(int key)
+    {
+        return entries.get(key);
+    }
+
     public boolean isIgnore(String rule)
     {
         return ignores.contains(rule);
@@ -43,7 +49,6 @@ public class ParserTable
     {
         private HashMap<String, Integer> actions;
         private HashMap<String, Integer> goTos;
-        private Set<String> ignores;
         private int restoreActions;
         private Rule rule;
 
@@ -53,7 +58,6 @@ public class ParserTable
             this.actions = actions;
             this.goTos = goTos;
             this.restoreActions = restoreActions;
-            this.ignores = ignores;
         }
 
         public HashMap<String, Integer> getActions()
@@ -61,9 +65,19 @@ public class ParserTable
             return actions;
         }
 
+        public Integer getAction(Token token)
+        {
+            return actions.get(token.getName());
+        }
+
         public HashMap<String, Integer> getGoTos()
         {
             return goTos;
+        }
+
+        public Integer getGoTo(Token token)
+        {
+            return goTos.get(token.getName());
         }
 
         public int getRestoreAction()

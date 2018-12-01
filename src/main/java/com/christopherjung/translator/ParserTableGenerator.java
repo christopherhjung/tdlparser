@@ -8,6 +8,7 @@ public class ParserTableGenerator
 {
     private Grammar grammar;
     private HashMap<Set<BasicItem>, Kernel> kernelHashMap;
+    private List<Kernel> kernels = new ArrayList<>();
 
     public ParserTable generate(Grammar grammar)
     {
@@ -23,20 +24,15 @@ public class ParserTableGenerator
         kernelHashMap = new LinkedHashMap<>();
         kernelHashMap.put(root.getItems(), root);
 
-        List<Kernel> kernels = new ArrayList<>();
+        kernels = new ArrayList<>();
         kernels.add(root);
 
-        var rootClosure = createClosure(root);
-        List<HashMap<String, Kernel>> closures = new ArrayList<>();
-        HashMap<Integer, HashMap<String, Kernel>> map = new HashMap<>();
-        closures.add(rootClosure);
-        map.put(0, rootClosure);
+        HashMap<Integer, HashMap<String, Kernel>> targetClosures = new HashMap<>();
+        targetClosures.put(0, createClosure(root));
 
-
-        int counter = 1;
-        for (int i = 0; i < closures.size(); i++)
+        for (int i = 0; i < targetClosures.size(); i++)
         {
-            HashMap<String, Kernel> closure = closures.get(i);
+            HashMap<String, Kernel> closure = targetClosures.get(i);
             for (String key : closure.keySet())
             {
                 Kernel kernel = closure.get(key);
@@ -46,46 +42,31 @@ public class ParserTableGenerator
                     continue;
                 }
 
+                targetClosures.put(kernels.size(), createClosure(kernel));
                 kernels.add(kernel);
-
-                var childClosures = createClosure(kernel);
-
-                map.put(counter, childClosures);
-
-                if (childClosures.size() > 0)
-                {
-                    closures.add(childClosures);
-                }
-
-                counter++;
             }
         }
 
-        HashMap<Integer, HashMap<String, Integer>> map2 = new HashMap<>();
+        System.out.println(targetClosures);
 
-        for (Integer kernelIndex : map.keySet())
+        ParserTable table = new ParserTable(grammar, ignores);
+        for (Integer kernelIndex : targetClosures.keySet())
         {
-            HashMap<String, Kernel> items = map.get(kernelIndex);
-            HashMap<String, Integer> test = new HashMap<>();
-            map2.put(kernelIndex, test);
+            HashMap<String, Kernel> items = targetClosures.get(kernelIndex);
+
+            HashMap<String, Integer> goTos = new HashMap<>();
+            HashMap<String, Integer> actions = new HashMap<>();
 
             for (String str : items.keySet())
             {
-                Kernel temp = items.get(str);
+                Kernel kernel = items.get(str);
 
-                int index = kernels.indexOf(temp);
+                int index = kernels.indexOf(kernel);
 
-                test.put(str, index);
+                goTos.put(str, index);
             }
-        }
 
-        ParserTable table = new ParserTable(grammar, ignores);
-        for (int layer : map2.keySet())
-        {
-            HashMap<String, Integer> goTos = map2.get(layer);
-            HashMap<String, Integer> actions = new HashMap<>();
-
-            Rule finished = kernels.get(layer).getFinished();
+            Rule finished = kernels.get(kernelIndex).getFinished();
             int restore = -1;
 
             if (finished != null)

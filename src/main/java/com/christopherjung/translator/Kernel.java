@@ -1,8 +1,7 @@
 package com.christopherjung.translator;
 
-import com.christopherjung.grammar.Grammar;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Kernel
 {
@@ -41,10 +40,21 @@ public class Kernel
     public boolean equals(Object obj)
     {
         if (obj == this) return true;
-        if (!(obj instanceof Kernel)) return false;
-        Kernel kernel = (Kernel) obj;
+        if (obj instanceof Kernel)
+        {
+            Kernel kernel = (Kernel) obj;
 
-        return items.equals(kernel.items);
+            return items.equals(kernel.items);
+        }
+
+        if (obj instanceof Set)
+        {
+            Set<?> items = (Set<?>) obj;
+
+            return items.equals(this.items);
+        }
+
+        return false;
     }
 
     @Override
