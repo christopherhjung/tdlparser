@@ -5,11 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.christopherjung</groupId>
-  <artifactId>compiler</artifactId>
+  <artifactId>parser</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>compiler</name>
-  <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
   <properties>

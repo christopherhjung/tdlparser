@@ -21,7 +21,7 @@ public class ReflectTLDGenerator
 
     private HashMap<Rule, Modifier> modifiers;
     private Grammar.Builder builder;
-    private HashMap<String, Class<?>> returnTypes;
+    private HashMap<String, Set<Class<?>>> returnTypes;
 
     public TDLParser generate(Class<?> clazz)
     {
@@ -117,14 +117,14 @@ public class ReflectTLDGenerator
         return nodes[0];
     }
 
-    private Class<?> getType(String rule)
+    private Set<Class<?>> getTypes(String rule)
     {
         if (returnTypes.containsKey(rule))
         {
             return returnTypes.get(rule);
         }
 
-        return String.class;
+        return Set.of(String.class);
     }
 
     private void checkMethodForModifier(Method method, int[] keyMap, int[][] mapping, String ruleSet)
@@ -151,11 +151,15 @@ public class ReflectTLDGenerator
 
             for (int j = 0; j < mapping[i].length; j++)
             {
-                Class<?> right = getType(valueSet[mapping[i][j]]);
+                Set<Class<?>> right = getTypes(valueSet[mapping[i][j]]);
 
-                if (!param.getType().isAssignableFrom(right))
+                for (Class<?> returnType : right)
                 {
-                    throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + valueSet[i] + " " + returnTypes);
+                    if (!param.getType().isAssignableFrom(returnType))
+                    {
+
+                        throw new RuntimeException("In Method \"" + method.getName() + "\" Parameter \"" + param.getName() + "\" type " + param.getType().getSimpleName() + " not assignable from " + valueSet[i] + " " + right);
+                    }
                 }
             }
         }
@@ -206,7 +210,7 @@ public class ReflectTLDGenerator
         };
     }
 
-    public Class<?> findClosestCommonSuper(Class<?> a, Class<?> b)
+    public Class<?> finsdClosestCommonSuper(Class<?> a, Class<?> b)
     {
         if (b.isAssignableFrom(a))
         {
@@ -276,9 +280,9 @@ public class ReflectTLDGenerator
         return set;
     }
 
-    public HashMap<String, Class<?>> getReturnTypes(Map<String, Method> nodeMethods)
+    public HashMap<String, Set<Class<?>>> getReturnTypes(Map<String, Method> nodeMethods)
     {
-        HashMap<String, Class<?>> returnTypes = new HashMap<>();
+        HashMap<String, Set<Class<?>>> returnTypes = new HashMap<>();
 
         for (var entry : nodeMethods.entrySet())
         {
@@ -287,14 +291,7 @@ public class ReflectTLDGenerator
 
             String key = value.substring(0, value.indexOf("->")).trim();
 
-            Class<?> returnClass = method.getReturnType();
-
-            if (returnTypes.containsKey(key))
-            {
-                returnClass = findClosestCommonSuper(returnTypes.get(key), returnClass);
-            }
-
-            returnTypes.put(key, returnClass);
+            returnTypes.computeIfAbsent(key, ($) -> new HashSet<>()).add(method.getReturnType());
         }
 
         return returnTypes;

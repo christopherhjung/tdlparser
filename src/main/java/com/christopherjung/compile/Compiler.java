@@ -2,7 +2,7 @@ package com.christopherjung.compile;
 
 import com.christopherjung.container.OrNode;
 import com.christopherjung.container.TreeNode;
-import com.christopherjung.machine.State;
+import com.christopherjung.regex.State;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;
 

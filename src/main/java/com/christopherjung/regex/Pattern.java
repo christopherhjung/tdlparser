@@ -1,6 +1,5 @@
-package com.christopherjung.machine;
+package com.christopherjung.regex;
 
-import com.christopherjung.regex.RegExParser;
 import com.christopherjung.container.TreeNode;
 
 public class Pattern

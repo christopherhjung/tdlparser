@@ -47,8 +47,6 @@ public class ParserTableGenerator
             }
         }
 
-        System.out.println(targetClosures);
-
         ParserTable table = new ParserTable(grammar, ignores);
         for (Integer kernelIndex : targetClosures.keySet())
         {

@@ -29,7 +29,6 @@ public class NumberUtils
         {
             src = src.longValue();
         }
-        System.out.println(src);
 
         return src;
     }

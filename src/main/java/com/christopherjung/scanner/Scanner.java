@@ -17,7 +17,6 @@ public class Scanner
         this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
     }
 
-
     public Scanner(List<TokenDescriptor> tokenDescriptors, String structureChars)
     {
         this.tokenDescriptors = new ArrayList<>(tokenDescriptors);

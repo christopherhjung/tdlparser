@@ -7,14 +7,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Compiler" />
+        <module name="Parser" />
+        <module name="parser" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Compiler" target="1.7" />
+      <module name="compiler" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Compiler" options="-parameters" />
+      <module name="Compiler" options="" />
+      <module name="Parser" options="-parameters" />
+      <module name="compiler" options="" />
     </option>
   </component>
 </project>

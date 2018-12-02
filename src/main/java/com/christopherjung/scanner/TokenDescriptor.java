@@ -1,7 +1,7 @@
 package com.christopherjung.scanner;
 
-import com.christopherjung.machine.Pattern;
-import com.christopherjung.machine.State;
+import com.christopherjung.regex.Pattern;
+import com.christopherjung.regex.State;
 import com.christopherjung.parser.ParserInputReader;
 
 public class TokenDescriptor

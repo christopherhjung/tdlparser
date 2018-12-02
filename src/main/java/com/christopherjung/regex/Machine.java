@@ -1,4 +1,4 @@
-package com.christopherjung.machine;
+package com.christopherjung.regex;
 
 public class Machine<T>
 {
