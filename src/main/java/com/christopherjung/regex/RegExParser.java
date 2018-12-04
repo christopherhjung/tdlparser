@@ -208,7 +208,11 @@ public class RegExParser extends Parser<TreeNode<Character>>
     {
         if (eat('\\'))
         {
-            if (eat('d'))
+            if (eat('n'))
+            {
+                return ValueNode.rawOf('\n');
+            }
+            else if (eat('d'))
             {
                 return rawFromTo('0', '9');
             }

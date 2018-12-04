@@ -51,13 +51,20 @@ public class ParserTable
         private HashMap<String, Integer> goTos;
         private int restoreActions;
         private Rule rule;
+        private Kernel kernel;
 
-        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions)
+        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions, Kernel kernel)
         {
             this.rule = rule;
             this.actions = actions;
             this.goTos = goTos;
             this.restoreActions = restoreActions;
+            this.kernel = kernel;
+        }
+
+        public Kernel getKernel()
+        {
+            return kernel;
         }
 
         public HashMap<String, Integer> getActions()

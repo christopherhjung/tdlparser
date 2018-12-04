@@ -253,6 +253,11 @@ public class ReflectTLDGenerator
             {
                 for (String perm : getRulePermutations(parserRule.value()))
                 {
+                    if (nodeMethods.containsKey(perm))
+                    {
+                        throw new RuntimeException("exist already " + nodeMethods);
+                    }
+
                     nodeMethods.put(perm, method);
                 }
             }

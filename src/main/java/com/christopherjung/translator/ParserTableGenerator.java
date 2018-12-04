@@ -80,7 +80,7 @@ public class ParserTableGenerator
                 }
             }
 
-            table.addEntry(new ParserTable.Entry(finished, actions, goTos, restore));
+            table.addEntry(new ParserTable.Entry(finished, actions, goTos, restore, kernels.get(kernelIndex)));
         }
 
         return table;
@@ -88,6 +88,8 @@ public class ParserTableGenerator
 
     public HashMap<String, Kernel> createClosure(Kernel kernel)
     {
+        System.out.println(kernel);
+
         HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
         HashSet<BasicItem> visited = new HashSet<>(kernel.getItems());
         LinkedList<BasicItem> current = new LinkedList<>(kernel.getItems());
@@ -123,10 +125,30 @@ public class ParserTableGenerator
 
         for (String symbol : result.keySet())
         {
+            checkSingleFinish(result.get(symbol));
+
             transform.put(symbol, getOrCreateKernel(result.get(symbol)));
         }
 
         return transform;
+    }
+
+    private void checkSingleFinish(Set<BasicItem> items)
+    {
+        Set<BasicItem> last = new HashSet<>();
+
+        for (BasicItem item : items)
+        {
+            if (item.isFinished())
+            {
+                last.add(item);
+            }
+        }
+
+        if (last.size() > 1)
+        {
+            throw new RuntimeException("Multiple FinishRules  : " + last);
+        }
     }
 
     public Kernel getOrCreateKernel(Set<BasicItem> items)

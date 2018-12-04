@@ -25,14 +25,17 @@ public class Kernel
 
     public Rule getFinished()
     {
+        Rule finishRule = null;
+
         for (BasicItem item : items)
         {
             if (item.isFinished())
             {
-                return item.getRule();
+                finishRule = item.getRule();
+                break;
             }
         }
-        return null;
+        return finishRule;
     }
 
 

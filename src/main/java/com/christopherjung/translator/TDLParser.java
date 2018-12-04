@@ -127,7 +127,6 @@ public class TDLParser
             return top.getValue();
         }
 
-        System.out.println(tokens);
         throw new TLDParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(Token::getValue).toArray()) + " " + currentToken);
     }
 }
