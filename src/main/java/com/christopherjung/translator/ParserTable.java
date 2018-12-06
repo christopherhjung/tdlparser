@@ -5,6 +5,7 @@ import com.christopherjung.scanner.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ParserTable
@@ -49,22 +50,13 @@ public class ParserTable
     {
         private HashMap<String, Integer> actions;
         private HashMap<String, Integer> goTos;
-        private int restoreActions;
-        private Rule rule;
-        private Kernel kernel;
+        private HashMap<String, Rule> restore;
 
-        public Entry(Rule rule, HashMap<String, Integer> actions, HashMap<String, Integer> goTos, int restoreActions, Kernel kernel)
+        public Entry(HashMap<String, Integer> actions, HashMap<String, Integer> goTos, HashMap<String,Rule> restore)
         {
-            this.rule = rule;
             this.actions = actions;
             this.goTos = goTos;
-            this.restoreActions = restoreActions;
-            this.kernel = kernel;
-        }
-
-        public Kernel getKernel()
-        {
-            return kernel;
+            this.restore = restore;
         }
 
         public HashMap<String, Integer> getActions()
@@ -87,19 +79,14 @@ public class ParserTable
             return goTos.get(token.getName());
         }
 
-        public int getRestoreAction()
+        public Rule getRestoreRule(Token token)
         {
-            return restoreActions;
+            return restore.get(token.getName());
         }
 
-        public boolean hasRestoreRule()
+        public HashMap<String, Rule> getRestoreRules()
         {
-            return restoreActions >= 0;
-        }
-
-        public Rule getRule()
-        {
-            return rule;
+            return restore;
         }
 
         @Override

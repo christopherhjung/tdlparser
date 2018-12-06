@@ -50,6 +50,7 @@ public class TDLParser
             if (path.size() > tokens.size())
             {
                 Integer nextPosition = entry.getAction(currentToken);
+                Rule restoreRule = entry.getRestoreRule(currentToken);
 
                 if (nextPosition != null)
                 {
@@ -58,9 +59,8 @@ public class TDLParser
                     tokens.push(currentToken);
                     currentToken = job.next();
                 }
-                else if (entry.hasRestoreRule())
+                else if (restoreRule != null)
                 {
-                    Rule restoreRule = entry.getRule();
                     Object[] objects = new Object[restoreRule.size()];
 
                     for (int i = restoreRule.size() - 1; i >= 0; i--)

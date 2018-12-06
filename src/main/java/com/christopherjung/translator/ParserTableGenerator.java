@@ -9,17 +9,55 @@ public class ParserTableGenerator
     private Grammar grammar;
     private HashMap<Set<BasicItem>, Kernel> kernelHashMap;
     private List<Kernel> kernels = new ArrayList<>();
+    private HashMap<String, Set<String>> firsts = new HashMap<>();
 
     public ParserTable generate(Grammar grammar)
     {
         return generate(grammar, new HashSet<>());
     }
 
+
+    public Set<String> getFirst(String ruleName)
+    {
+        if (firsts.containsKey(ruleName))
+        {
+            return firsts.get(ruleName);
+        }
+
+        Set<Rule> children = grammar.getChildRules(ruleName);
+        Set<String> first = new HashSet<>();
+        firsts.put(ruleName, first);
+
+        for (Rule rule : children)
+        {
+            if (rule.size() > 0)
+            {
+                String key = rule.getKey(0);
+                if (grammar.getAlphabet().contains(key))
+                {
+                    first.add(key);
+                }
+                else
+                {
+                    first.addAll(getFirst(key));
+                }
+            }
+            else
+            {
+                throw new RuntimeException("Nullable Rules not supported yet");
+            }
+        }
+
+        return first;
+    }
+
     public ParserTable generate(Grammar grammar, Set<String> ignores)
     {
         this.grammar = grammar;
 
-        Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule()));
+        HashSet<String> rootLookahead = new HashSet<>();
+        rootLookahead.add("EOF");
+        Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule(), rootLookahead));
 
         kernelHashMap = new LinkedHashMap<>();
         kernelHashMap.put(root.getItems(), root);
@@ -64,12 +102,16 @@ public class ParserTableGenerator
                 goTos.put(str, index);
             }
 
-            Rule finished = kernels.get(kernelIndex).getFinished();
+            Set<BasicItem> finished = kernels.get(kernelIndex).getFinishedItems();
+            HashMap<String, Rule> restoreRules = new HashMap<>();
             int restore = -1;
 
-            if (finished != null)
+            for (BasicItem item : finished)
             {
-                restore = finished.getId();
+                for (String look : item.getLookahead())
+                {
+                    restoreRules.put(look, item.getRule());
+                }
             }
 
             for (String sign : grammar.getAlphabet())
@@ -80,7 +122,7 @@ public class ParserTableGenerator
                 }
             }
 
-            table.addEntry(new ParserTable.Entry(finished, actions, goTos, restore, kernels.get(kernelIndex)));
+            table.addEntry(new ParserTable.Entry( actions, goTos, restoreRules));
         }
 
         return table;
@@ -88,7 +130,6 @@ public class ParserTableGenerator
 
     public HashMap<String, Kernel> createClosure(Kernel kernel)
     {
-        System.out.println(kernel);
 
         HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
         HashSet<BasicItem> visited = new HashSet<>(kernel.getItems());
@@ -103,15 +144,36 @@ public class ParserTableGenerator
             }
 
             String key = item.getNextKey();
-            BasicItem nextItem = item.next();
+
+
+            BasicItem nextItem = new BasicItem(item.getDotIndex() + 1, item.getRule(), item.getLookahead());
 
             result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
+
+            HashSet<String> lookahead = new HashSet<>();
+
+            if (nextItem.isFinished())
+            {
+                lookahead.addAll(item.getLookahead());
+            }
+            else
+            {
+                if (grammar.getAlphabet().contains(nextItem.getNextKey()))
+                {
+                    lookahead.add(nextItem.getNextKey());
+                }
+                else
+                {
+                    lookahead.addAll(getFirst(nextItem.getNextKey()));
+                }
+            }
 
             if (grammar.contains(key))
             {
                 for (Rule rule : grammar.getChildRules(key))
                 {
-                    BasicItem newItem = new BasicItem(0, rule);
+                    BasicItem newItem = new BasicItem(0, rule, lookahead);
+                    //System.out.println(newItem);
                     if (!visited.contains(newItem))
                     {
                         current.push(newItem);
@@ -136,16 +198,20 @@ public class ParserTableGenerator
     private void checkSingleFinish(Set<BasicItem> items)
     {
         Set<BasicItem> last = new HashSet<>();
+        Set<String> lookahead = new HashSet<>();
+        boolean found = false;
 
         for (BasicItem item : items)
         {
             if (item.isFinished())
             {
+                found |= !Collections.disjoint(lookahead, item.getLookahead());
                 last.add(item);
+                lookahead.addAll(item.getLookahead());
             }
         }
 
-        if (last.size() > 1)
+        if (found)
         {
             throw new RuntimeException("Multiple FinishRules  : " + last);
         }

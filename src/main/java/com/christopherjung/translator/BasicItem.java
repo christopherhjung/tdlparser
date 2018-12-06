@@ -1,19 +1,38 @@
 package com.christopherjung.translator;
 
+import java.util.HashSet;
+
 public class BasicItem
 {
     private Rule rule;
     private int dotIndex;
+    private HashSet<String> lookahead;
 
-    public BasicItem(int dotIndex, Rule rule)
+    public BasicItem(int dotIndex, Rule rule, HashSet<String> lookahead)
     {
         this.rule = rule;
         this.dotIndex = dotIndex;
+        this.lookahead = lookahead;
+    }
+
+    public BasicItem(int dotIndex, Rule rule)
+    {
+        this(dotIndex, rule, new HashSet<>());
+    }
+
+    public HashSet<String> getLookahead()
+    {
+        return lookahead;
     }
 
     public String getNextKey()
     {
         return rule.getKey(dotIndex);
+    }
+
+    public int getDotIndex()
+    {
+        return dotIndex;
     }
 
     public Rule getRule()
@@ -38,13 +57,13 @@ public class BasicItem
         if (!(obj instanceof BasicItem)) return false;
         BasicItem item = (BasicItem) obj;
 
-        return dotIndex == item.dotIndex && rule.equals(item.rule);
+        return dotIndex == item.dotIndex && rule.equals(item.rule) && lookahead.equals(item.lookahead);
     }
 
     @Override
     public int hashCode()
     {
-        return rule.hashCode() * (dotIndex << 3);
+        return (rule.hashCode() * (dotIndex << 3));// ^ lookahead.hashCode();
     }
 
     @Override
@@ -73,6 +92,9 @@ public class BasicItem
         {
             sb.append('.');
         }
+
+        sb.append(" ");
+        sb.append(lookahead);
 
         return sb.toString();
     }

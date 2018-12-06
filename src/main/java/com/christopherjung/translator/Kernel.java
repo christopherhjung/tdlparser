@@ -38,6 +38,19 @@ public class Kernel
         return finishRule;
     }
 
+    public Set<BasicItem> getFinishedItems()
+    {
+        Set<BasicItem> result = new HashSet<>();
+        for (BasicItem item : items)
+        {
+            if (item.isFinished())
+            {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
 
     @Override
     public boolean equals(Object obj)

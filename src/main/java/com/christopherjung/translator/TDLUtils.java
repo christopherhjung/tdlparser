@@ -4,6 +4,9 @@ import com.christopherjung.datatable.DataTable;
 import com.christopherjung.datatable.DataTableRow;
 import com.christopherjung.grammar.Grammar;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class TDLUtils
 {
     private TDLUtils()
@@ -42,21 +45,20 @@ public class TDLUtils
                 }
             }
 
-            if (test.getRestoreAction() != -1)
+            row.set("restore", "");
+
+            Set<Rule> visited = new HashSet<>();
+
+            for (var entry : test.getRestoreRules().entrySet())
             {
-                if (test.getRestoreAction() == 0)
+                row.set(entry.getKey(), "r" + entry.getValue().getId());
+
+                if (!visited.contains(entry.getValue()))
                 {
-                    row.set("EOF", "r" + test.getRestoreAction());
-                }
-                else
-                {
-                    for (String symbol : grammar.getAlphabet())
-                    {
-                        row.set(symbol, "r" + test.getRestoreAction());
-                    }
+                    row.set("restore", row.get("restore") + " ; " + entry.getValue());
                 }
 
-                row.set("restore", test.getRule().toString());
+                visited.add(entry.getValue());
             }
 
             row.set("state", i++);

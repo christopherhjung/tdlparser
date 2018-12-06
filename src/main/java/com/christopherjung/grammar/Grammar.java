@@ -37,6 +37,11 @@ public class Grammar
 
     public Set<Rule> getChildRules(String name)
     {
+        if (name.equals("__start__"))
+        {
+            return Set.of(root);
+        }
+
         return rules.get(name);
     }
 
