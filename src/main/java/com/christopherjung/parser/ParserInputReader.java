@@ -1,5 +1,6 @@
 package com.christopherjung.parser;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Predicate;
@@ -14,7 +15,7 @@ public class ParserInputReader
 
     public ParserInputReader(InputStream stream)
     {
-        this.stream = stream;
+        this.stream = new BufferedInputStream(stream);
 
         buffer = new char[10];
         position = 0;

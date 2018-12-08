@@ -144,9 +144,7 @@ public class ParserTableGenerator
             }
 
             String key = item.getNextKey();
-
-
-            BasicItem nextItem = new BasicItem(item.getDotIndex() + 1, item.getRule(), item.getLookahead());
+            BasicItem nextItem = item.next();
 
             result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
 
@@ -154,7 +152,7 @@ public class ParserTableGenerator
 
             if (nextItem.isFinished())
             {
-                lookahead.addAll(item.getLookahead());
+                lookahead.addAll(nextItem.getLookahead());
             }
             else
             {

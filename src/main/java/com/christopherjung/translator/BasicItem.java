@@ -42,7 +42,12 @@ public class BasicItem
 
     public BasicItem next()
     {
-        return new BasicItem(dotIndex + 1, rule);
+        if (isFinished())
+        {
+            throw new RuntimeException("No further Item possible");
+        }
+
+        return new BasicItem(dotIndex + 1, rule, lookahead);
     }
 
     public boolean isFinished()

@@ -45,8 +45,6 @@ public class ReflectTLDGenerator
 
         ParserTable table = new ParserTableGenerator().generate(grammar, parserIgnores);
 
-        System.out.println(TDLUtils.toString(table));
-
         ModifierSource source = new ModifierSource(modifiers);
 
         return new TDLParser(table, source);

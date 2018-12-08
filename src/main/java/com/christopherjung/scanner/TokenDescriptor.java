@@ -42,8 +42,7 @@ public class TokenDescriptor
 
         for (int i = 0; inputStream.hasNext(i); )
         {
-            char cha = inputStream.get(i++);
-            current = current.propagate(cha);
+            current = current.propagate(inputStream.get(i++));
 
             if (current == null)
             {

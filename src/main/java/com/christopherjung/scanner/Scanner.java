@@ -10,6 +10,7 @@ import java.util.List;
 public class Scanner
 {
     private List<TokenDescriptor> tokenDescriptors;
+    private List<TokenDescriptor> ignoreDescriptors;
     private char[] structureChars;
 
     public Scanner(List<TokenDescriptor> tokenDescriptors)
@@ -17,9 +18,10 @@ public class Scanner
         this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
     }
 
-    public Scanner(List<TokenDescriptor> tokenDescriptors, String structureChars)
+    public Scanner(List<TokenDescriptor> tokenDescriptors, List<TokenDescriptor> ignoreDescriptors, String structureChars)
     {
         this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
+        this.ignoreDescriptors = new ArrayList<>(ignoreDescriptors);
         this.structureChars = structureChars.toCharArray();
 
         Arrays.sort(this.structureChars);
@@ -29,7 +31,7 @@ public class Scanner
     {
         List<Token> tokens = new ArrayList<>();
 
-        ScanJob job = new ScanJob(this,inputStream);
+        ScanJob job = new ScanJob(this, inputStream);
 
         while (true)
         {
@@ -56,6 +58,11 @@ public class Scanner
         return tokenDescriptors;
     }
 
+    public List<TokenDescriptor> getIgnoreDescriptors()
+    {
+        return ignoreDescriptors;
+    }
+
     @Override
     public String toString()
     {
@@ -65,6 +72,7 @@ public class Scanner
     public static class Builder
     {
         private List<TokenDescriptor> tokenDescriptors = new ArrayList<>();
+        private List<TokenDescriptor> ignoreDescriptors = new ArrayList<>();
         private StringBuilder structureCharsBuilder = new StringBuilder();
 
         public void addAll(InputStream stream)
@@ -94,12 +102,20 @@ public class Scanner
 
         public void add(TokenDescriptor tokenDescriptor)
         {
-            tokenDescriptors.add(tokenDescriptor);
+
+            if (tokenDescriptor.getName().equalsIgnoreCase("ignore"))
+            {
+                ignoreDescriptors.add(tokenDescriptor);
+            }
+            else
+            {
+                tokenDescriptors.add(tokenDescriptor);
+            }
         }
 
         public Scanner build()
         {
-            return new Scanner(tokenDescriptors, structureCharsBuilder.toString());
+            return new Scanner(tokenDescriptors, ignoreDescriptors, structureCharsBuilder.toString());
         }
     }
 }
