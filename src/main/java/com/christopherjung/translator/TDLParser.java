@@ -50,7 +50,6 @@ public class TDLParser
             if (path.size() > tokens.size())
             {
                 Integer nextPosition = entry.getAction(currentToken);
-                Rule restoreRule = entry.getRestoreRule(currentToken);
 
                 if (nextPosition != null)
                 {
@@ -59,45 +58,49 @@ public class TDLParser
                     tokens.push(currentToken);
                     currentToken = job.next();
                 }
-                else if (restoreRule != null)
+                else
                 {
-                    Object[] objects = new Object[restoreRule.size()];
-
-                    for (int i = restoreRule.size() - 1; i >= 0; i--)
+                    Rule restoreRule = entry.getRestoreRule(currentToken);
+                    if (restoreRule != null)
                     {
-                        String key = restoreRule.getKey(i);
-                        Token restoreToken = tokens.pop();
+                        Object[] objects = new Object[restoreRule.size()];
 
-                        if (!restoreToken.getName().equals(key))
+                        for (int i = restoreRule.size() - 1; i >= 0; i--)
                         {
-                            throw new TLDParseException("Parser Table wrong");
+                            String key = restoreRule.getKey(i);
+                            Token restoreToken = tokens.pop();
+
+                            if (!restoreToken.getName().equals(key))
+                            {
+                                throw new TLDParseException("Parser Table wrong");
+                            }
+
+                            objects[i] = restoreToken.getValue();
+                            path.pop();
                         }
 
-                        objects[i] = restoreToken.getValue();
-                        path.pop();
+                        currentPosition = path.peekFirst();
+
+                        Modifier modifier = source.getModifier(restoreRule);
+                        Object modifiedToken;
+                        if (modifier != null)
+                        {
+                            ModifySet modifySet = new ModifySet(objects);
+                            modifiedToken = modifier.modify(modifySet);
+                        }
+                        else
+                        {
+                            modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
+                        }
+
+                        tokens.push(new Token(restoreRule.getName(), modifiedToken));
                     }
-
-                    currentPosition = path.peekFirst();
-
-                    Modifier modifier = source.getModifier(restoreRule);
-                    Object modifiedToken;
-                    if (modifier != null)
+                    else if (table.isIgnore(currentToken.getName()))
                     {
-                        ModifySet modifySet = new ModifySet(objects);
-                        modifiedToken = modifier.modify(modifySet);
+                        currentToken = job.next();
                     }
-                    else
-                    {
-                        modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
-                    }
-
-                    tokens.push(new Token(restoreRule.getName(), modifiedToken));
+                    else break;
                 }
-                else if (table.isIgnore(currentToken.getName()))
-                {
-                    currentToken = job.next();
-                }
-                else break;
             }
             else
             {

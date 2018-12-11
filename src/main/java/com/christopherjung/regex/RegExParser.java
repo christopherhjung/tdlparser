@@ -173,10 +173,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
                 if (negate)
                 {
-                    HashSet<Character> complement = new HashSet<>();
-                    fromToChars(complement, 0, 127);
-                    complement.removeAll(nodes);
-                    nodes = complement;
+                    nodes = negate(nodes);
                 }
 
                 return OrNode.all(nodes);
@@ -194,6 +191,15 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return null;
     }
 
+    private HashSet<Character> negate(Collection<Character> nodes)
+    {
+        HashSet<Character> complement = new HashSet<>();
+        fromToChars(complement, 0, 127);
+        complement.removeAll(nodes);
+
+        return complement;
+    }
+
     public TreeNode<Character> parseValue()
     {
         if (is('\\'))
@@ -204,32 +210,45 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return new ValueNode<>(eat());
     }
 
+    public Collection<Character> specialValues(char cha)
+    {
+        if (cha == 'n')
+        {
+            return ValueNode.rawOf('\n');
+        }
+        else if (cha == 'd')
+        {
+            return rawFromTo('0', '9');
+        }
+        else if (cha == 's')
+        {
+            return ValueNode.rawOf('\n', ' ', '\t', '\r');
+        }
+        else if (cha == 'w')
+        {
+            HashSet<Character> set = new HashSet<>();
+
+            set.addAll(rawFromTo('a', 'z'));
+            set.addAll(rawFromTo('A', 'Z'));
+            set.add('_');
+
+            return set;
+        }
+        else if (cha == 'W' || cha == 'S' || cha =='D')
+        {
+            return negate(specialValues(Character.toLowerCase(cha)));
+        }
+        else
+        {
+            return Set.of(cha);
+        }
+    }
+
     public Collection<Character> parseValues()
     {
         if (eat('\\'))
         {
-            if (eat('n'))
-            {
-                return ValueNode.rawOf('\n');
-            }
-            else if (eat('d'))
-            {
-                return rawFromTo('0', '9');
-            }
-            else if (eat('s'))
-            {
-                return ValueNode.rawOf('\n', ' ', '\t', '\r');
-            }
-            else if (eat('w'))
-            {
-                HashSet<Character> set = new HashSet<>();
-
-                set.addAll(rawFromTo('a', 'z'));
-                set.addAll(rawFromTo('A', 'Z'));
-                set.add('_');
-
-                return set;
-            }
+            return specialValues(eat());
         }
 
         return Set.of(eat());
@@ -271,9 +290,9 @@ public class RegExParser extends Parser<TreeNode<Character>>
     public static Collection<TreeNode<Character>> map(char... chars)
     {
         HashSet<TreeNode<Character>> result = new HashSet<>();
-        for (int i = 0; i < chars.length; i++)
+        for (char cha : chars)
         {
-            result.add(new ValueNode<>(chars[i]));
+            result.add(new ValueNode<>(cha));
         }
 
         return result;

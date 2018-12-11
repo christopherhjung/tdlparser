@@ -6,11 +6,13 @@ import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.translator.*;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -44,6 +46,8 @@ public class ReflectTLDGenerator
         Set<String> parserIgnores = getIgnores(structureFields);
 
         ParserTable table = new ParserTableGenerator().generate(grammar, parserIgnores);
+
+        System.out.println(table.getEntries().size());
 
         ModifierSource source = new ModifierSource(modifiers);
 
@@ -131,6 +135,7 @@ public class ReflectTLDGenerator
 
         Parameter[] parameter = method.getParameters();
 
+
         if (parameter.length < mapping.length || mapping.length > valueSet.length)
         {
             throw new RuntimeException("Wrong Parameter Size " + method.getName() + " with " + Arrays.toString(parameter) + " " + Arrays.deepToString(mapping) + " " + Arrays.toString(valueSet));
@@ -169,11 +174,12 @@ public class ReflectTLDGenerator
 
         Set<String> ruleNames = Arrays.stream(keySet).collect(Collectors.toSet());
         Set<String> usedParameters = Arrays.stream(method.getParameters()).map(Parameter::getName).filter(ruleNames::contains).collect(Collectors.toSet());
+        HashMap<String, List<Integer>> route = getRoute(usedParameters, keySet);
 
         int[] keyMapping = getKeyMapping(method, usedParameters);
-
-        HashMap<String, List<Integer>> route = getRoute(usedParameters, keySet);
         int[][] valueMapping = getValueMapping(method, route);
+        int[] defaultMapping = getDefaultMapping(method, usedParameters);
+        Supplier<?>[] defaultParameters = getDefaultConstructors(method, defaultMapping);
 
         checkMethodForModifier(method, keyMapping, valueMapping, ruleSet);
 
@@ -197,6 +203,11 @@ public class ReflectTLDGenerator
                 }
             }
 
+            for (int i = 0; i < defaultParameters.length; i++)
+            {
+                objs[defaultMapping[i]] = defaultParameters[i].get();
+            }
+
             try
             {
                 return method.invoke(null, objs);
@@ -206,21 +217,6 @@ public class ReflectTLDGenerator
                 throw new RuntimeException(e);
             }
         };
-    }
-
-    public Class<?> finsdClosestCommonSuper(Class<?> a, Class<?> b)
-    {
-        if (b.isAssignableFrom(a))
-        {
-            return b;
-        }
-
-        while (!a.isAssignableFrom(b))
-        {
-            a = a.getSuperclass();
-        }
-
-        return a;
     }
 
     public Method getRootMethod(Class<?> clazz)
@@ -317,6 +313,63 @@ public class ReflectTLDGenerator
             j++;
         }
 
+        return keyMap;
+    }
+
+
+    public int[] getDefaultMapping(Method method, Set<String> usedParameters)
+    {
+        int[] keyMap = new int[method.getParameterCount() - usedParameters.size()];
+
+        int i = 0;
+        int j = 0;
+        for (Parameter parameter : method.getParameters())
+        {
+            if (!usedParameters.contains(parameter.getName()))
+            {
+                keyMap[i++] = j;
+            }
+
+            j++;
+        }
+
+        return keyMap;
+    }
+
+    public Supplier<?>[] getDefaultConstructors(Method method, int[] defaultMapping)
+    {
+        Parameter[] parameters = method.getParameters();
+        Supplier<?>[] keyMap = new Supplier[defaultMapping.length];
+
+        for (int i = 0; i < defaultMapping.length; i++)
+        {
+            try
+            {
+                Class<?> type = parameters[i].getType();
+
+                if (List.class.equals(type))
+                {
+                    type = ArrayList.class;
+                }
+
+                Constructor<?> constructor = type.getConstructor();
+                keyMap[i] = () -> {
+                    try
+                    {
+                        return constructor.newInstance();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                keyMap[i] = () -> null;
+            }
+
+        }
         return keyMap;
     }
 

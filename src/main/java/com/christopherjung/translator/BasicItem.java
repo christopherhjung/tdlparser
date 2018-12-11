@@ -1,26 +1,21 @@
 package com.christopherjung.translator;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class BasicItem
 {
     private Rule rule;
     private int dotIndex;
-    private HashSet<String> lookahead;
+    private Set<String> lookahead;
 
-    public BasicItem(int dotIndex, Rule rule, HashSet<String> lookahead)
+    public BasicItem(int dotIndex, Rule rule, Set<String> lookahead)
     {
         this.rule = rule;
         this.dotIndex = dotIndex;
         this.lookahead = lookahead;
     }
 
-    public BasicItem(int dotIndex, Rule rule)
-    {
-        this(dotIndex, rule, new HashSet<>());
-    }
-
-    public HashSet<String> getLookahead()
+    public Set<String> getLookahead()
     {
         return lookahead;
     }
@@ -68,7 +63,7 @@ public class BasicItem
     @Override
     public int hashCode()
     {
-        return (rule.hashCode() * (dotIndex << 3));// ^ lookahead.hashCode();
+        return (rule.hashCode() + dotIndex) ^ lookahead.hashCode();
     }
 
     @Override

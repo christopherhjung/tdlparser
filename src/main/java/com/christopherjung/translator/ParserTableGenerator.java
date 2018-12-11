@@ -68,6 +68,7 @@ public class ParserTableGenerator
         HashMap<Integer, HashMap<String, Kernel>> targetClosures = new HashMap<>();
         targetClosures.put(0, createClosure(root));
 
+        System.out.println("Generate Closure");
         for (int i = 0; i < targetClosures.size(); i++)
         {
             HashMap<String, Kernel> closure = targetClosures.get(i);
@@ -85,6 +86,8 @@ public class ParserTableGenerator
             }
         }
 
+        System.out.println("Generate Parsing Table");
+
         ParserTable table = new ParserTable(grammar, ignores);
         for (Integer kernelIndex : targetClosures.keySet())
         {
@@ -92,6 +95,7 @@ public class ParserTableGenerator
 
             HashMap<String, Integer> goTos = new HashMap<>();
             HashMap<String, Integer> actions = new HashMap<>();
+            HashMap<String, Rule> restoreRules = new HashMap<>();
 
             for (String str : items.keySet())
             {
@@ -103,8 +107,6 @@ public class ParserTableGenerator
             }
 
             Set<BasicItem> finished = kernels.get(kernelIndex).getFinishedItems();
-            HashMap<String, Rule> restoreRules = new HashMap<>();
-            int restore = -1;
 
             for (BasicItem item : finished)
             {
@@ -122,7 +124,7 @@ public class ParserTableGenerator
                 }
             }
 
-            table.addEntry(new ParserTable.Entry( actions, goTos, restoreRules));
+            table.addEntry(new ParserTable.Entry(actions, goTos, restoreRules));
         }
 
         return table;
@@ -130,7 +132,6 @@ public class ParserTableGenerator
 
     public HashMap<String, Kernel> createClosure(Kernel kernel)
     {
-
         HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
         HashSet<BasicItem> visited = new HashSet<>(kernel.getItems());
         LinkedList<BasicItem> current = new LinkedList<>(kernel.getItems());
@@ -148,30 +149,29 @@ public class ParserTableGenerator
 
             result.computeIfAbsent(key, ($) -> new HashSet<>()).add(nextItem);
 
-            HashSet<String> lookahead = new HashSet<>();
+            if (grammar.contains(key))
+            {
+                HashSet<String> lookahead = new HashSet<>();
 
-            if (nextItem.isFinished())
-            {
-                lookahead.addAll(nextItem.getLookahead());
-            }
-            else
-            {
-                if (grammar.getAlphabet().contains(nextItem.getNextKey()))
+                if (nextItem.isFinished())
                 {
-                    lookahead.add(nextItem.getNextKey());
+                    lookahead.addAll(nextItem.getLookahead());
                 }
                 else
                 {
-                    lookahead.addAll(getFirst(nextItem.getNextKey()));
+                    if (grammar.getAlphabet().contains(nextItem.getNextKey()))
+                    {
+                        lookahead.add(nextItem.getNextKey());
+                    }
+                    else
+                    {
+                        lookahead.addAll(getFirst(nextItem.getNextKey()));
+                    }
                 }
-            }
 
-            if (grammar.contains(key))
-            {
                 for (Rule rule : grammar.getChildRules(key))
                 {
                     BasicItem newItem = new BasicItem(0, rule, lookahead);
-                    //System.out.println(newItem);
                     if (!visited.contains(newItem))
                     {
                         current.push(newItem);
@@ -185,15 +185,49 @@ public class ParserTableGenerator
 
         for (String symbol : result.keySet())
         {
-            checkSingleFinish(result.get(symbol));
+            LinkedList<BasicItem> merged = new LinkedList<>(result.get(symbol));
+            Set<BasicItem> after = new HashSet<>();
 
-            transform.put(symbol, getOrCreateKernel(result.get(symbol)));
+            for (; merged.size() > 0; )
+            {
+                ListIterator<BasicItem> listIterator = merged.listIterator();
+                BasicItem first = listIterator.next();
+                listIterator.remove();
+                Set<String> lookahead = null;
+                for (; listIterator.hasNext(); )
+                {
+                    BasicItem other = listIterator.next();
+
+                    if (first.getDotIndex() == other.getDotIndex() && first.getRule().equals(other.getRule()))
+                    {
+                        if (lookahead == null)
+                        {
+                            lookahead = new HashSet<>(first.getLookahead());
+                        }
+
+                        lookahead.addAll(other.getLookahead());
+                        listIterator.remove();
+                    }
+                }
+
+                if (lookahead != null)
+                {
+                    first = new BasicItem(first.getDotIndex(), first.getRule(), lookahead);
+                }
+
+                after.add(first);
+            }
+
+
+            checkSingleFinish(symbol, after);
+
+            transform.put(symbol, kernelHashMap.computeIfAbsent(after, ($) -> new Kernel(after)));
         }
 
         return transform;
     }
 
-    private void checkSingleFinish(Set<BasicItem> items)
+    private void checkSingleFinish(String symbol, Collection<BasicItem> items)
     {
         Set<BasicItem> last = new HashSet<>();
         Set<String> lookahead = new HashSet<>();
@@ -207,16 +241,12 @@ public class ParserTableGenerator
                 last.add(item);
                 lookahead.addAll(item.getLookahead());
             }
+
         }
 
         if (found)
         {
-            throw new RuntimeException("Multiple FinishRules  : " + last);
+            throw new RuntimeException("Multiple FinishRules  : " + symbol + " -> " + last);
         }
-    }
-
-    public Kernel getOrCreateKernel(Set<BasicItem> items)
-    {
-        return kernelHashMap.computeIfAbsent(items, ($) -> new Kernel(items));
     }
 }
