@@ -3,7 +3,10 @@ package com.christopherjung.reflectparser;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.translator.*;
+import com.christopherjung.translator.ParserTable;
+import com.christopherjung.translator.ParserTableGenerator;
+import com.christopherjung.translator.Rule;
+import com.christopherjung.translator.TDLParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -15,7 +18,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ReflectTLDGenerator
 {
@@ -168,55 +170,68 @@ public class ReflectTLDGenerator
         }
     }
 
-    private Modifier createModifier(Method method, String ruleSet)
+    private static class ReflectModifier implements Modifier
     {
-        String[] keySet = getKeySet(ruleSet);
+        private Method method;
+        private HashMap<Integer, Integer> mapping;
+        private HashMap<Integer, Supplier<?>> defaultParameters;
+        private Object[] values;
 
-        Set<String> ruleNames = Arrays.stream(keySet).collect(Collectors.toSet());
-        Set<String> usedParameters = Arrays.stream(method.getParameters()).map(Parameter::getName).filter(ruleNames::contains).collect(Collectors.toSet());
-        HashMap<String, List<Integer>> route = getRoute(usedParameters, keySet);
+        public ReflectModifier(Method method, HashMap<Integer, Integer> mapping, HashMap<Integer, Supplier<?>> defaultParameters)
+        {
+            this.method = method;
+            this.mapping = mapping;
+            this.defaultParameters = defaultParameters;
+            values = new Object[method.getParameterCount()];
+        }
 
-        int[] keyMapping = getKeyMapping(method, usedParameters);
-        int[][] valueMapping = getValueMapping(method, route);
-        int[] defaultMapping = getDefaultMapping(method, usedParameters);
-        Supplier<?>[] defaultParameters = getDefaultConstructors(method, defaultMapping);
-
-        checkMethodForModifier(method, keyMapping, valueMapping, ruleSet);
-
-        return set -> {
-
-            Object[] objs = new Object[method.getParameterCount()];
-
-            for (int i = 0; i < keyMapping.length; i++)
+        @Override
+        public Object modify()
+        {
+            for (int i : defaultParameters.keySet())
             {
-                int objIndex = keyMapping[i];
-
-                objs[objIndex] = set.get(valueMapping[i][0]);
-
-                //equals check if more than one common key
-                for (int j = 1; j < valueMapping[i].length; j++)
-                {
-                    if (!objs[objIndex].equals(set.get(valueMapping[i][j])))
-                    {
-                        throw new RuntimeException("Not equals " + objs[i] + " " + set.get(valueMapping[i][j]));
-                    }
-                }
-            }
-
-            for (int i = 0; i < defaultParameters.length; i++)
-            {
-                objs[defaultMapping[i]] = defaultParameters[i].get();
+                values[i] = defaultParameters.get(i).get();
             }
 
             try
             {
-                return method.invoke(null, objs);
+                return method.invoke(null, values);
             }
             catch (Exception e)
             {
                 throw new RuntimeException(e);
             }
-        };
+        }
+
+        @Override
+        public void register(int index, Object obj)
+        {
+            Integer objIndex = mapping.get(index);
+
+            if (objIndex == null)
+            {
+                return;
+            }
+
+            values[objIndex] = obj;
+        }
+    }
+
+    private Modifier createModifier(Method method, String ruleSet)
+    {
+        String[] keySet = getKeySet(ruleSet);
+
+        HashMap<String, Integer> ruleMapping = new HashMap<>();
+
+        for (int i = 0; i < keySet.length; i++)
+        {
+            ruleMapping.putIfAbsent(keySet[i], i);
+        }
+
+        HashMap<Integer, Integer> mapping = getKeyMapping(method, ruleMapping);
+        HashMap<Integer, Supplier<?>> defaultParameters = getDefaultConstructors(method, ruleMapping.keySet());
+
+        return new ReflectModifier(method, mapping, defaultParameters);
     }
 
     public Method getRootMethod(Class<?> clazz)
@@ -297,106 +312,65 @@ public class ReflectTLDGenerator
     }
 
 
-    public int[] getKeyMapping(Method method, Set<String> usedParameters)
+    public HashMap<Integer, Integer> getKeyMapping(Method method, HashMap<String, Integer> ruleMap)
     {
-        int[] keyMap = new int[usedParameters.size()];
+        HashMap<Integer, Integer> keyMap = new HashMap<>();
 
         int i = 0;
-        int j = 0;
         for (Parameter parameter : method.getParameters())
         {
-            if (usedParameters.contains(parameter.getName()))
+            if (ruleMap.containsKey(parameter.getName()))
             {
-                keyMap[i++] = j;
+                keyMap.put(ruleMap.get(parameter.getName()), i);
             }
 
-            j++;
+            i++;
         }
 
         return keyMap;
     }
 
-
-    public int[] getDefaultMapping(Method method, Set<String> usedParameters)
+    public HashMap<Integer, Supplier<?>> getDefaultConstructors(Method method, Set<String> usedParameters)
     {
-        int[] keyMap = new int[method.getParameterCount() - usedParameters.size()];
+        Parameter[] parameters = method.getParameters();
+        HashMap<Integer, Supplier<?>> keyMap = new HashMap<>();
 
         int i = 0;
-        int j = 0;
         for (Parameter parameter : method.getParameters())
         {
             if (!usedParameters.contains(parameter.getName()))
             {
-                keyMap[i++] = j;
+                try
+                {
+                    Class<?> type = parameters[i].getType();
+
+                    if (List.class.equals(type))
+                    {
+                        type = ArrayList.class;
+                    }
+
+                    Constructor<?> constructor = type.getConstructor();
+                    keyMap.put(i, () -> {
+                        try
+                        {
+                            return constructor.newInstance();
+                        }
+                        catch (Exception e)
+                        {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                catch (Exception e)
+                {
+                    keyMap.put(i, () -> null);
+                }
             }
 
-            j++;
+            i++;
         }
 
         return keyMap;
-    }
-
-    public Supplier<?>[] getDefaultConstructors(Method method, int[] defaultMapping)
-    {
-        Parameter[] parameters = method.getParameters();
-        Supplier<?>[] keyMap = new Supplier[defaultMapping.length];
-
-        for (int i = 0; i < defaultMapping.length; i++)
-        {
-            try
-            {
-                Class<?> type = parameters[i].getType();
-
-                if (List.class.equals(type))
-                {
-                    type = ArrayList.class;
-                }
-
-                Constructor<?> constructor = type.getConstructor();
-                keyMap[i] = () -> {
-                    try
-                    {
-                        return constructor.newInstance();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                keyMap[i] = () -> null;
-            }
-
-        }
-        return keyMap;
-    }
-
-    public int[][] getValueMapping(Method method, HashMap<String, List<Integer>> route)
-    {
-        int[][] mapping = new int[route.size()][];
-
-        int i = 0;
-        for (Parameter parameter : method.getParameters())
-        {
-            List<Integer> routingList = route.get(parameter.getName());
-
-            if (routingList != null)
-            {
-                mapping[i] = new int[routingList.size()];
-
-                int j = 0;
-                for (int index : routingList)
-                {
-                    mapping[i][j++] = index;
-                }
-
-                i++;
-            }
-        }
-
-        return mapping;
     }
 
     public String[] getKeySet(String ruleNames)

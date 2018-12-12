@@ -7,18 +7,13 @@ import com.christopherjung.parser.ParserInputReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public class RegExParser extends Parser<TreeNode<Character>>
 {
     @Override
     protected TreeNode<Character> parse()
     {
-        return new ConcatNode<>(parseOr(), new ValueNode<>());
-    }
-
-    public TreeNode<Character> parseRaw(String str)
-    {
-        reset(str);
         return parseOr();
     }
 
@@ -120,9 +115,33 @@ public class RegExParser extends Parser<TreeNode<Character>>
         {
             if (eat('('))
             {
+                UnaryOperator<TreeNode<Character>> mapper;
+                if (eat('?'))
+                {
+                    if (eat('='))
+                    {
+                        mapper = LookaheadNode::new;
+                    }
+                    else if (eat('!'))
+                    {
+                        mapper = NegativeLookaheadNode::new;
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Optional Parenthesis error!");
+                    }
+                }
+                else
+                {
+                    mapper = node -> node;
+                }
+
                 TreeNode<Character> temp = parseOr();
-                next();
-                return temp;
+                if (!eat(')'))
+                {
+                    throw new RuntimeException("No Parenthesis closing!");
+                }
+                return mapper.apply(temp);
             }
             else if (eat('.'))
             {
@@ -234,7 +253,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
             return set;
         }
-        else if (cha == 'W' || cha == 'S' || cha =='D')
+        else if (cha == 'W' || cha == 'S' || cha == 'D')
         {
             return negate(specialValues(Character.toLowerCase(cha)));
         }

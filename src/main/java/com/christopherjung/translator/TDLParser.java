@@ -3,7 +3,6 @@ package com.christopherjung.translator;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.grammar.ModifySet;
 import com.christopherjung.scanner.ScanJob;
 import com.christopherjung.scanner.Token;
 
@@ -63,7 +62,7 @@ public class TDLParser
                     Rule restoreRule = entry.getRestoreRule(currentToken);
                     if (restoreRule != null)
                     {
-                        Object[] objects = new Object[restoreRule.size()];
+                        Modifier modifier = source.getModifier(restoreRule);
 
                         for (int i = restoreRule.size() - 1; i >= 0; i--)
                         {
@@ -75,25 +74,12 @@ public class TDLParser
                                 throw new TLDParseException("Parser Table wrong");
                             }
 
-                            objects[i] = restoreToken.getValue();
+                            modifier.register(i, restoreToken.getValue());
                             path.pop();
                         }
 
                         currentPosition = path.peekFirst();
-
-                        Modifier modifier = source.getModifier(restoreRule);
-                        Object modifiedToken;
-                        if (modifier != null)
-                        {
-                            ModifySet modifySet = new ModifySet(objects);
-                            modifiedToken = modifier.modify(modifySet);
-                        }
-                        else
-                        {
-                            modifiedToken = Arrays.stream(objects).reduce("", (a, b) -> a + "" + b);
-                        }
-
-                        tokens.push(new Token(restoreRule.getName(), modifiedToken));
+                        tokens.push(new Token(restoreRule.getName(), modifier.modify()));
                     }
                     else if (table.isIgnore(currentToken.getName()))
                     {

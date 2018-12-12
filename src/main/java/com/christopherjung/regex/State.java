@@ -60,49 +60,4 @@ public class State<T>
 
         return sb.toString();
     }
-
-    public static <T> State<T> compile(TreeNode<T> node)
-    {
-        HashMap<Collection<Integer>, State<T>> states = new HashMap<>();
-        NDA<T> nda = new NDA<>();
-        nda.from(node);
-
-        State<T> state = compile(nda, nda.getFirstPositions(), states);
-
-        //System.out.println(states.values());
-        return state;
-    }
-
-    private static <T> State<T> compile(NDA<T> nda, Collection<Integer> set, HashMap<Collection<Integer>, State<T>> states)
-    {
-        if (states.containsKey(set))
-        {
-            return states.get(set);
-        }
-
-        boolean isFinish = false;
-        Map<T, HashSet<Integer>> next = new LinkedHashMap<>();
-        for (Integer key : set)
-        {
-            T child = nda.getValues(key);
-            if (child != null)
-            {
-                next.computeIfAbsent(child, ($) -> new HashSet<>())
-                        .addAll(nda.getFollowPositions(key));
-            }
-            else
-            {
-                isFinish = true;
-            }
-        }
-
-        State<T> state = new State<>(isFinish);
-        states.put(set, state);
-        for (T key : next.keySet())
-        {
-            state.put(key, compile(nda, next.get(key), states));
-        }
-
-        return state;
-    }
 }

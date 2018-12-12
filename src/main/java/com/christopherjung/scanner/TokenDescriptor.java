@@ -54,7 +54,7 @@ public class TokenDescriptor
             }
         }
 
-        if (length >= 0)
+        if (length > 0)
         {
             return inputStream.fetch(length);
         }

@@ -2,6 +2,7 @@ package com.christopherjung.compile;
 
 import com.christopherjung.container.OrNode;
 import com.christopherjung.container.TreeNode;
+import com.christopherjung.regex.Pattern;
 import com.christopherjung.regex.State;
 import com.christopherjung.scanner.ScanResult;
 import com.christopherjung.scanner.Token;
@@ -55,7 +56,7 @@ public class Compiler
             {
                 TreeNode<String> treeNode = rules.get(name);
                 treeNode = TreeNode.close(treeNode);
-                State<String> compilerState = State.compile(treeNode);
+                State<String> compilerState = Pattern.compile(treeNode);
                 compiled.put(name, compilerState);
             }
 
@@ -81,7 +82,7 @@ public class Compiler
     {
         RuleParser parser = new RuleParser();
         TreeNode<String> parsedRule = parser.parse(rule);
-        rules.put(name, State.compile(parsedRule));
+        rules.put(name, Pattern.compile(parsedRule));
     }
 
     public void compile(ScanResult scanResult)

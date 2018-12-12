@@ -102,7 +102,6 @@ public class Scanner
 
         public void add(TokenDescriptor tokenDescriptor)
         {
-
             if (tokenDescriptor.getName().equalsIgnoreCase("ignore"))
             {
                 ignoreDescriptors.add(tokenDescriptor);

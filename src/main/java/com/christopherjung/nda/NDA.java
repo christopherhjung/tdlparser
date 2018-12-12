@@ -3,55 +3,69 @@ package com.christopherjung.nda;
 import com.christopherjung.container.*;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class NDA<T>
 {
-    private Supplier<Collection<Integer>> supplier = HashSet::new;
-    private Supplier<Map<Integer, Collection<Integer>>> mapSupplier = HashMap::new;
-
     private int position = 0;
 
     private Map<Integer, T> values = new HashMap<>();
     private Map<Integer, Boolean> nullifies = new HashMap<>();
 
-    private List<Collection<Integer>> firstPositions = new ArrayList<>();
-    private List<Collection<Integer>> lastPositions = new ArrayList<>();
-    private Map<Integer, Collection<Integer>> followPositions = mapSupplier.get();
+    private List<Set<Integer>> firstPositions = new ArrayList<>();
+    private List<Set<Integer>> lastPositions = new ArrayList<>();
+    private Map<Integer, Set<Integer>> followPositions = new HashMap<>();
+    private Set<Integer> finish = new HashSet<>();
 
-    public T getValues(int key)
+    public T getValue(int key)
     {
         return values.get(key);
     }
 
-    public Collection<Integer> getFirstPositions()
+    public Set<Integer> getFirstPositions()
     {
         return firstPositions.get(0);
     }
 
-    public Collection<Integer> getFollowPositions(int key)
+    public Set<Integer> getFollowPositions(int key)
     {
         return followPositions.get(key);
     }
 
-    public void from(TreeNode<T> root)
+    public boolean isFinish(int key)
     {
-        compute(root);
-
-/*
-        System.out.println(values);
-        System.out.println(firstPositions);
-        System.out.println(followPositions);
-
-        System.out.println("-----------------");*/
+        return finish.contains(key);
     }
 
-    public int compute(TreeNode<T> root)
+    public static <T> NDA<T> create(TreeNode<T> root)
+    {
+        NDA<T> nda = new NDA<>();
+        nda.compute(root);
+        return nda;
+    }
+
+    private void compute(TreeNode<T> root)
+    {
+        int last = computeRecursive(root);
+
+        if (nullifies.get(last))
+        {
+            firstPositions.get(last).add(position);
+        }
+
+        for (int lastPosition : lastPositions.get(last))
+        {
+            followPositions.get(lastPosition).add(position);
+        }
+
+        finish.add(position);
+    }
+
+    private int computeRecursive(TreeNode<T> root)
     {
         int index = position++;
 
-        Collection<Integer> thisFirstPositions = supplier.get();
-        Collection<Integer> thisLastPositions = supplier.get();
+        Set<Integer> thisFirstPositions = new HashSet<>();
+        Set<Integer> thisLastPositions = new HashSet<>();
         firstPositions.add(thisFirstPositions);
         lastPositions.add(thisLastPositions);
 
@@ -59,11 +73,8 @@ public class NDA<T>
         {
             BinaryNode<T> binaryNode = (BinaryNode<T>) root;
 
-            TreeNode<T> left = binaryNode.getLeft();
-            TreeNode<T> right = binaryNode.getRight();
-
-            int leftIndex = compute(left);
-            int rightIndex = compute(right);
+            int leftIndex = computeRecursive(binaryNode.getLeft());
+            int rightIndex = computeRecursive(binaryNode.getRight());
 
             if (root instanceof ConcatNode)
             {
@@ -100,41 +111,35 @@ public class NDA<T>
         else if (root instanceof UnaryNode)
         {
             UnaryNode<T> unaryNode = (UnaryNode<T>) root;
-
-            TreeNode<T> node = unaryNode.getValue();
-
-            int valueIndex = compute(node);
+            int valueIndex = computeRecursive(unaryNode.getValue());
 
             thisFirstPositions.addAll(firstPositions.get(valueIndex));
             thisLastPositions.addAll(lastPositions.get(valueIndex));
 
-            if (root instanceof PlusNode)
+            if ( root instanceof LookaheadNode )
             {
-                nullifies.put(index, false);
+                LookaheadNode<T> lookaheadNode = (LookaheadNode<T>) root;
 
-                for (int child : lastPositions.get(valueIndex))
-                {
-                    followPositions.get(child).addAll(thisFirstPositions);
-                }
-            }
-            else if (root instanceof QuestNode)
-            {
-                nullifies.put(index, true);
-            }
-            else if (root instanceof StarNode)
-            {
-                nullifies.put(index, true);
 
-                for (int child : lastPositions.get(valueIndex))
+                throw new RuntimeException("Not yet implemented");
+            }
+            else
+            {
+                nullifies.put(index, !(root instanceof PlusNode));
+
+                if (!(root instanceof QuestNode))
                 {
-                    followPositions.get(child).addAll(thisFirstPositions);
+                    for (int child : lastPositions.get(valueIndex))
+                    {
+                        followPositions.get(child).addAll(thisFirstPositions);
+                    }
                 }
             }
         }
         else if (root instanceof ValueNode)
         {
             ValueNode<T> value = (ValueNode<T>) root;
-            followPositions.put(index, supplier.get());
+            followPositions.put(index, new HashSet<>());
 
             nullifies.put(index, false);
             values.put(index, value.getValue());
