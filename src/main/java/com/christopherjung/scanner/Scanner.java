@@ -1,79 +1,34 @@
 package com.christopherjung.scanner;
 
 import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.regex.ConcatStates;
+import com.christopherjung.regex.Pattern;
+import com.christopherjung.regex.State;
+import com.christopherjung.regex.TokenState;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Scanner
 {
-    private List<TokenDescriptor> tokenDescriptors;
-    private List<TokenDescriptor> ignoreDescriptors;
-    private char[] structureChars;
+    private TokenState<Character> tokenState;
 
-    public Scanner(List<TokenDescriptor> tokenDescriptors)
+    public Scanner(TokenState<Character> tokenState)
     {
-        this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
+        this.tokenState = tokenState;
     }
 
-    public Scanner(List<TokenDescriptor> tokenDescriptors, List<TokenDescriptor> ignoreDescriptors, String structureChars)
+    public TokenState<Character> getTokenState()
     {
-        this.tokenDescriptors = new ArrayList<>(tokenDescriptors);
-        this.ignoreDescriptors = new ArrayList<>(ignoreDescriptors);
-        this.structureChars = structureChars.toCharArray();
-
-        Arrays.sort(this.structureChars);
-    }
-
-    public ScanResult scan(InputStream inputStream)
-    {
-        List<Token> tokens = new ArrayList<>();
-
-        ScanJob job = new ScanJob(this, inputStream);
-
-        while (true)
-        {
-            Token token = job.next();
-
-            tokens.add(token);
-
-            if (token == Token.EOF)
-            {
-                break;
-            }
-        }
-
-        return new ScanResult(tokens);
-    }
-
-    public char[] getStructureChars()
-    {
-        return structureChars;
-    }
-
-    public List<TokenDescriptor> getTokenDescriptors()
-    {
-        return tokenDescriptors;
-    }
-
-    public List<TokenDescriptor> getIgnoreDescriptors()
-    {
-        return ignoreDescriptors;
-    }
-
-    @Override
-    public String toString()
-    {
-        return tokenDescriptors.toString();
+        return tokenState;
     }
 
     public static class Builder
     {
-        private List<TokenDescriptor> tokenDescriptors = new ArrayList<>();
-        private List<TokenDescriptor> ignoreDescriptors = new ArrayList<>();
-        private StringBuilder structureCharsBuilder = new StringBuilder();
+        private Map<String, State<Character>> tokenRegex = new HashMap<>();
 
         public void addAll(InputStream stream)
         {
@@ -92,29 +47,22 @@ public class Scanner
 
         public void addStructureChars(String structureChars)
         {
-            structureCharsBuilder.append(structureChars);
+            for (char cha : structureChars.toCharArray())
+            {
+                add(cha + "", "\\" + cha);
+            }
         }
 
         public void add(String token, String regEx)
         {
-            add(TokenDescriptor.create(token, regEx));
-        }
-
-        public void add(TokenDescriptor tokenDescriptor)
-        {
-            if (tokenDescriptor.getName().equalsIgnoreCase("ignore"))
-            {
-                ignoreDescriptors.add(tokenDescriptor);
-            }
-            else
-            {
-                tokenDescriptors.add(tokenDescriptor);
-            }
+            tokenRegex.put(token, Pattern.compile(regEx));
         }
 
         public Scanner build()
         {
-            return new Scanner(tokenDescriptors, ignoreDescriptors, structureCharsBuilder.toString());
+            TokenState<Character> full = ConcatStates.create(tokenRegex);
+
+            return new Scanner(full);
         }
     }
 }

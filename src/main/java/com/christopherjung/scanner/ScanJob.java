@@ -1,9 +1,9 @@
 package com.christopherjung.scanner;
 
 import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.regex.TokenState;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class ScanJob
@@ -27,62 +27,39 @@ public class ScanJob
             return Token.EOF;
         }
 
-        long start = System.currentTimeMillis();
-        long end;
-
         while (reader.hasNext())
         {
-            if (scanner.getStructureChars() != null)
+            TokenState<Character> current = scanner.getTokenState();
+            int target = -1;
+            for (int i = 0; ; )
             {
-                int index = Arrays.binarySearch(scanner.getStructureChars(), reader.get());
+                TokenState<Character> next = current.propagate(reader.get(i++));
 
-                if (index >= 0)
+                if (next == null)
                 {
-                    String name = String.valueOf(reader.eat());
+                    if (current.getToken().equals("ignore"))
+                    {
+                        reader.next(target);
+                        break;
+                    }
 
-                    end = System.currentTimeMillis();
-                    timeNeed += end - start;
+                    String str = reader.fetch(target);
 
-                    return new Token(name, name);
-                }
-            }
-
-            if (fetchToken(scanner.getIgnoreDescriptors()) == null)
-            {
-                Token token = fetchToken(scanner.getTokenDescriptors());
-
-                if (token == null)
-                {
-                    throw new RuntimeException("Scanner error :" + reader.fetch(20) + "...");
+                    return new Token(current.getToken(), str);
                 }
 
-                end = System.currentTimeMillis();
-                timeNeed += end - start;
-                return token;
+                if (!next.isLookahead())
+                {
+                    target = i;
+                }
+
+                current = next;
             }
         }
-
-
-        System.out.println("Scanner: " + timeNeed);
 
         finished = true;
         reader.close();
         return Token.EOF;
-    }
-
-    private Token fetchToken(List<TokenDescriptor> tokenDescriptors)
-    {
-        for (TokenDescriptor tokenDescriptor : tokenDescriptors)
-        {
-            Token token = tokenDescriptor.fetchToken(reader);
-
-            if (token != null)
-            {
-                return token;
-            }
-        }
-
-        return null;
     }
 
     public boolean hasNext()

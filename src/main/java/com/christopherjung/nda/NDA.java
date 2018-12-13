@@ -137,12 +137,9 @@ public class NDA<T>
             if (root instanceof LookaheadNode)
             {
                 nullifies.put(index, false);
-                for (int i = valueIndex; i < position; i++)
+                for (int i = valueIndex; i <= position; i++)
                 {
-                    if (values.containsKey(i))
-                    {
-                        lookaheads.add(i);
-                    }
+                    lookaheads.add(i);
                 }
             }
             else if (root instanceof NegativeLookaheadNode)

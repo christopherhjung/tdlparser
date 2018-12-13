@@ -37,6 +37,11 @@ public class State<T>
         this.accept = accept;
     }
 
+    public void setLookahead(boolean lookahead)
+    {
+        this.lookahead = lookahead;
+    }
+
     public boolean isAccept()
     {
         return accept;

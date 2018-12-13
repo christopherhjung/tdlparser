@@ -6,7 +6,6 @@ public class Token
 {
     public static final Token EOF = new Token("EOF", (String)null);
 
-    private TokenDescriptor descriptor;
     private Object value;
     private String name;
 
@@ -16,15 +15,9 @@ public class Token
         this.value = value;
     }
 
-    public Token(String value, TokenDescriptor descriptor)
-    {
-        this.descriptor = descriptor;
-        this.value = value;
-    }
-
     public String getName()
     {
-        return descriptor == null ? name : descriptor.getName();
+        return name;
     }
 
     public Object getValue()
