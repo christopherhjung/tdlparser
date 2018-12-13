@@ -21,7 +21,7 @@ public class Pattern
         HashMap<Set<Integer>, State<T>> states = new HashMap<>();
         State<T> state = compile(nda, nda.getFirstPositions(), states);
 
-        System.out.println(states.values());
+        //System.out.println(states.values());
 
         return state;
     }
@@ -34,22 +34,33 @@ public class Pattern
         }
 
         boolean isFinish = false;
+        Boolean isLookahead = null;
         Map<T, HashSet<Integer>> next = new LinkedHashMap<>();
         for (Integer key : set)
         {
+            if (isLookahead == null)
+            {
+                isLookahead = nda.isLookahead(key);
+            }
+            else if (isLookahead != nda.isLookahead(key))
+            {
+                throw new RuntimeException("ewidszfuhidjoskpl");
+            }
+
             if (nda.isFinish(key))
             {
                 isFinish = true;
             }
-            else
+
+            T child = nda.getValue(key);
+            if (child != null)
             {
-                T child = nda.getValue(key);
                 next.computeIfAbsent(child, ($) -> new HashSet<>())
                         .addAll(nda.getFollowPositions(key));
             }
         }
 
-        State<T> state = new State<>(isFinish);
+        State<T> state = new State<>(isFinish, isLookahead);
         states.put(set, state);
         for (T key : next.keySet())
         {

@@ -15,10 +15,16 @@ public class NDA<T>
     private List<Set<Integer>> lastPositions = new ArrayList<>();
     private Map<Integer, Set<Integer>> followPositions = new HashMap<>();
     private Set<Integer> finish = new HashSet<>();
+    private Set<Integer> lookaheads = new HashSet<>();
 
     public T getValue(int key)
     {
         return values.get(key);
+    }
+
+    public boolean isLookahead(int key)
+    {
+        return lookaheads.contains(key);
     }
 
     public Set<Integer> getFirstPositions()
@@ -40,6 +46,8 @@ public class NDA<T>
     {
         NDA<T> nda = new NDA<>();
         nda.compute(root);
+
+
         return nda;
     }
 
@@ -57,7 +65,17 @@ public class NDA<T>
             followPositions.get(lastPosition).add(position);
         }
 
-        finish.add(position);
+        if (finish.size() == 0)
+        {
+            finish.add(position);
+        }
+/*
+        System.out.println(values);
+        System.out.println(firstPositions);
+        System.out.println(lastPositions);
+        System.out.println(followPositions);
+        System.out.println(lookaheads);
+        System.out.println(finish);*/
     }
 
     private int computeRecursive(TreeNode<T> root)
@@ -116,12 +134,20 @@ public class NDA<T>
             thisFirstPositions.addAll(firstPositions.get(valueIndex));
             thisLastPositions.addAll(lastPositions.get(valueIndex));
 
-            if ( root instanceof LookaheadNode )
+            if (root instanceof LookaheadNode)
             {
-                LookaheadNode<T> lookaheadNode = (LookaheadNode<T>) root;
-
-
-                throw new RuntimeException("Not yet implemented");
+                nullifies.put(index, false);
+                for (int i = valueIndex; i < position; i++)
+                {
+                    if (values.containsKey(i))
+                    {
+                        lookaheads.add(i);
+                    }
+                }
+            }
+            else if (root instanceof NegativeLookaheadNode)
+            {
+                throw new RuntimeException("not yet implemented");
             }
             else
             {

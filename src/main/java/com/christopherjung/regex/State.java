@@ -1,8 +1,5 @@
 package com.christopherjung.regex;
 
-import com.christopherjung.nda.NDA;
-import com.christopherjung.container.TreeNode;
-
 import java.util.*;
 
 public class State<T>
@@ -13,10 +10,15 @@ public class State<T>
     private HashMap<T, State<T>> next = new LinkedHashMap<>();
 
     private boolean accept;
+    private boolean lookahead;
 
     public State()
     {
-        accept = false;
+    }
+
+    public State(HashMap<T, State<T>> next)
+    {
+        this.next = next;
     }
 
     public State(boolean isFinish)
@@ -24,9 +26,30 @@ public class State<T>
         this.accept = isFinish;
     }
 
+    public State(boolean accept, boolean lookahead)
+    {
+        this.accept = accept;
+        this.lookahead = lookahead;
+    }
+
+    public void setAccept(boolean accept)
+    {
+        this.accept = accept;
+    }
+
     public boolean isAccept()
     {
         return accept;
+    }
+
+    public boolean isLookahead()
+    {
+        return lookahead;
+    }
+
+    public HashMap<T, State<T>> getNext()
+    {
+        return next;
     }
 
     public void put(T cha, State<T> state)
@@ -47,6 +70,7 @@ public class State<T>
         sb.append('(');
         sb.append(info);
         if (accept) sb.append('!');
+        if (lookahead) sb.append('?');
         sb.append(')');
         sb.append("->");
         for (T cha : next.keySet())
@@ -60,4 +84,6 @@ public class State<T>
 
         return sb.toString();
     }
+
+
 }

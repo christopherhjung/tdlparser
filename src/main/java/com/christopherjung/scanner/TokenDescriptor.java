@@ -1,8 +1,8 @@
 package com.christopherjung.scanner;
 
+import com.christopherjung.parser.ParserInputReader;
 import com.christopherjung.regex.Pattern;
 import com.christopherjung.regex.State;
-import com.christopherjung.parser.ParserInputReader;
 
 public class TokenDescriptor
 {
@@ -39,19 +39,36 @@ public class TokenDescriptor
         State<Character> current = begin;
 
         int length = -1;
+        int beforeLookahead = -1;
+        boolean lastLookahead = false;
 
-        for (int i = 0; inputStream.hasNext(i); )
+        for (int currentPosition = 0; inputStream.hasNext(currentPosition); )
         {
-            current = current.propagate(inputStream.get(i++));
+            current = current.propagate(inputStream.get(currentPosition++));
 
             if (current == null)
             {
                 break;
             }
-            else if (current.isAccept())
+
+            if (current.isLookahead())
             {
-                length = i;
+                if (!lastLookahead)
+                {
+                    beforeLookahead = currentPosition;
+                }
             }
+            else if (lastLookahead)
+            {
+                currentPosition = beforeLookahead;
+            }
+
+            if (current.isAccept())
+            {
+                length = currentPosition;
+            }
+
+            lastLookahead = current.isLookahead();
         }
 
         if (length > 0)
