@@ -4,15 +4,13 @@ import com.christopherjung.parser.ParserInputReader;
 import com.christopherjung.regex.TokenState;
 
 import java.io.InputStream;
-import java.util.List;
 
 public class ScanJob
 {
     private Scanner scanner;
     private ParserInputReader reader;
     private boolean finished = false;
-
-    private long timeNeed = 0;
+    private long position = 0;
 
     public ScanJob(Scanner scanner, InputStream inputStream)
     {
@@ -37,7 +35,7 @@ public class ScanJob
 
                 if (next == null)
                 {
-                    if (current.getToken().equals("ignore"))
+                    if ("ignore".equals(current.getToken()))
                     {
                         reader.next(target);
                         break;
