@@ -13,4 +13,6 @@ public abstract class UnaryNode<T> extends TreeNode<T>
     {
         return value;
     }
+
+
 }

@@ -1,6 +1,5 @@
 package com.christopherjung.translator;
 
-import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
 import com.christopherjung.scanner.ScanJob;
@@ -105,10 +104,9 @@ public class TDLParser
 
         if (tokens.size() == 1)
         {
-            Grammar grammar = table.getGrammar();
             Token top = tokens.peekFirst();
 
-            if (!top.getName().equals(grammar.getRootRule().getName()))
+            if (!top.getName().equals("root"))
             {
                 throw new RuntimeException("False End Token " + top.getName() + " " + top.getValue());
             }
@@ -116,6 +114,6 @@ public class TDLParser
             return top.getValue();
         }
 
-        throw new TLDParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(Token::getValue).toArray()) + " " + currentToken);
+        throw new TLDParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(token -> token.getValue()).toArray()) + " " + currentToken);
     }
 }

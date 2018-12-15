@@ -2,6 +2,7 @@ package com.christopherjung.regex;
 
 import com.christopherjung.container.TreeNode;
 import com.christopherjung.nda.NDA;
+import com.christopherjung.reflectparser.RuleParser;
 
 import java.util.*;
 

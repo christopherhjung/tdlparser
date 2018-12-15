@@ -43,13 +43,6 @@ public class ValueNode<T> extends TreeNode<T>
         return value + "";
     }
 
-    public static <T> Collection<T> rawOf(T... chars)
-    {
-        HashSet<T> set = new HashSet<>();
-        Collections.addAll(set, chars);
-        return set;
-    }
-
     @Override
     public ValueNode<T> clone()
     {

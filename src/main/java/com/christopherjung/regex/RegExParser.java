@@ -233,7 +233,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
     {
         if (cha == 'n')
         {
-            return ValueNode.rawOf('\n');
+            return Set.of('\n');
         }
         else if (cha == 'd')
         {
@@ -241,7 +241,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
         }
         else if (cha == 's')
         {
-            return ValueNode.rawOf('\n', ' ', '\t', '\r');
+            return Set.of('\n', ' ', '\t', '\r');
         }
         else if (cha == 'w')
         {

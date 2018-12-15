@@ -43,6 +43,16 @@ public abstract class Parser<T>
         return reader.fetch(chars);
     }
 
+    protected String fetchUntil(String limiter)
+    {
+        return reader.fetchUntil(limiter);
+    }
+
+    protected String fetchOver(String limiter)
+    {
+        return reader.fetchOver(limiter);
+    }
+
     protected String fetchWhile(Predicate<Character> test)
     {
         return reader.fetchWhile(test);

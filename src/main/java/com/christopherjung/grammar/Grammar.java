@@ -11,13 +11,11 @@ public class Grammar
 {
     private HashMap<String, Set<Rule>> rules;
     private HashSet<String> alphabet;
-    private Rule root;
 
-    public Grammar(HashMap<String, Set<Rule>> rules, HashSet<String> alphabet, Rule root)
+    public Grammar(HashMap<String, Set<Rule>> rules, HashSet<String> alphabet)
     {
         this.rules = new HashMap<>(rules);
         this.alphabet = new HashSet<>(alphabet);
-        this.root = root;
     }
 
     public Set<String> getAlphabet()
@@ -32,16 +30,11 @@ public class Grammar
 
     public Rule getRootRule()
     {
-        return root;
+        return rules.get("root").iterator().next();
     }
 
     public Set<Rule> getChildRules(String name)
     {
-        if (name.equals("__start__"))
-        {
-            return Set.of(root);
-        }
-
         return rules.get(name);
     }
 
@@ -77,7 +70,6 @@ public class Grammar
         private HashMap<String, Set<Rule>> rules;
         private HashSet<String> alphabet;
 
-        private Rule root;
         private int index;
 
         public Builder()
@@ -85,11 +77,6 @@ public class Grammar
             rules = new HashMap<>();
             alphabet = new HashSet<>();
             index = 1;
-        }
-
-        public Rule setRootRule(String root)
-        {
-            return this.root = new Rule(0, "__start__", root.split("\\s+"));
         }
 
         public void addRules(String rules)
@@ -109,13 +96,6 @@ public class Grammar
             {
                 String name = inputReader.fetchOver("->").trim();
                 String rule = inputReader.fetchLine();
-
-                if (!hasRoot)
-                {
-                    hasRoot = true;
-                    setRootRule(name);
-                }
-
                 addRule(name, rule);
                 inputReader.eatWhitespace();
             }
@@ -147,6 +127,11 @@ public class Grammar
                 symbols = ruleDescriptor.split("\\s+");
             }
 
+            return addRule(name, symbols);
+        }
+
+        public Rule addRule(String name, String[] symbols)
+        {
             Set<String> symbolSet = new HashSet<>(List.of(symbols));
             alphabet.addAll(symbolSet);
 
@@ -161,17 +146,11 @@ public class Grammar
         public Grammar build()
         {
             alphabet.add(Token.EOF.getName());
-            return new Grammar(rules, alphabet, root);
-        }
-
-        public void removeEpsilon()
-        {
-            for (String ruleName : rules.keySet())
+            if (!rules.containsKey("root"))
             {
-                Set<Rule> children = rules.get(ruleName);
-
-
+                throw new RuntimeException("No root Rule");
             }
+            return new Grammar(rules, alphabet);
         }
     }
 

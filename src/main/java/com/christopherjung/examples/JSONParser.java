@@ -156,62 +156,28 @@ public class JSONParser
         }
     }
 
-    @ParserRoot("object EOF")
+    @ParserRule("root -> object")
     public static JSONObject start(JSONObject object)
     {
         return object;
     }
 
-    @ParserRule("object -> { members? }")
+    @ParserRule("object -> '{' members:pair{separator=','} '}'")
     public static JSONObject nonEmptyObject(List<JSONPair> members)
     {
-        if (members == null)
-        {
-            members = new ArrayList<>();
-        }
-
         return new JSONObject(members);
     }
 
-    @ParserRule("members -> (members ,)? pair")
-    public static List<JSONPair> multiplePairs(JSONPair pair, List<JSONPair> members)
-    {
-        if (members == null)
-        {
-            members = new ArrayList<>();
-        }
-
-        members.add(pair);
-        return members;
-    }
-
-    @ParserRule("pair -> key:string : value")
+    @ParserRule("pair -> key:string ':' value")
     public static JSONPair pair(String key, JSONValue value)
     {
         return new JSONPair(key, value);
     }
 
-    @ParserRule("array -> [ elements? ]")
+    @ParserRule("array -> '[' elements:value{separator=','} ']'")
     public static JSONList nonEmptyArray(List<JSONValue> elements)
     {
-        if (elements == null)
-        {
-            elements = new ArrayList<>();
-        }
-
         return new JSONList(elements);
-    }
-
-    @ParserRule("elements -> (elements ,)? value")
-    public static List<JSONValue> multipleValues(JSONValue value, List<JSONValue> elements)
-    {
-        if (elements == null)
-        {
-            elements = new ArrayList<>();
-        }
-
-        elements.add(value);
-        return elements;
     }
 
     @ParserRule("value -> object")

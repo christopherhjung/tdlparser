@@ -62,7 +62,7 @@ public class ParserInputReader
     {
         StringBuilder builder = new StringBuilder();
 
-        while (chars > 0)
+        while (hasNext() && chars > 0)
         {
             builder.append(eat());
             chars--;
