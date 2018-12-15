@@ -4,7 +4,10 @@ import com.christopherjung.container.*;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.translator.*;
+import com.christopherjung.translator.ParserTable;
+import com.christopherjung.translator.ParserTableGenerator;
+import com.christopherjung.translator.Rule;
+import com.christopherjung.translator.TDLParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -84,7 +87,7 @@ public class ReflectTLDGenerator
         Mapper mapper = new Mapper(method.getParameterCount())
         {
             @Override
-            Object map(Object... values)
+            Object map(Object[] values)
             {
                 try
                 {
@@ -252,7 +255,7 @@ public class ReflectTLDGenerator
                 addModifier(name, new Mapper(2)
                 {
                     @Override
-                    Object map(Object... values)
+                    Object map(Object[] values)
                     {
                         List list = (List) values[0];
                         list.add(values[1]);
@@ -266,12 +269,9 @@ public class ReflectTLDGenerator
                 addModifier(name, new Mapper(1)
                 {
                     @Override
-                    Object map(Object... values)
+                    Object map(Object[] values)
                     {
                         List list = new ArrayList<>();
-                        if(values[0] == null){
-                            throw new RuntimeException("test");
-                        }
                         list.add(values[0]);
                         return list;
                     }
@@ -333,9 +333,9 @@ public class ReflectTLDGenerator
             addModifier(name, new Mapper(2)
             {
                 @Override
-                Object map(Object... values)
+                Object map(Object[] values)
                 {
-                    List list = (List) values[0];
+                    List<Object> list = (List<Object>) values[0];
                     list.add(values[1]);
                     return list;
                 }
@@ -347,9 +347,9 @@ public class ReflectTLDGenerator
             addModifier(name, new Mapper(1)
             {
                 @Override
-                Object map(Object... values)
+                Object map(Object[] values)
                 {
-                    List list = new ArrayList();
+                    List<Object> list = new ArrayList<>();
                     list.add(values[0]);
                     return list;
                 }
@@ -358,14 +358,12 @@ public class ReflectTLDGenerator
             return permutations;
         }
 
-
         throw new RuntimeException("frlfdhueiowpso " + node);
     }
 
 
     private String generateName(TreeNode<String> node)
     {
-
         String name;
 
         if (node instanceof ValueNode)
@@ -385,18 +383,6 @@ public class ReflectTLDGenerator
         return name;
     }
 
-    private ParserRoot getRootRule(Method method)
-    {
-        ParserRoot[] nodes = method.getAnnotationsByType(ParserRoot.class);
-
-        if (nodes.length != 1 && nodes[0] != null)
-        {
-            throw new RuntimeException("No Root ParserRule found");
-        }
-
-        return nodes[0];
-    }
-
     public static abstract class Mapper
     {
         int size;
@@ -411,7 +397,7 @@ public class ReflectTLDGenerator
             return size;
         }
 
-        abstract Object map(Object... values);
+        abstract Object map(Object[] values);
     }
 
     private static class ReflectModifier implements Modifier
@@ -447,23 +433,6 @@ public class ReflectTLDGenerator
         }
     }
 
-    public Method getRootMethod(Class<?> clazz)
-    {
-        Method rootMethod = null;
-        for (Method method : clazz.getMethods())
-        {
-            ParserRoot[] parserRoots = method.getAnnotationsByType(ParserRoot.class);
-
-            if (parserRoots.length == 1)
-            {
-                rootMethod = method;
-                break;
-            }
-        }
-
-        return rootMethod;
-    }
-
     public HashMap<String, Method> getNodeMethods(Class<?> clazz)
     {
         HashMap<String, Method> nodeMethods = new HashMap<>();
@@ -480,7 +449,6 @@ public class ReflectTLDGenerator
         return nodeMethods;
     }
 
-
     public HashMap<String, Set<Class<?>>> getReturnTypes(Map<String, Method> nodeMethods)
     {
         HashMap<String, Set<Class<?>>> returnTypes = new HashMap<>();
@@ -496,24 +464,5 @@ public class ReflectTLDGenerator
         }
 
         return returnTypes;
-    }
-
-
-    public HashMap<Integer, Integer> getKeyMapping(Method method, HashMap<String, Integer> ruleMap)
-    {
-        HashMap<Integer, Integer> keyMap = new HashMap<>();
-
-        int i = 0;
-        for (Parameter parameter : method.getParameters())
-        {
-            if (ruleMap.containsKey(parameter.getName()))
-            {
-                keyMap.put(ruleMap.get(parameter.getName()), i);
-            }
-
-            i++;
-        }
-
-        return keyMap;
     }
 }

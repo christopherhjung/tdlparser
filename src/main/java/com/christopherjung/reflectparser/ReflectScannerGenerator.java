@@ -30,8 +30,6 @@ public class ReflectScannerGenerator
             builder.add(name, tokens.get(name));
         }
 
-
-
         return builder.build();
     }
 

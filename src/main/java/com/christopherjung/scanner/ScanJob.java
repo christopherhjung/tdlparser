@@ -12,6 +12,7 @@ public class ScanJob
     private boolean finished = false;
     private long position = 0;
 
+
     public ScanJob(Scanner scanner, InputStream inputStream)
     {
         this.scanner = scanner;
@@ -43,7 +44,9 @@ public class ScanJob
 
                     String str = reader.fetch(target);
 
-                    return new Token(current.getToken(), str);
+                    Token token = new Token(current.getToken(), str);
+
+                    return token;
                 }
 
                 if (!next.isLookahead())

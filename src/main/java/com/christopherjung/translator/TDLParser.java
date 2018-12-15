@@ -33,7 +33,6 @@ public class TDLParser
 
         path.push(currentPosition);
 
-
         if (!job.hasNext())
         {
             throw new TLDParseException("No Input tokens provided");

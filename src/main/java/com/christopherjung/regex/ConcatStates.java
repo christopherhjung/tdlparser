@@ -9,12 +9,7 @@ public class ConcatStates<T>
 
     public static <T> TokenState<T> create(Map<String, State<T>> list)
     {
-        var concat = new ConcatStates<T>();
-        TokenState<T> result = concat.test(list, new TokenState<>());
-        //System.out.println(result);
-        //System.out.println(concat.cache.values());
-
-        return result;
+        return new ConcatStates<T>().test(list, new TokenState<>());
     }
 
     private TokenState<T> test(Map<String, State<T>> list, TokenState<T> current)
