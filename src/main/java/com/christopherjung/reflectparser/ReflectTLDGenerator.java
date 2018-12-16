@@ -4,13 +4,17 @@ import com.christopherjung.container.*;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.translator.*;
+import com.christopherjung.translator.ParserTable;
+import com.christopherjung.translator.ParserTableGenerator;
+import com.christopherjung.translator.Rule;
+import com.christopherjung.translator.TDLParser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ReflectTLDGenerator
@@ -92,7 +96,7 @@ public class ReflectTLDGenerator
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e );
                 }
             }
         };
@@ -114,6 +118,8 @@ public class ReflectTLDGenerator
 
         for (Permutation permutation : currentRule)
         {
+            Mapper currentMapper = mapper;
+
             Rule rule = builder.addRule(name, permutation.rule.toArray(new String[0]));
             HashMap<Integer, Integer> mapping = new HashMap<>();
 
@@ -126,7 +132,33 @@ public class ReflectTLDGenerator
                 }
             }
 
-            Modifier modifier = new ReflectModifier(mapper, mapping);
+
+            if (permutation.defaultValues.size() > 0)
+            {
+                HashMap<Integer, Supplier<?>> defaultValues = new HashMap<>();
+
+                for (String key : permutation.defaultValues.keySet())
+                {
+                    defaultValues.put(nameMapping.get(key),permutation.defaultValues.get(key));
+                }
+
+                currentMapper = new Mapper(mapper.size)
+                {
+                    @Override
+                    Object map(Object[] values)
+                    {
+                        for ( int key : defaultValues.keySet() )
+                        {
+                            values[key] = defaultValues.get(key).get();
+                        }
+
+                        return mapper.map(values);
+                    }
+                };
+            }
+
+
+            Modifier modifier = new ReflectModifier(currentMapper, mapping);
             modifiers.put(rule, modifier);
         }
     }
@@ -134,15 +166,17 @@ public class ReflectTLDGenerator
     private static class Permutation implements Cloneable
     {
         HashMap<Integer, String> mapping;
+        HashMap<String, Supplier<?>> defaultValues;
         List<String> rule;
 
         public Permutation()
         {
-            this(new HashMap<>(), new ArrayList<>());
+            this(new HashMap<>(), new ArrayList<>(), new HashMap<>());
         }
 
-        public Permutation(HashMap<Integer, String> mapping, List<String> rule)
+        public Permutation(HashMap<Integer, String> mapping, List<String> rule, HashMap<String, Supplier<?>> defaultValues)
         {
+            this.defaultValues = defaultValues;
             this.mapping = mapping;
             this.rule = rule;
         }
@@ -151,6 +185,11 @@ public class ReflectTLDGenerator
         {
             mapping.put(rule.size(), value);
             rule.add(value);
+        }
+
+        private void addDefaultValue(String name, Supplier<?> supplier)
+        {
+            defaultValues.put(name, supplier);
         }
 
         private void addPermutation(Permutation other)
@@ -168,12 +207,26 @@ public class ReflectTLDGenerator
             {
                 mapping.put(i, name);
             }
+
+            if (defaultValues.size() > 1)
+            {
+                throw new RuntimeException("not possible");
+            }
+
+            HashMap<String, Supplier<?>> renamed = new HashMap<>();
+
+            for (Supplier<?> supplier : defaultValues.values())
+            {
+                renamed.put(name, supplier);
+            }
+
+            defaultValues = renamed;
         }
 
         @Override
         protected Permutation clone()
         {
-            return new Permutation(new HashMap<>(mapping), new ArrayList<>(rule));
+            return new Permutation(new HashMap<>(mapping), new ArrayList<>(rule), new HashMap<>(defaultValues));
         }
 
         @Override
@@ -243,7 +296,9 @@ public class ReflectTLDGenerator
 
                 if (node instanceof StarNode)
                 {
-                    permutations.add(new Permutation());
+                    Permutation permutation = new Permutation();
+                    permutation.addDefaultValue(name, ArrayList::new);
+                    permutations.add(permutation);
                 }
 
                 HashMap<String, Integer> nameMappingFirst = new HashMap<>();
@@ -311,7 +366,9 @@ public class ReflectTLDGenerator
 
             if (optionNode.getOption("min") == null || optionNode.getOption("min").equals("0"))
             {
-                permutations.add(new Permutation());
+                Permutation permutation = new Permutation();
+                permutation.addDefaultValue(name, ArrayList::new);
+                permutations.add(permutation);
             }
 
             TreeNode<String> listNode;
