@@ -4,10 +4,7 @@ import com.christopherjung.container.*;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.translator.ParserTable;
-import com.christopherjung.translator.ParserTableGenerator;
-import com.christopherjung.translator.Rule;
-import com.christopherjung.translator.TDLParser;
+import com.christopherjung.translator.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -20,7 +17,7 @@ public class ReflectTLDGenerator
 {
     private HashMap<Rule, Modifier> modifiers;
     private Grammar.Builder builder;
-    private HashMap<String, Set<Class<?>>> returnTypes;
+    //private HashMap<String, Set<Class<?>>> returnTypes;
 
     public TDLParser generate(Class<?> clazz)
     {
@@ -28,7 +25,7 @@ public class ReflectTLDGenerator
 
         HashMap<String, Method> nodeMethods = getNodeMethods(clazz);
 
-        returnTypes = getReturnTypes(nodeMethods);
+        //returnTypes = getReturnTypes(nodeMethods);
 
         builder = new Grammar.Builder();
 

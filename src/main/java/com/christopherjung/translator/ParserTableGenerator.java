@@ -61,7 +61,7 @@ public class ParserTableGenerator
         rootLookahead.add("EOF");
 
         kernels = new HashMap<>();
-        Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule(), rootLookahead));
+        Kernel root = new Kernel(new BasicItem(0, grammar.getRoot(), rootLookahead));
         kernels.put(root, kernels.size());
         kernelList.add(root);
 

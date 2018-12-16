@@ -6,6 +6,23 @@ import java.util.HashMap;
 
 public class ModifierSource
 {
+    private static final Modifier ROOT = new Modifier()
+    {
+        Object object;
+
+        @Override
+        public Object modify()
+        {
+            return object;
+        }
+
+        @Override
+        public void register(int index, Object obj)
+        {
+            object = obj;
+        }
+    };
+
     private HashMap<Rule, Modifier> modifiers;
     private Modifier defaultModifier;
 
@@ -25,7 +42,7 @@ public class ModifierSource
 
         if (modifier == null)
         {
-            modifier = defaultModifier;
+            modifier = ROOT;
         }
 
         return modifier;

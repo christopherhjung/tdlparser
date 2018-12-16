@@ -11,11 +11,13 @@ public class Grammar
 {
     private HashMap<String, Set<Rule>> rules;
     private HashSet<String> alphabet;
+    private Rule root;
 
-    public Grammar(HashMap<String, Set<Rule>> rules, HashSet<String> alphabet)
+    public Grammar(HashMap<String, Set<Rule>> rules, HashSet<String> alphabet, Rule root)
     {
         this.rules = new HashMap<>(rules);
         this.alphabet = new HashSet<>(alphabet);
+        this.root = root;
     }
 
     public Set<String> getAlphabet()
@@ -23,14 +25,14 @@ public class Grammar
         return Collections.unmodifiableSet(alphabet);
     }
 
+    public Rule getRoot()
+    {
+        return root;
+    }
+
     public Set<String> getRuleNames()
     {
         return rules.keySet();
-    }
-
-    public Rule getRootRule()
-    {
-        return rules.get("root").iterator().next();
     }
 
     public Set<Rule> getChildRules(String name)
@@ -150,7 +152,7 @@ public class Grammar
             {
                 throw new RuntimeException("No root Rule");
             }
-            return new Grammar(rules, alphabet);
+            return new Grammar(rules, alphabet, new Rule(-1, "__root__", new String[]{"root"}));
         }
     }
 
