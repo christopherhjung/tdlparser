@@ -4,11 +4,13 @@ import com.christopherjung.grammar.Grammar;
 
 import java.util.*;
 
+
 public class ParserTableGenerator
 {
     private Grammar grammar;
     private HashMap<Set<BasicItem>, Kernel> kernelHashMap;
-    private List<Kernel> kernels = new ArrayList<>();
+    private List<Kernel> kernelList = new ArrayList<>();
+    private HashMap<Kernel, Integer> kernels = new HashMap<>();
     private HashMap<String, Set<String>> firsts = new HashMap<>();
 
     public ParserTable generate(Grammar grammar)
@@ -57,18 +59,20 @@ public class ParserTableGenerator
 
         HashSet<String> rootLookahead = new HashSet<>();
         rootLookahead.add("EOF");
+
+        kernels = new HashMap<>();
         Kernel root = new Kernel(new BasicItem(0, grammar.getRootRule(), rootLookahead));
+        kernels.put(root, kernels.size());
+        kernelList.add(root);
 
         kernelHashMap = new LinkedHashMap<>();
         kernelHashMap.put(root.getItems(), root);
-
-        kernels = new ArrayList<>();
-        kernels.add(root);
 
         HashMap<Integer, HashMap<String, Kernel>> targetClosures = new HashMap<>();
         targetClosures.put(0, createClosure(root));
 
         System.out.println("Generate Closure");
+
         for (int i = 0; i < targetClosures.size(); i++)
         {
             HashMap<String, Kernel> closure = targetClosures.get(i);
@@ -76,18 +80,19 @@ public class ParserTableGenerator
             {
                 Kernel kernel = closure.get(key);
 
-                if (kernels.contains(kernel))
+                if (kernels.containsKey(kernel))
                 {
                     continue;
                 }
 
                 targetClosures.put(kernels.size(), createClosure(kernel));
-                kernels.add(kernel);
+                kernels.put(kernel, kernels.size());
+                kernelList.add(kernel);
             }
         }
 
-        System.out.println("Generate Parsing Table");
 
+        System.out.println("Generate Parsing Table");
         ParserTable table = new ParserTable(grammar, ignores);
         for (Integer kernelIndex : targetClosures.keySet())
         {
@@ -101,12 +106,12 @@ public class ParserTableGenerator
             {
                 Kernel kernel = items.get(str);
 
-                int index = kernels.indexOf(kernel);
+                int index = kernels.get(kernel);
 
                 goTos.put(str, index);
             }
 
-            Set<BasicItem> finished = kernels.get(kernelIndex).getFinishedItems();
+            Set<BasicItem> finished = kernelList.get(kernelIndex).getFinishedItems();
 
             for (BasicItem item : finished)
             {
@@ -130,6 +135,25 @@ public class ParserTableGenerator
         return table;
     }
 
+    private Set<String> estimateLookahead(BasicItem item)
+    {
+        if (item.isFinished())
+        {
+            return item.getLookahead();
+        }
+        else
+        {
+            if (grammar.getAlphabet().contains(item.getNextKey()))
+            {
+                return Set.of(item.getNextKey());
+            }
+            else
+            {
+                return getFirst(item.getNextKey());
+            }
+        }
+    }
+
     public HashMap<String, Kernel> createClosure(Kernel kernel)
     {
         HashMap<String, Set<BasicItem>> result = new LinkedHashMap<>();
@@ -151,23 +175,7 @@ public class ParserTableGenerator
 
             if (grammar.contains(key))
             {
-                HashSet<String> lookahead = new HashSet<>();
-
-                if (nextItem.isFinished())
-                {
-                    lookahead.addAll(nextItem.getLookahead());
-                }
-                else
-                {
-                    if (grammar.getAlphabet().contains(nextItem.getNextKey()))
-                    {
-                        lookahead.add(nextItem.getNextKey());
-                    }
-                    else
-                    {
-                        lookahead.addAll(getFirst(nextItem.getNextKey()));
-                    }
-                }
+                Set<String> lookahead = estimateLookahead(nextItem);
 
                 for (Rule rule : grammar.getChildRules(key))
                 {
@@ -217,7 +225,6 @@ public class ParserTableGenerator
 
                 after.add(first);
             }
-
 
             checkSingleFinish(symbol, after);
 
