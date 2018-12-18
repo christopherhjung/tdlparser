@@ -10,6 +10,7 @@ import com.christopherjung.translator.Rule;
 import com.christopherjung.translator.TDLParser;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -44,7 +45,28 @@ public class ReflectTLDGenerator
 
         System.out.println(table.getEntries().size());
 
-        ModifierSource source = new ModifierSource(modifiers);
+        Supplier<Object> parserSupplier;
+
+        try
+        {
+            Constructor<?> constructor = clazz.getConstructor();
+            parserSupplier = () -> {
+                try
+                {
+                    return constructor.newInstance();
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException("Invoke exception");
+                }
+            };
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("No Default Constructor");
+        }
+
+        ModifierSource source = new ModifierSource(modifiers, parserSupplier);
 
         return new TDLParser(table, source);
     }
@@ -88,15 +110,15 @@ public class ReflectTLDGenerator
         Mapper mapper = new Mapper(method.getParameterCount())
         {
             @Override
-            Object map(Object[] values)
+            Object map(Object tag, Object[] values)
             {
                 try
                 {
-                    return method.invoke(null, values);
+                    return method.invoke(tag, values);
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException(e );
+                    throw new RuntimeException(e);
                 }
             }
         };
@@ -118,6 +140,11 @@ public class ReflectTLDGenerator
 
         for (Permutation permutation : currentRule)
         {
+            if (permutation.size() == 0)
+            {
+                continue;
+            }
+
             Mapper currentMapper = mapper;
 
             Rule rule = builder.addRule(name, permutation.rule.toArray(new String[0]));
@@ -132,34 +159,31 @@ public class ReflectTLDGenerator
                 }
             }
 
-
             if (permutation.defaultValues.size() > 0)
             {
                 HashMap<Integer, Supplier<?>> defaultValues = new HashMap<>();
 
                 for (String key : permutation.defaultValues.keySet())
                 {
-                    defaultValues.put(nameMapping.get(key),permutation.defaultValues.get(key));
+                    defaultValues.put(nameMapping.get(key), permutation.defaultValues.get(key));
                 }
 
                 currentMapper = new Mapper(mapper.size)
                 {
                     @Override
-                    Object map(Object[] values)
+                    Object map(Object parser, Object[] values)
                     {
-                        for ( int key : defaultValues.keySet() )
+                        for (int key : defaultValues.keySet())
                         {
                             values[key] = defaultValues.get(key).get();
                         }
 
-                        return mapper.map(values);
+                        return mapper.map(parser, values);
                     }
                 };
             }
 
-
-            Modifier modifier = new ReflectModifier(currentMapper, mapping);
-            modifiers.put(rule, modifier);
+            modifiers.put(rule, new ReflectModifier(currentMapper, mapping));
         }
     }
 
@@ -185,6 +209,11 @@ public class ReflectTLDGenerator
         {
             mapping.put(rule.size(), value);
             rule.add(value);
+        }
+
+        public int size()
+        {
+            return rule.size();
         }
 
         private void addDefaultValue(String name, Supplier<?> supplier)
@@ -287,49 +316,7 @@ public class ReflectTLDGenerator
             else if (node instanceof StarNode || node instanceof PlusNode)
             {
                 TreeNode<String> subTree = unaryNode.getValue();
-                String name = "list#" + generateName(subTree);
-
-                List<Permutation> permutations = new ArrayList<>();
-                Permutation list = new Permutation();
-                list.addValue(name);
-                permutations.add(list);
-
-                if (node instanceof StarNode)
-                {
-                    Permutation permutation = new Permutation();
-                    permutation.addDefaultValue(name, ArrayList::new);
-                    permutations.add(permutation);
-                }
-
-                HashMap<String, Integer> nameMappingFirst = new HashMap<>();
-                nameMappingFirst.put(name, 0);
-                nameMappingFirst.put("element", 1);
-                addModifier(name, new Mapper(2)
-                {
-                    @Override
-                    Object map(Object[] values)
-                    {
-                        List list = (List) values[0];
-                        list.add(values[1]);
-                        return list;
-                    }
-                }, nameMappingFirst, new ConcatNode<>(new ValueNode<>(name), new NameNode<>("element", subTree)));
-
-
-                HashMap<String, Integer> nameMappingSecond = new HashMap<>();
-                nameMappingSecond.put("element", 0);
-                addModifier(name, new Mapper(1)
-                {
-                    @Override
-                    Object map(Object[] values)
-                    {
-                        List list = new ArrayList<>();
-                        list.add(values[0]);
-                        return list;
-                    }
-                }, nameMappingSecond, new NameNode<>("element", subTree));
-
-                return permutations;
+                return sequence(subTree, node instanceof StarNode, null);
             }
             else if (node instanceof NameNode)
             {
@@ -349,70 +336,97 @@ public class ReflectTLDGenerator
         {
             ValueNode<String> valueNode = (ValueNode<String>) node;
 
-            Permutation value = new Permutation();
-            value.addValue(valueNode.getValue());
-            return new ArrayList<>(List.of(value));
+            String value = valueNode.getValue();
+
+            List<Permutation> permutations = new ArrayList<>();
+
+            Permutation permutation = new Permutation();
+            permutation.addValue(value);
+            permutations.add(permutation);
+
+            return permutations;
         }
         else if (node instanceof OptionNode)
         {
             OptionNode<String> optionNode = (OptionNode<String>) node;
             TreeNode<String> subTree = optionNode.getTarget();
-            String name = "sequence" + optionCounter++ + "#" + generateName(subTree);
-            List<Permutation> permutations = new ArrayList<>();
-            Permutation list = new Permutation();
-            list.addValue(name);
-            permutations.add(list);
+            return sequence(subTree,
+                    optionNode.getInt("min", 0) == 0,
+                    optionNode.getOption("separator"));
+        }
+
+        throw new RuntimeException("Unknown TreeNode " + node);
+    }
 
 
-            if (optionNode.getOption("min") == null || optionNode.getOption("min").equals("0"))
+    public List<Permutation> sequence(TreeNode<String> subTree, boolean nullable, String separator)
+    {
+        String name;
+
+        if (separator == null)
+        {
+            if (nullable)
             {
-                Permutation permutation = new Permutation();
-                permutation.addDefaultValue(name, ArrayList::new);
-                permutations.add(permutation);
-            }
-
-            TreeNode<String> listNode;
-            if (optionNode.getOption("separator") != null)
-            {
-                listNode = new ConcatNode<>(new ConcatNode<>(new ValueNode<>(name), new ValueNode<>(optionNode.getOption("separator"))), new NameNode<>("element", subTree));
+                name = "nullableList#" + generateName(subTree);
             }
             else
             {
-                listNode = new ConcatNode<>(new ValueNode<>(name), new NameNode<>("element", subTree));
+                name = "list#" + generateName(subTree);
             }
+        }
+        else
+        {
+            name = "sequence" + optionCounter++ + "#" + generateName(subTree);
+        }
+        List<Permutation> permutations = new ArrayList<>();
+        Permutation list = new Permutation();
+        list.addValue(name);
+        permutations.add(list);
 
-            HashMap<String, Integer> nameMapper = new HashMap<>();
-            nameMapper.put(name, 0);
-            nameMapper.put("element", 1);
-            addModifier(name, new Mapper(2)
-            {
-                @Override
-                Object map(Object[] values)
-                {
-                    List<Object> list = (List<Object>) values[0];
-                    list.add(values[1]);
-                    return list;
-                }
-            }, nameMapper, listNode);
-
-
-            HashMap<String, Integer> nameMapperRight = new HashMap<>();
-            nameMapperRight.put("element", 0);
-            addModifier(name, new Mapper(1)
-            {
-                @Override
-                Object map(Object[] values)
-                {
-                    List<Object> list = new ArrayList<>();
-                    list.add(values[0]);
-                    return list;
-                }
-            }, nameMapperRight, new NameNode<>("element", subTree));
-
-            return permutations;
+        if (nullable)
+        {
+            Permutation permutation = new Permutation();
+            permutation.addDefaultValue(name, ArrayList::new);
+            permutations.add(permutation);
         }
 
-        throw new RuntimeException("frlfdhueiowpso " + node);
+        TreeNode<String> listNode = new ValueNode<>(name);
+        if (separator != null)
+        {
+            listNode = new ConcatNode<>(listNode, new ValueNode<>(separator));
+        }
+
+        listNode = new ConcatNode<>(listNode, new NameNode<>("element", subTree));
+
+        HashMap<String, Integer> nameMapper = new HashMap<>();
+        nameMapper.put(name, 0);
+        nameMapper.put("element", 1);
+        addModifier(name, new Mapper(2)
+        {
+            @Override
+            Object map(Object tag, Object[] values)
+            {
+                List<Object> list = (List<Object>) values[0];
+                list.add(values[1]);
+                return list;
+            }
+        }, nameMapper, listNode);
+
+
+        HashMap<String, Integer> nameMapperRight = new HashMap<>();
+        nameMapperRight.put("element", 0);
+        addModifier(name, new Mapper(1)
+        {
+            @Override
+            Object map(Object tag, Object[] values)
+            {
+                List<Object> list = new ArrayList<>();
+                list.add(values[0]);
+                return list;
+            }
+        }, nameMapperRight, new NameNode<>("element", subTree));
+
+        return permutations;
     }
 
 
@@ -451,7 +465,7 @@ public class ReflectTLDGenerator
             return size;
         }
 
-        abstract Object map(Object[] values);
+        abstract Object map(Object tag, Object[] values);
     }
 
     private static class ReflectModifier implements Modifier
@@ -468,9 +482,9 @@ public class ReflectTLDGenerator
         }
 
         @Override
-        public Object modify()
+        public Object modify(Object parser)
         {
-            return mapper.map(values);
+            return mapper.map(parser, values);
         }
 
         @Override

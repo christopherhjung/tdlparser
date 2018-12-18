@@ -92,7 +92,7 @@ public class ParserTable
         @Override
         public String toString()
         {
-            return goTos.toString();
+            return actions.toString() + " " + goTos.toString();
         }
     }
 }

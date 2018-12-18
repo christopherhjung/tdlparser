@@ -27,6 +27,7 @@ public class TDLParser
 
     public Object parse(ScanJob job)
     {
+        Object tag = source.createTag();
         int currentPosition = 0;
 
         path.clear();
@@ -78,7 +79,7 @@ public class TDLParser
                         }
 
                         currentPosition = path.peekFirst();
-                        tokens.push(new Token(restoreRule.getName(), modifier.modify()));
+                        tokens.push(new Token(restoreRule.getName(), modifier.modify(tag)));
                     }
                     else if (table.isIgnore(currentToken.getName()))
                     {
@@ -115,6 +116,7 @@ public class TDLParser
             return top.getValue();
         }
 
+        System.out.println(table.getEntry(currentPosition));
         throw new TLDParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(token -> token.getValue()).toArray()) + " " + currentToken);
     }
 }

@@ -103,7 +103,7 @@ public class ReflectScannerGenerator
         }
         catch (Exception e)
         {
-            throw new RuntimeException("Field");
+            throw new RuntimeException("Field",e);
         }
 
         return result;

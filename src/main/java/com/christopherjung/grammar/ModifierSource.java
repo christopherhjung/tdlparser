@@ -3,6 +3,7 @@ package com.christopherjung.grammar;
 import com.christopherjung.translator.Rule;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class ModifierSource
 {
@@ -11,7 +12,7 @@ public class ModifierSource
         Object object;
 
         @Override
-        public Object modify()
+        public Object modify(Object parser)
         {
             return object;
         }
@@ -24,16 +25,17 @@ public class ModifierSource
     };
 
     private HashMap<Rule, Modifier> modifiers;
-    private Modifier defaultModifier;
+    private Supplier<Object> parserSupplier;
 
-    public ModifierSource(HashMap<Rule, Modifier> modifiers)
+    public ModifierSource(HashMap<Rule, Modifier> modifiers, Supplier<Object> parserSupplier)
     {
+        this.parserSupplier = parserSupplier;
         this.modifiers = new HashMap<>(modifiers);
     }
 
-    public ModifierSource()
+    public Object createTag()
     {
-        this(new HashMap<>());
+        return parserSupplier.get();
     }
 
     public Modifier getModifier(Rule rule)
@@ -46,11 +48,6 @@ public class ModifierSource
         }
 
         return modifier;
-    }
-
-    public void setDefaultModifier(Modifier defaultModifier)
-    {
-        this.defaultModifier = defaultModifier;
     }
 }
 

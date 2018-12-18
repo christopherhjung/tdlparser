@@ -23,6 +23,21 @@ public class OptionNode<T> extends TreeNode<T>
         return options.get(key);
     }
 
+    public String getOption(String key, Object defaultValue)
+    {
+        return options.getOrDefault(key, defaultValue.toString());
+    }
+
+    public int getInt(String key, int defaultValue)
+    {
+        if (options.containsKey(key))
+        {
+            return Integer.parseInt(options.get(key));
+        }
+
+        return defaultValue;
+    }
+
     public TreeNode<T> getTarget()
     {
         return target;
