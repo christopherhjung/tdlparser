@@ -1,19 +1,19 @@
 package com.christopherjung.regex;
 
-public class Machine<T>
+public class Machine
 {
-    private State<T> begin;
+    private State<Character> begin;
 
-    public Machine(State<T> begin)
+    public Machine(State<Character> begin)
     {
         this.begin = begin;
     }
 
-    public boolean check(T... str)
+    public boolean check(String str)
     {
-        State<T> current = begin;
+        State<Character> current = begin;
 
-        for (T key : str)
+        for (char key : str.toCharArray())
         {
             current = current.propagate(key);
             if (current == null)
@@ -23,11 +23,6 @@ public class Machine<T>
         }
 
         return current.isAccept();
-    }
-
-    public static Machine<Character> compile(String regEx)
-    {
-        return new Machine<>(Pattern.compile(regEx));
     }
 
 }

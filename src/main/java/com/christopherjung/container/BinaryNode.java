@@ -13,6 +13,11 @@ public abstract class BinaryNode<T> extends TreeNode<T>
 
     public BinaryNode(TreeNode<T> left, TreeNode<T> right)
     {
+        if (left == null || right == null)
+        {
+            throw new RuntimeException("Null not allowed");
+        }
+
         this.left = left;
         this.right = right;
     }

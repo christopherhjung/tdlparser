@@ -136,9 +136,9 @@ public class ReflectTLDGenerator
 
     private void addModifier(String name, Mapper mapper, HashMap<String, Integer> nameMapping, TreeNode<String> ruleTree)
     {
-        List<Permutation> currentRule = generatePermutations(ruleTree);
+        List<Permutation> permutations = generatePermutations(ruleTree);
 
-        for (Permutation permutation : currentRule)
+        for (Permutation permutation : permutations)
         {
             if (permutation.size() == 0)
             {
@@ -159,8 +159,10 @@ public class ReflectTLDGenerator
                 }
             }
 
+
             if (permutation.defaultValues.size() > 0)
             {
+
                 HashMap<Integer, Supplier<?>> defaultValues = new HashMap<>();
 
                 for (String key : permutation.defaultValues.keySet())
@@ -185,6 +187,7 @@ public class ReflectTLDGenerator
 
             modifiers.put(rule, new ReflectModifier(currentMapper, mapping));
         }
+
     }
 
     private static class Permutation implements Cloneable
@@ -228,6 +231,7 @@ public class ReflectTLDGenerator
                 mapping.put(i + rule.size(), other.mapping.get(i));
             }
             rule.addAll(other.rule);
+            defaultValues.putAll(other.defaultValues);
         }
 
         private void rename(String name)
@@ -350,9 +354,18 @@ public class ReflectTLDGenerator
         {
             OptionNode<String> optionNode = (OptionNode<String>) node;
             TreeNode<String> subTree = optionNode.getTarget();
-            return sequence(subTree,
+            List<Permutation> permutations = sequence(subTree,
                     optionNode.getInt("min", 0) == 0,
                     optionNode.getOption("separator"));
+
+
+            if (permutations.get(permutations.size() - 1).defaultValues.size() > 0)
+            {
+                permutations = permutations;
+            }
+
+
+            return permutations;
         }
 
         throw new RuntimeException("Unknown TreeNode " + node);
@@ -378,6 +391,8 @@ public class ReflectTLDGenerator
         {
             name = "sequence" + optionCounter++ + "#" + generateName(subTree);
         }
+
+
         List<Permutation> permutations = new ArrayList<>();
         Permutation list = new Permutation();
         list.addValue(name);

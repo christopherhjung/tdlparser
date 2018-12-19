@@ -273,13 +273,6 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return Set.of(eat());
     }
 
-    public static Collection<TreeNode<Character>> fromTo(int from, int to)
-    {
-        HashSet<TreeNode<Character>> set = new HashSet<>();
-        fromTo(set, from, to);
-        return set;
-    }
-
     public static Collection<Character> rawFromTo(int from, int to)
     {
         HashSet<Character> set = new HashSet<>();
@@ -290,14 +283,6 @@ public class RegExParser extends Parser<TreeNode<Character>>
         return set;
     }
 
-    public static void fromTo(Collection<TreeNode<Character>> collection, int from, int to)
-    {
-        for (int i = to; i >= from; i--)
-        {
-            collection.add(new ValueNode<>((char) i));
-        }
-    }
-
     public static void fromToChars(Collection<Character> collection, int from, int to)
     {
         for (int i = to; i >= from; i--)
@@ -306,15 +291,67 @@ public class RegExParser extends Parser<TreeNode<Character>>
         }
     }
 
-    public static Collection<TreeNode<Character>> map(char... chars)
+    private static TreeNode<Character> DIGITS = OrNode.all(rawFromTo('1', '9'));
+    private static TreeNode<Character> DIGITS_WITH_ZERO = new OrNode<>(new ValueNode<>('0'), DIGITS);
+
+    public static TreeNode<Character> numberMatch(long max)
     {
-        HashSet<TreeNode<Character>> result = new HashSet<>();
-        for (char cha : chars)
+        TreeNode<Character> result = null;
+        TreeNode<Character> all = new ValueNode<>('0');
+        TreeNode<Character> tenner = null;
+
+        for (; max > 0; )
         {
-            result.add(new ValueNode<>(cha));
+            int digit = (int) (max % 10);
+            max /= 10;
+
+            if (result == null)
+            {
+                result = OrNode.all(rawFromTo('0', '0' + digit));
+            }
+            else if (max > 0)
+            {
+                result = new ConcatNode<>(OrNode.all(rawFromTo('0', '0' + digit)), result);
+
+                if (digit > 0)
+                {
+                    result = new OrNode<>(result,
+                            new ConcatNode<>(OrNode.all(rawFromTo('0', '0' + (digit - 1))), tenner));
+                }
+            }
+            else
+            {
+                result = new ConcatNode<>(new ValueNode<>((char) ('0' + digit)), result);
+            }
+
+            TreeNode<Character> range;
+            if (max > 0)
+            {
+                range = DIGITS;
+            }
+            else if (digit > 1)
+            {
+                range = OrNode.all(rawFromTo('1', '0' + (digit - 1)));
+            }
+            else break;
+
+            if (tenner == null)
+            {
+                all = new OrNode<>(range, all);
+                tenner = DIGITS_WITH_ZERO;
+            }
+            else
+            {
+                all = new OrNode<>(new ConcatNode<>(range, tenner), all);
+                tenner = new ConcatNode<>(DIGITS_WITH_ZERO, tenner);
+            }
         }
 
-        return result;
-    }
+        if (result != null)
+        {
+            all = new OrNode<>(all, result);
+        }
 
+        return all;
+    }
 }
