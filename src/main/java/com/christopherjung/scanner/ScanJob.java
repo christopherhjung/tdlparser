@@ -32,7 +32,8 @@ public class ScanJob
             int target = -1;
             for (int i = 0; ; )
             {
-                TokenState<Character> next = current.propagate(reader.get(i++));
+                char currentChar = reader.get(i++);
+                TokenState<Character> next = current.propagate(currentChar);
 
                 if (next == null)
                 {
@@ -44,12 +45,15 @@ public class ScanJob
 
                     String str = reader.fetch(target);
 
-                    Token token = new Token(current.getToken(), str);
+                    if (current.getToken() == null)
+                    {
+                        throw new RuntimeException("Unknown token " + str );
+                    }
 
-                    return token;
+                    return new Token(current.getToken(), str);
                 }
 
-                if (!next.isLookahead())
+                if (!current.isLookahead(currentChar))
                 {
                     target = i;
                 }

@@ -1,6 +1,9 @@
 package com.christopherjung.regex;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 public class State<T>
 {
@@ -8,9 +11,9 @@ public class State<T>
     private int info = counter++;
 
     private HashMap<T, State<T>> next = new LinkedHashMap<>();
+    private Set<T> lookahead = new HashSet<>();
 
     private boolean accept;
-    private boolean lookahead;
 
     public State()
     {
@@ -26,7 +29,7 @@ public class State<T>
         this.accept = isFinish;
     }
 
-    public State(boolean accept, boolean lookahead)
+    public State(boolean accept, Set<T> lookahead)
     {
         this.accept = accept;
         this.lookahead = lookahead;
@@ -37,7 +40,12 @@ public class State<T>
         this.accept = accept;
     }
 
-    public void setLookahead(boolean lookahead)
+    public Set<T> getLookahead()
+    {
+        return lookahead;
+    }
+
+    public void setLookahead(Set<T> lookahead)
     {
         this.lookahead = lookahead;
     }
@@ -47,9 +55,9 @@ public class State<T>
         return accept;
     }
 
-    public boolean isLookahead()
+    public boolean isLookahead(T element)
     {
-        return lookahead;
+        return lookahead == null ? false : lookahead.contains(element);
     }
 
     public HashMap<T, State<T>> getNext()
@@ -75,7 +83,13 @@ public class State<T>
         sb.append('(');
         sb.append(info);
         if (accept) sb.append('!');
-        if (lookahead) sb.append('?');
+
+
+        if (lookahead != null && lookahead.size() > 0)
+        {
+            sb.append(lookahead);
+        }
+
         sb.append(')');
         sb.append("->");
         for (T cha : next.keySet())

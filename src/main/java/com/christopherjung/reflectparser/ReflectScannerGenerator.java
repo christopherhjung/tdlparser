@@ -15,6 +15,7 @@ public class ReflectScannerGenerator
         List<Field> tokenFields = getAnnotatedFields(clazz, ScannerToken.class);
 
         var tokens = getTokens(tokenFields);
+
         String structure = getStructure(structureFields);
         String ignore = getIgnore(ignoreFields);
 

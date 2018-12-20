@@ -6,6 +6,7 @@ import com.christopherjung.regex.State;
 import com.christopherjung.regex.TokenState;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Scanner
@@ -24,7 +25,7 @@ public class Scanner
 
     public static class Builder
     {
-        private Map<String, State<Character>> tokenRegex = new HashMap<>();
+        private Map<String, State<Character>> tokenRegex = new LinkedHashMap<>();
 
         public void addStructureChars(String structureChars)
         {

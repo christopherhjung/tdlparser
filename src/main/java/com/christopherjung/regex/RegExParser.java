@@ -73,7 +73,7 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
                 if (!eat('}'))
                 {
-                    throw new ParserInputReader.ParseException("no closing");
+                    throw new ParserInputReader.ParseException(state + " no closing " + fetch(20));
                 }
 
                 TreeNode<Character> temp = state;
@@ -197,13 +197,9 @@ public class RegExParser extends Parser<TreeNode<Character>>
 
                 return OrNode.all(nodes);
             }
-            else if (is('\\'))
-            {
-                return parseValue();
-            }
             else if (!is('|') && !is('*') && !is('+'))
             {
-                return new ValueNode<>(eat());
+                return parseValue();
             }
         }
 
@@ -224,6 +220,36 @@ public class RegExParser extends Parser<TreeNode<Character>>
         if (is('\\'))
         {
             return OrNode.all(parseValues());
+        }
+        else if (eat('#'))
+        {
+            if (!eat('{'))
+            {
+                throw new RuntimeException("not possible");
+            }
+
+            String leftString = "0";
+            String rightString = fetchWhile(cha -> cha != ',' && cha != '}');
+
+            if (!is('}'))
+            {
+                eat(',');
+                leftString = rightString;
+                rightString = fetchUntil("}");
+            }
+
+            long left = Long.parseLong(leftString);
+            long right = Long.parseLong(rightString);
+
+            if (!eat('}'))
+            {
+                throw new RuntimeException("not possible");
+            }
+
+            System.out.println("lol");
+            TreeNode<Character> treeNode = numberMatch(left, right);
+
+            return treeNode;
         }
 
         return new ValueNode<>(eat());
@@ -294,8 +320,25 @@ public class RegExParser extends Parser<TreeNode<Character>>
     private static TreeNode<Character> DIGITS = OrNode.all(rawFromTo('1', '9'));
     private static TreeNode<Character> DIGITS_WITH_ZERO = new OrNode<>(new ValueNode<>('0'), DIGITS);
 
-    public static TreeNode<Character> numberMatch(long max)
+    public static TreeNode<Character> numberMatch(long min, long max)
     {
+        if (min < 0)
+        {
+            if (max <= 0)
+            {
+                return new ConcatNode<>(new ValueNode<>('-'), numberMatch(-max, -min));
+            }
+            else
+            {
+                return new OrNode<>(numberMatch(0, max), numberMatch(min, 0));
+            }
+        }
+
+        if (min > 0)
+        {
+            throw new RuntimeException("Not yet implemented");
+        }
+
         TreeNode<Character> result = null;
         TreeNode<Character> all = new ValueNode<>('0');
         TreeNode<Character> tenner = null;

@@ -16,7 +16,7 @@ public class ConcatStates<T>
     {
         HashSet<T> values = new HashSet<>();
         boolean accept = false;
-        boolean lookahead = false;
+        Set<T> lookahead = new HashSet<>();
 
         for (String token : list.keySet())
         {
@@ -25,8 +25,8 @@ public class ConcatStates<T>
             {
                 current.setToken(token);
                 accept = true;
-                lookahead = state.isLookahead();
             }
+            lookahead.addAll(state.getLookahead());
             values.addAll(state.getNext().keySet());
         }
 
