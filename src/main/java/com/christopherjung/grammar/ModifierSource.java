@@ -1,6 +1,6 @@
 package com.christopherjung.grammar;
 
-import com.christopherjung.translator.Rule;
+import com.christopherjung.parser.Rule;
 
 import java.util.HashMap;
 import java.util.function.Supplier;

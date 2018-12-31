@@ -1,125 +1,115 @@
 package com.christopherjung.parser;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.function.Predicate;
+import com.christopherjung.grammar.Grammar;
+import com.christopherjung.grammar.Modifier;
+import com.christopherjung.grammar.ModifierSource;
+import com.christopherjung.scanner.ScanJob;
+import com.christopherjung.scanner.Token;
 
-public abstract class Parser<T>
+import java.util.Arrays;
+import java.util.LinkedList;
+
+public class Parser
 {
-    private ParserInputReader reader;
+    private ParserTable table;
+    private ModifierSource source;
+    private LinkedList<Integer> path;
+    private LinkedList<Token> tokens;
 
-    protected void reset(String str)
+    public Parser(ParserTable table, ModifierSource source)
     {
-        reset(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+        this.table = table;
+        this.source = source;
+
+        path = new LinkedList<>();
+        tokens = new LinkedList<>();
     }
 
-    protected void reset(InputStream inputStream)
+    public Object parse(ScanJob job)
     {
-        this.reader = new ParserInputReader(inputStream);
-    }
+        Object tag = source.createTag();
+        int currentPosition = 0;
 
-    public T parse(String str)
-    {
-        reset(str);
-        return parse();
-    }
+        path.clear();
+        tokens.clear();
 
-    public T parse(InputStream stream)
-    {
-        reset(stream);
-        return parse();
-    }
+        path.push(currentPosition);
 
-    protected abstract T parse();
+        if (!job.hasNext())
+        {
+            throw new ParseException("No Input tokens provided");
+        }
 
-    public long getPosition()
-    {
-        return reader.getPosition();
-    }
+        Token currentToken = job.next();
 
-    protected String fetch(int chars)
-    {
-        return reader.fetch(chars);
-    }
+        for (; ; )
+        {
+            ParserTable.Entry entry = table.getEntry(currentPosition);
 
-    protected String fetchUntil(String limiter)
-    {
-        return reader.fetchUntil(limiter);
-    }
+            if (path.size() > tokens.size())
+            {
+                Integer nextPosition = entry.getAction(currentToken);
 
-    protected String fetchOver(String limiter)
-    {
-        return reader.fetchOver(limiter);
-    }
+                if (nextPosition != null)
+                {
+                    currentPosition = nextPosition;
+                    path.push(currentPosition);
+                    tokens.push(currentToken);
+                    currentToken = job.next();
+                }
+                else
+                {
+                    Rule restoreRule = entry.getRestoreRule(currentToken);
+                    if (restoreRule != null)
+                    {
+                        Modifier modifier = source.getModifier(restoreRule);
 
-    protected String fetchWhile(Predicate<Character> test)
-    {
-        return reader.fetchWhile(test);
-    }
+                        for (int i = restoreRule.size(); --i >= 0;)
+                        {
+                            Token restoreToken = tokens.pop();
+                            modifier.register(i, restoreToken.getValue());
+                            path.pop();
+                        }
 
-    protected int findNext(char cha)
-    {
-        return reader.findNext(cha);
-    }
+                        currentPosition = path.peekFirst();
+                        tokens.push(new Token(restoreRule.getName(), modifier.modify(tag)));
+                    }
+                    else if (table.isIgnore(currentToken.getName()))
+                    {
+                        currentToken = job.next();
+                    }
+                    else break;
+                }
+            }
+            else
+            {
+                Token ruleName = tokens.peekFirst();
+                Integer nextPosition = entry.getGoTo(ruleName);
 
-    protected char eat()
-    {
-        return reader.eat();
-    }
+                if (nextPosition == null)
+                {
+                    break;
+                }
 
-    protected boolean eat(char cha)
-    {
-        return reader.eat(cha);
-    }
+                path.push(nextPosition);
+                currentPosition = nextPosition;
+            }
+        }
 
-    protected boolean eat(String str)
-    {
-        return reader.eat(str);
-    }
+        if (tokens.size() == 1)
+        {
+            Grammar grammar = table.getGrammar();
+            Token top = tokens.peekFirst();
 
-    protected int eatWhitespace()
-    {
-        return reader.eatWhitespace();
-    }
+            if (!top.getName().equals(grammar.getRoot().getName()))
+            {
+                throw new RuntimeException("False End Token " + top.getName() + " " + top.getValue());
+            }
 
-    protected boolean followedBy(String str)
-    {
-        return followedBy(str);
-    }
+            return top.getValue();
+        }
 
-    protected boolean isValid()
-    {
-        return reader.isValid();
-    }
-
-    protected void next()
-    {
-        reader.next();
-    }
-
-    protected void next(int count)
-    {
-        reader.next(count);
-    }
-
-    protected boolean hasNext()
-    {
-        return reader.hasNext();
-    }
-
-    protected boolean is(char cha)
-    {
-        return reader.is(cha);
-    }
-
-    protected char get()
-    {
-        return reader.get();
-    }
-
-    protected char get(int index)
-    {
-        return reader.get(index);
+        System.out.println(table.getEntry(currentPosition));
+        throw new ParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(token -> token.getValue()).toArray()) + " " + currentToken);
     }
 }

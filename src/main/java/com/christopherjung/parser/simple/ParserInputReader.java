@@ -1,4 +1,4 @@
-package com.christopherjung.parser;
+package com.christopherjung.parser.simple;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

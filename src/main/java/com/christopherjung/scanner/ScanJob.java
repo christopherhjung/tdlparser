@@ -1,6 +1,6 @@
 package com.christopherjung.scanner;
 
-import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.parser.simple.ParserInputReader;
 import com.christopherjung.regex.TokenState;
 
 import java.io.InputStream;

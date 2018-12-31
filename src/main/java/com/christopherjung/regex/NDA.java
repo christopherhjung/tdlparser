@@ -69,13 +69,7 @@ public class NDA<T>
         {
             finish.add(position);
         }
-/*
-        System.out.println(values);
-        System.out.println(firstPositions);
-        System.out.println(lastPositions);
-        System.out.println(followPositions);
-        System.out.println(lookaheads);
-        System.out.println(finish);*/
+
     }
 
     private int computeRecursive(TreeNode<T> root)

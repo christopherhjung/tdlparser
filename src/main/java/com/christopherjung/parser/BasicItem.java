@@ -1,4 +1,4 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
 import java.util.Set;
 
@@ -93,8 +93,8 @@ public class BasicItem
             sb.append('.');
         }
 
-        sb.append(" ");
-        sb.append(lookahead);
+        //sb.append(" ");
+        //sb.append(lookahead);
 
         return sb.toString();
     }

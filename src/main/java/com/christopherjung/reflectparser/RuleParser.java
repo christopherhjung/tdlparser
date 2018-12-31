@@ -1,8 +1,8 @@
 package com.christopherjung.reflectparser;
 
 import com.christopherjung.container.*;
-import com.christopherjung.parser.Parser;
-import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.parser.simple.Parser;
+import com.christopherjung.parser.simple.ParserInputReader;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

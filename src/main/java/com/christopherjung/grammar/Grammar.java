@@ -1,8 +1,8 @@
 package com.christopherjung.grammar;
 
-import com.christopherjung.parser.ParserInputReader;
+import com.christopherjung.parser.simple.ParserInputReader;
 import com.christopherjung.scanner.Token;
-import com.christopherjung.translator.Rule;
+import com.christopherjung.parser.Rule;
 
 import java.io.InputStream;
 import java.util.*;

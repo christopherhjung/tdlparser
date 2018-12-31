@@ -1,4 +1,4 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
 import java.util.HashSet;
 import java.util.Set;

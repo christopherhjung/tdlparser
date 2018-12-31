@@ -1,11 +1,11 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
 import com.christopherjung.grammar.Grammar;
 
 import java.util.*;
 
 
-public class ParserTableGenerator
+public class Generator
 {
     private Grammar grammar;
     private HashMap<Set<BasicItem>, Kernel> kernelHashMap;
@@ -118,6 +118,11 @@ public class ParserTableGenerator
             {
                 for (String look : item.getLookahead())
                 {
+                    if (restoreRules.containsKey(look))
+                    {
+                        throw new RuntimeException("multiple rules! " + look);
+                    }
+
                     restoreRules.put(look, item.getRule());
                 }
             }
@@ -227,9 +232,23 @@ public class ParserTableGenerator
                 after.add(first);
             }
 
-            checkSingleFinish(symbol, after);
+            if (transform.containsKey(symbol))
+            {
+                throw new RuntimeException("hääää");
+            }
 
-            transform.put(symbol, kernelHashMap.computeIfAbsent(after, ($) -> new Kernel(after)));
+            if (kernelHashMap.containsKey(after))
+            {
+                transform.put(symbol, kernelHashMap.get(after));
+            }
+            else
+            {
+                checkSingleFinish(symbol, after);
+
+                Kernel newOne = new Kernel(after);
+                kernelHashMap.put(after, newOne);
+                transform.put(symbol, newOne);
+            }
         }
 
         return transform;
@@ -237,24 +256,30 @@ public class ParserTableGenerator
 
     private void checkSingleFinish(String symbol, Collection<BasicItem> items)
     {
-        Set<BasicItem> last = new HashSet<>();
-        Set<String> lookahead = new HashSet<>();
+        HashMap<String, List<BasicItem>> lookahead = new HashMap<>();
+        HashMap<String, List<BasicItem>> result = new HashMap<>();
         boolean found = false;
 
         for (BasicItem item : items)
         {
             if (item.isFinished())
             {
-                found |= !Collections.disjoint(lookahead, item.getLookahead());
-                last.add(item);
-                lookahead.addAll(item.getLookahead());
-            }
+                for (String ahead : item.getLookahead())
+                {
+                    lookahead.computeIfAbsent(ahead, ($) -> new ArrayList<>()).add(item);
 
+                    if (lookahead.get(ahead).size() == 2)
+                    {
+                        found = true;
+                        result.put(ahead, lookahead.get(ahead));
+                    }
+                }
+            }
         }
 
         if (found)
         {
-            throw new RuntimeException("Multiple FinishRules  : " + symbol + " -> " + last);
+            System.out.println(symbol + " " + result);
         }
     }
 }

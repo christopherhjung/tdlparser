@@ -1,4 +1,4 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
 import com.christopherjung.datatable.DataTable;
 import com.christopherjung.datatable.DataTableRow;
@@ -7,9 +7,9 @@ import com.christopherjung.grammar.Grammar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TDLUtils
+public class Utils
 {
-    private TDLUtils()
+    private Utils()
     {
 
     }

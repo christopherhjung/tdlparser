@@ -4,10 +4,10 @@ import com.christopherjung.container.*;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.translator.ParserTable;
-import com.christopherjung.translator.ParserTableGenerator;
-import com.christopherjung.translator.Rule;
-import com.christopherjung.translator.TDLParser;
+import com.christopherjung.parser.ParserTable;
+import com.christopherjung.parser.Generator;
+import com.christopherjung.parser.Rule;
+import com.christopherjung.parser.Parser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -24,7 +24,7 @@ public class ReflectTLDGenerator
     private Grammar.Builder builder;
     //private HashMap<String, Set<Class<?>>> returnTypes;
 
-    public TDLParser generate(Class<?> clazz)
+    public Parser generate(Class<?> clazz)
     {
         modifiers = new HashMap<>();
 
@@ -41,7 +41,7 @@ public class ReflectTLDGenerator
         List<Field> structureFields = getAnnotatedFields(clazz, ParserIgnore.class);
         Set<String> parserIgnores = structureFields.stream().map(Field::getName).collect(Collectors.toSet());
 
-        ParserTable table = new ParserTableGenerator().generate(grammar, parserIgnores);
+        ParserTable table = new Generator().generate(grammar, parserIgnores);
 
         System.out.println(table.getEntries().size());
 
@@ -68,7 +68,7 @@ public class ReflectTLDGenerator
 
         ModifierSource source = new ModifierSource(modifiers, parserSupplier);
 
-        return new TDLParser(table, source);
+        return new Parser(table, source);
     }
 
     public <T extends Annotation> List<Field> getAnnotatedFields(Class<?> clazz, Class<T> anno)
@@ -101,6 +101,7 @@ public class ReflectTLDGenerator
     {
         String name = ruleSet.replaceFirst("->.+", "").trim();
         String components = ruleSet.replaceFirst(".*?->", "").trim();
+
         if (name.equals("root"))
         {
             components += " EOF";

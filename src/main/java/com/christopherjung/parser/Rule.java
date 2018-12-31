@@ -1,5 +1,6 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Rule
@@ -42,7 +43,11 @@ public class Rule
         if (!(obj instanceof Rule)) return false;
         Rule rule = (Rule) obj;
 
-        return name.equals(rule.name) && Arrays.equals(keys, rule.keys);
+        if(!name.equals(rule.name)){
+            return false;
+        }
+
+        return Arrays.equals(keys, rule.keys);
     }
 
 

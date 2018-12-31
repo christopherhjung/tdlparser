@@ -1,11 +1,10 @@
-package com.christopherjung.translator;
+package com.christopherjung.parser;
 
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.scanner.Token;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class ParserTable
