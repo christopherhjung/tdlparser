@@ -93,8 +93,8 @@ public class BasicItem
             sb.append('.');
         }
 
-        //sb.append(" ");
-        //sb.append(lookahead);
+        sb.append(" ");
+        sb.append(lookahead);
 
         return sb.toString();
     }

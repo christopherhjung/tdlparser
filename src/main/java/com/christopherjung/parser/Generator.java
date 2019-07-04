@@ -245,6 +245,8 @@ public class Generator
             {
                 checkSingleFinish(symbol, after);
 
+                //handle multiple finish rules!!!!
+
                 Kernel newOne = new Kernel(after);
                 kernelHashMap.put(after, newOne);
                 transform.put(symbol, newOne);
@@ -268,6 +270,7 @@ public class Generator
                 {
                     lookahead.computeIfAbsent(ahead, ($) -> new ArrayList<>()).add(item);
 
+                    int i = 9;
                     if (lookahead.get(ahead).size() == 2)
                     {
                         found = true;

@@ -1,0 +1,1201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0a443413-e255-4bcd-9621-8dcb916d1e3b" name="Default" comment="Abschluss mit Fehlern">
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/SeperatorNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/BinaryNode$Type.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/BinaryNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/ConcatNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/LookaheadNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/NameNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/NegativeLookaheadNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/OrNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/PlusNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/QuestNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/SeperatorNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/StarNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/TreeNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/UnaryNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/container/ValueNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/datatable/Container.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/datatable/DataTable.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/datatable/DataTableColumn.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/datatable/DataTableRow.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/datatable/NumberUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONBoolean.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONList.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONNumber.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONObject.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONPair.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONString.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser$JSONValue.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/JSONParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/MathParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/XMLParser$XMLAttribute.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/XMLParser$XMLElement.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/XMLParser$XMLNode.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/XMLParser$XMLText.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/examples/XMLParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/grammar/Grammar$Builder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/grammar/Grammar.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/grammar/Modifier.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/grammar/ModifierSource$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/grammar/ModifierSource.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/BasicItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/Generator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/Kernel.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/ParseException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/Parser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/ParserTable$Entry.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/ParserTable.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/Rule.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/Utils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/simple/Parser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/simple/ParserInputReader$ParseException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/parser/simple/ParserInputReader.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/Nodes.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ParserIgnore.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ParserRoot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ParserRule.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectScannerGenerator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$Mapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$Permutation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator$ReflectModifier.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ReflectTLDGenerator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/RuleParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ScannerIgnore.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ScannerSingle.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/reflectparser/ScannerToken.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/ConcatStates.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/Machine.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/NDA.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/Pattern.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/RegExParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/State.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/regex/TokenState.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/scanner/ScanJob.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/scanner/Scanner$Builder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/scanner/Scanner.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/scanner/Token.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/utils/Logger.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/christopherjung/utils/Timer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/com/christopherjung/AppEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/BinaryNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/BinaryNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/ConcatNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/ConcatNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/LookaheadNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/LookaheadNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/NameNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/NameNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/NegativeLookaheadNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/NegativeLookaheadNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/OptionNode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/OrNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/OrNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/PlusNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/PlusNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/QuestNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/QuestNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/StarNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/StarNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/TreeNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/TreeNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/UnaryNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/UnaryNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/ValueNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/container/ValueNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/Container.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/Container.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTableColumn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTableColumn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTableRow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/DataTableRow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/NumberUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/datatable/NumberUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JSONParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JSONParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/XMLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Grammar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Grammar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Modifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Modifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/ModifierSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/ModifierSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/BasicItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/BasicItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Generator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Kernel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/ParseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/ParseException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/ParserTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/ParserTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Rule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Rule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/simple/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/simple/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/simple/ParserInputReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/parser/simple/ParserInputReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/Nodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/Nodes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserIgnore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserIgnore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRoot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectScannerGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectScannerGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectTLDGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectTLDGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/RuleParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/RuleParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerIgnore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerIgnore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerSingle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerSingle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ScannerToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/ConcatStates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/ConcatStates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Machine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Machine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/NDA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/NDA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Pattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Pattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/RegExParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/RegExParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/TokenState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/TokenState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/ScanJob.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/ScanJob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/ScanResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/utils/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/utils/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/christopherjung/utils/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/christopherjung/utils/Timer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/christopherjung/AppEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/christopherjung/AppEntry.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/compiler/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/RuleParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="104">
+              <caret line="29" column="30" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="30" />
+              <folding>
+                <element signature="e#250#251#0" expanded="true" />
+                <element signature="e#282#283#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JSONParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="328">
+              <caret line="164" column="38" selection-start-line="164" selection-start-column="31" selection-end-line="164" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="405">
+              <caret line="33" column="23" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/RegExParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="173">
+              <caret line="261" column="30" selection-start-line="261" selection-start-column="26" selection-end-line="261" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/ConcatStates.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/parser/BasicItem.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Generator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/XMLParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret line="104" selection-start-line="104" selection-end-line="104" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/NDA.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectTLDGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="194">
+              <caret line="135" selection-start-line="135" selection-end-line="135" />
+              <folding>
+                <element signature="e#903#904#0" expanded="true" />
+                <element signature="e#971#972#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="AnnotationType" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>static</find>
+      <find>getKeyS</find>
+      <find>System</find>
+      <find>System.out</find>
+      <find>System.ou</find>
+      <find>multiNode</find>
+      <find>getKeySe</find>
+      <find>removeKeys</find>
+      <find>::</find>
+      <find>continue</find>
+      <find>getKeyMapping</find>
+      <find>getValueMapping</find>
+      <find>space</find>
+      <find>44</find>
+      <find>[</find>
+      <find>?</find>
+      <find>\\?</find>
+      <find>nullablePattern</find>
+      <find>20</find>
+      <find>closure</find>
+      <find>getOrCreateKernel</find>
+      <find>hashC</find>
+      <find>system</find>
+      <find>classExpressions</find>
+      <find>syste</find>
+      <find>methodExpressions</find>
+      <find>127</find>
+      <find>declar</find>
+      <find>methodExpression</find>
+      <find>:pair</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>HashMap</replace>
+      <replace>HashSet</replace>
+      <replace>ArrayList</replace>
+      <replace>this</replace>
+      <replace>&quot;</replace>
+      <replace>-&gt;</replace>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/XMLParser2.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/YMLParser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/ModifySet.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRoot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathParser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ParserRule.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/Nodes.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectScannerGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JSONParser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/TDLUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/ClosureTable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/Kernel.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/ScanJob.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/ParserTable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/ParserTableGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Scanner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/machine/State.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/RegExParser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/regex/State.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JavaParserRaw.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Statement.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Expression.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/ClassExpression.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatemenMul.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatemenDiv.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatemenAdd.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatemenSub.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementVariable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/ClassContainer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/DeclareAssign.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementAdd.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementDouble.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementMul.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementDiv.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementSub.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MethodContainer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementString.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Addign.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/translator/TDLParser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Declare.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Assign.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementGreater.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/test.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JavaParser.java" />
+        <option value="$PROJECT_DIR$/compiler/pom.xml" />
+        <option value="$PROJECT_DIR$/src/test/java/com/christopherjung/AppEntry.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectTLDGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Grammar.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1680" />
+    <option name="height" value="976" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="grammar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="parser" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="reflectparser" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="regex" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Parser" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Parser" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="christopherjung" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/Christopher/Desktop/Compiler/src/main/java/com/christopherjung/parseDescriptor" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543758873201" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Christopher\Desktop\Compiler\src\main\resources" />
+      <recent name="C:\Users\Christopher\Desktop\Compiler\src\main\java\com\christopherjung\compile" />
+      <recent name="C:\Users\Christopher\Desktop\Compiler\src\main\java" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.christopherjung.examples" />
+      <recent name="com.christopherjung.reflectparser" />
+      <recent name="com.christopherjung" />
+      <recent name="com.christopherjung.translator" />
+      <recent name="com.christopherjung.compile" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Christopher\Desktop\Compiler\src\main" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.JSONMain">
+    <configuration name="AnnotationApp" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.christopherjung.Main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JAVAMain" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.christopherjung.Main2" />
+      <module name="Parser" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JSONMain" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="12" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.christopherjung.Main" />
+      <module name="parser" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MathMain" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.christopherjung.examples.MathMain" />
+      <module name="Parser" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NullableApp" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.christopherjung.NullableMain" />
+      <module name="Parser" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.JSONMain" />
+      <item itemvalue="Application.AnnotationApp" />
+      <item itemvalue="Application.MathMain" />
+      <item itemvalue="Application.NullableApp" />
+      <item itemvalue="Application.JAVAMain" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0a443413-e255-4bcd-9621-8dcb916d1e3b" name="Default" comment="" />
+      <created>1539856789855</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1539856789855</updated>
+      <workItem from="1539856795825" duration="6872000" />
+      <workItem from="1539944257512" duration="2475000" />
+      <workItem from="1540739867357" duration="17310000" />
+      <workItem from="1540989306307" duration="335000" />
+      <workItem from="1540993965253" duration="152000" />
+      <workItem from="1541350424785" duration="660000" />
+      <workItem from="1541686430366" duration="1280000" />
+      <workItem from="1542098422152" duration="11000" />
+      <workItem from="1542137964992" duration="18330000" />
+      <workItem from="1542234153984" duration="93567000" />
+      <workItem from="1542792560834" duration="8449000" />
+      <workItem from="1542807529415" duration="15224000" />
+      <workItem from="1542832386202" duration="202474000" />
+      <workItem from="1543758977204" duration="135000" />
+      <workItem from="1543759289248" duration="199000" />
+      <workItem from="1543759612648" duration="385000" />
+      <workItem from="1562241487756" duration="3161000" />
+    </task>
+    <task id="LOCAL-00001" summary="Init commit">
+      <created>1542234466563</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1542234466563</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Create Rules and Compiler">
+      <created>1542267764123</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1542267764123</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Create Rules and Compiler">
+      <created>1542268172432</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1542268172432</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Parametrisieren von Allen Knoten">
+      <created>1542270625320</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1542270625320</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Erste Compiler implementierung">
+      <created>1542319139331</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1542319139331</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Implementierung TreeNode mit Reihenfolge">
+      <created>1542372444710</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1542372444710</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Implementierung das NDA aus TreeNodes entfernt">
+      <created>1542385593095</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1542385593095</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Umräumen">
+      <created>1542561452665</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1542561452665</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Implementierung der goto stack und goto">
+      <created>1542722555650</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1542722555650</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add TokenDescriptor">
+      <created>1542961758439</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1542961758440</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Erster funktionierender TDL Parser">
+      <created>1542963146924</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1542963146924</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Erster funktionierender TDL Parser">
+      <created>1542963170147</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1542963170147</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Tabelle zu String erzeugung verbessert">
+      <created>1543000342299</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1543000342299</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Fertigstellen Reflect Parser und JSON und XML Beipsiel">
+      <created>1543319537383</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1543319537383</updated>
+    </task>
+    <task id="LOCAL-00015" summary="TLD Parser Ignore&#10;XMLParser Vervolständigen&#10;MathParser vervollständigen">
+      <created>1543406044051</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1543406044051</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Implement optional &quot;?&quot; in ParserRules">
+      <created>1543474413003</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1543474413003</updated>
+    </task>
+    <task id="LOCAL-00017" summary="ScanJob implementiert. Es werden nur Tokens gelesen die verlangt werden">
+      <created>1543505341985</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1543505341985</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Beispiele auslagern und kleine verbesserungen im Parser durchführen">
+      <created>1543524057856</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1543524057856</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Bugfix Nodes">
+      <created>1543529604992</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1543529604992</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Closure Table umstrukturieren&#10;ScannerStructure in ScannerSingle umbenennen">
+      <created>1543664863628</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1543664863628</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Closure generate move to ParserTableGenerator">
+      <created>1543667264495</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1543667264495</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Kleine Optimiuerungen">
+      <created>1543679943386</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1543679943386</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="371019000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1680" height="976" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16605617" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Flutter Performance" side_tool="true" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.47381547" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.30656108" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.14819005" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Statistic" order="6" weight="0.011221945" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.25226244" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.0" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.27149323" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Flutter Outline" />
+      <window_info anchor="right" id="Flutter Inspector" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24901575" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Maven Projects" order="8" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.test" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Init commit" />
+    <MESSAGE value="Create Rules and Compiler" />
+    <MESSAGE value="Parametrisieren von Allen Knoten" />
+    <MESSAGE value="Erste Compiler implementierung" />
+    <MESSAGE value="Implementierung TreeNode mit Reihenfolge" />
+    <MESSAGE value="Implementierung das NDA aus TreeNodes entfernt" />
+    <MESSAGE value="Implementierung der goto stack und goto" />
+    <MESSAGE value="Add TokenDescriptor" />
+    <MESSAGE value="Umräumen" />
+    <MESSAGE value="Erster funktionierender TDL Parser" />
+    <MESSAGE value="Tabelle zu String erzeugung verbessert" />
+    <MESSAGE value="Fertigstellen Reflect Parser und JSON und XML Beipsiel" />
+    <MESSAGE value="TLD Parser Ignore&#10;XMLParser Vervolständigen&#10;MathParser vervollständigen" />
+    <MESSAGE value="Implement optional &quot;?&quot; in ParserRules" />
+    <MESSAGE value="ScanJob implementiert. Es werden nur Tokens gelesen die verlangt werden" />
+    <MESSAGE value="Beispiele auslagern und kleine verbesserungen im Parser durchführen" />
+    <MESSAGE value="Bugfix Nodes" />
+    <MESSAGE value="Closure Table umstrukturieren&#10;ScannerStructure in ScannerSingle umbenennen" />
+    <MESSAGE value="Closure generate move to ParserTableGenerator" />
+    <MESSAGE value="Kleine Optimiuerungen" />
+    <MESSAGE value="Abschluss mit Fehlern" />
+    <option name="LAST_COMMIT_MESSAGE" value="Abschluss mit Fehlern" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Main.java</url>
+          <line>19</line>
+          <properties />
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/RuleParser.java</url>
+          <line>33</line>
+          <properties />
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/Kernel.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/Rule.java" />
+    <entry file="jar://C:/Program Files/Java/jdk-10.0.1/lib/src.zip!/java.base/java/lang/String.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/ParserTableGenerator.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/TDLUtils.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/ParserTable.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathMain.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/Scanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="91" column="36" selection-start-line="91" selection-start-column="36" selection-end-line="91" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/TokenDescriptor.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Pattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/State.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="71" column="10" selection-start-line="71" selection-start-column="10" selection-end-line="71" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JavaParserRaw.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Statement.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/ClassExpression.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementVariable.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Expression.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/ClassContainer.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementDouble.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementAdd.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementMul.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementDiv.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementSub.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MethodContainer.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Main.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementString.java" />
+    <entry file="file://$PROJECT_DIR$/Compiler/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/src/main/resources/test.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/StatementGreater.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JavaParser.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/translator/TDLParser.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Declare.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/Assign.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/DeclareAssign.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/Machine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/scanner/ScanJob.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/christopherjung/AppEntry.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="31" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/grammar/Grammar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="51" column="37" selection-start-line="51" selection-start-column="37" selection-end-line="51" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectScannerGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="29" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/parser/simple/Parser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/ReflectTLDGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="135" selection-start-line="135" selection-end-line="135" />
+          <folding>
+            <element signature="e#903#904#0" expanded="true" />
+            <element signature="e#971#972#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/reflectparser/RuleParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="29" column="30" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="30" />
+          <folding>
+            <element signature="e#250#251#0" expanded="true" />
+            <element signature="e#282#283#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/MathParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="33" column="23" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/RegExParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="261" column="30" selection-start-line="261" selection-start-column="26" selection-end-line="261" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/ConcatStates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/parser/BasicItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/parser/Generator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/regex/NDA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/JSONParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="164" column="38" selection-start-line="164" selection-start-column="31" selection-end-line="164" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/christopherjung/examples/XMLParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>parser</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: junit:junit:4.11</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

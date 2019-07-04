@@ -2,10 +2,6 @@ package com.christopherjung.reflectparser;
 
 import com.christopherjung.container.*;
 import com.christopherjung.parser.simple.Parser;
-import com.christopherjung.parser.simple.ParserInputReader;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class RuleParser extends Parser<TreeNode<String>>
 {
@@ -60,35 +56,17 @@ public class RuleParser extends Parser<TreeNode<String>>
             {
                 return new PlusNode<>(state);
             }
-            else if (eat('{'))
+            else if (eat('['))
             {
-                HashMap<String, String> map = new LinkedHashMap<>();
 
-                for (; !eat('}'); )
+                String value = parseNameOrString();
+
+                if (!eat('}'))
                 {
-                    String key = parseName();
-                    eatWhitespace();
-                    if (!eat('='))
-                    {
-                        throw new RuntimeException("kherfdskjlk " + get());
-                    }
-                    eatWhitespace();
-                    String value = parseNameOrString();
-                    eatWhitespace();
-                    map.put(key, value);
-
-                    if (eat('}'))
-                    {
-                        break;
-                    }
-
-                    if (!eat(','))
-                    {
-                        throw new ParserInputReader.ParseException("no closing" + get());
-                    }
+                    throw new RuntimeException("kfdhbsn");
                 }
 
-                return new OptionNode<>(state, map);
+                return new SeperatorNode<>(state, value);
             }
         }
 

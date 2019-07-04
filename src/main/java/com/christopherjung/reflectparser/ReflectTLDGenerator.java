@@ -4,10 +4,10 @@ import com.christopherjung.container.*;
 import com.christopherjung.grammar.Grammar;
 import com.christopherjung.grammar.Modifier;
 import com.christopherjung.grammar.ModifierSource;
-import com.christopherjung.parser.ParserTable;
 import com.christopherjung.parser.Generator;
-import com.christopherjung.parser.Rule;
 import com.christopherjung.parser.Parser;
+import com.christopherjung.parser.ParserTable;
+import com.christopherjung.parser.Rule;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -24,7 +24,12 @@ public class ReflectTLDGenerator
     private Grammar.Builder builder;
     //private HashMap<String, Set<Class<?>>> returnTypes;
 
-    public Parser generate(Class<?> clazz)
+    public static Parser generate(Class<?> clazz)
+    {
+        return new ReflectTLDGenerator().generateImpl(clazz);
+    }
+
+    private Parser generateImpl(Class<?> clazz)
     {
         modifiers = new HashMap<>();
 
@@ -107,6 +112,8 @@ public class ReflectTLDGenerator
             components += " EOF";
         }
         TreeNode<String> tree = new RuleParser().parse(components);
+
+        System.out.println(tree.toRegEx());
 
         Mapper mapper = new Mapper(method.getParameterCount())
         {
@@ -351,20 +358,13 @@ public class ReflectTLDGenerator
 
             return permutations;
         }
-        else if (node instanceof OptionNode)
+        else if (node instanceof SeperatorNode)
         {
-            OptionNode<String> optionNode = (OptionNode<String>) node;
-            TreeNode<String> subTree = optionNode.getTarget();
+            SeperatorNode<String> separatorNode = (SeperatorNode<String>) node;
+
+            TreeNode<String> subTree = separatorNode.getTarget();
             List<Permutation> permutations = sequence(subTree,
-                    optionNode.getInt("min", 0) == 0,
-                    optionNode.getOption("separator"));
-
-
-            if (permutations.get(permutations.size() - 1).defaultValues.size() > 0)
-            {
-                permutations = permutations;
-            }
-
+                    false, separatorNode.getSeparator());
 
             return permutations;
         }
@@ -402,7 +402,7 @@ public class ReflectTLDGenerator
         if (nullable)
         {
             Permutation permutation = new Permutation();
-            permutation.addDefaultValue(name, ArrayList::new);
+            permutation.addDefaultValue(  name, ArrayList::new);
             permutations.add(permutation);
         }
 
@@ -537,7 +537,7 @@ public class ReflectTLDGenerator
     {
         HashMap<String, Set<Class<?>>> returnTypes = new HashMap<>();
 
-        for (var entry : nodeMethods.entrySet())
+        for (Map.Entry<String,Method> entry : nodeMethods.entrySet())
         {
             Method method = entry.getValue();
             String value = entry.getKey();

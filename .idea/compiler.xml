@@ -22,6 +22,7 @@
       <module name="Compiler" options="" />
       <module name="Parser" options="-parameters" />
       <module name="compiler" options="" />
+      <module name="parser" options="" />
     </option>
   </component>
 </project>

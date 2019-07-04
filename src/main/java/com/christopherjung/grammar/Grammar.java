@@ -51,9 +51,9 @@ public class Grammar
     {
         StringBuilder sb = new StringBuilder();
 
-        for (var entry : rules.entrySet())
+        for (Map.Entry<String,Set<Rule>> entry : rules.entrySet())
         {
-            for (var rule : entry.getValue())
+            for (Rule rule : entry.getValue())
             {
                 if (sb.length() > 0)
                 {
@@ -91,7 +91,7 @@ public class Grammar
 
         public void addRules(InputStream inputStream)
         {
-            var inputReader = new ParserInputReader(inputStream);
+            ParserInputReader inputReader = new ParserInputReader(inputStream);
             inputReader.eatWhitespace();
             boolean hasRoot = false;
             while (inputReader.hasNext())
@@ -134,7 +134,7 @@ public class Grammar
 
         public Rule addRule(String name, String[] symbols)
         {
-            Set<String> symbolSet = new HashSet<>(List.of(symbols));
+            Set<String> symbolSet = new HashSet<>(Arrays.asList(symbols));
             alphabet.addAll(symbolSet);
 
             Rule rule = new Rule(index++, name, symbols);

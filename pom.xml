@@ -12,8 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>10</maven.compiler.source>
-    <maven.compiler.target>10</maven.compiler.target>
+    <maven.compiler.source>12</maven.compiler.source>
+    <maven.compiler.target>12</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -38,14 +38,15 @@
           <version>3.0.2</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.7.0</version>
           <configuration>
-            <compilerArgs>
-              <arg>
-                -parameters
-              </arg>
-            </compilerArgs>
+            <source>12</source>
+            <target>12</target>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>true</showDeprecation>
+
           </configuration>
         </plugin>
         <plugin>

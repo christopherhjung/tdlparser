@@ -8,6 +8,7 @@ import com.christopherjung.scanner.Token;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class Parser
 {
@@ -15,6 +16,9 @@ public class Parser
     private ModifierSource source;
     private LinkedList<Integer> path;
     private LinkedList<Token> tokens;
+
+
+    //lookahead????
 
     public Parser(ParserTable table, ModifierSource source)
     {
@@ -35,15 +39,11 @@ public class Parser
 
         path.push(currentPosition);
 
-        if (!job.hasNext())
-        {
-            throw new ParseException("No Input tokens provided");
-        }
-
         Token currentToken = job.next();
 
         for (; ; )
         {
+            System.out.println(currentToken);
             ParserTable.Entry entry = table.getEntry(currentPosition);
 
             if (path.size() > tokens.size())
@@ -52,6 +52,7 @@ public class Parser
 
                 if (nextPosition != null)
                 {
+                    //aufleiten
                     currentPosition = nextPosition;
                     path.push(currentPosition);
                     tokens.push(currentToken);
@@ -59,7 +60,12 @@ public class Parser
                 }
                 else
                 {
+                    //ableiten
                     Rule restoreRule = entry.getRestoreRule(currentToken);
+
+                    //multiple restore rules??????????
+                    //get right rule from lookahead!!!
+
                     if (restoreRule != null)
                     {
                         Modifier modifier = source.getModifier(restoreRule);
@@ -83,8 +89,8 @@ public class Parser
             }
             else
             {
-                Token ruleName = tokens.peekFirst();
-                Integer nextPosition = entry.getGoTo(ruleName);
+                //mit abgeleiteter regel fort
+                Integer nextPosition = entry.getGoTo(tokens.peekFirst());
 
                 if (nextPosition == null)
                 {
@@ -109,7 +115,9 @@ public class Parser
             return top.getValue();
         }
 
+        System.out.println(tokens);
         System.out.println(table.getEntry(currentPosition));
-        throw new ParseException("Token result size not equals 1 " + Arrays.toString(tokens.stream().map(token -> token.getValue()).toArray()) + " " + currentToken);
+        Set<String> set = table.getEntry(currentPosition).getActions().keySet();
+        throw new ParseException("Exected: " + set);
     }
 }
