@@ -246,7 +246,6 @@ public class RegExParser extends Parser<TreeNode<Character>>
                 throw new RuntimeException("not possible");
             }
 
-            System.out.println("lol");
             TreeNode<Character> treeNode = numberMatch(left, right);
 
             return treeNode;

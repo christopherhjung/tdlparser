@@ -1,11 +1,13 @@
 package com.christopherjung.examples;
 
-import com.christopherjung.reflectparser.*;
+import com.christopherjung.reflectparser.ParserRule;
+import com.christopherjung.reflectparser.ScannerIgnore;
+import com.christopherjung.reflectparser.ScannerSingle;
+import com.christopherjung.reflectparser.ScannerToken;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class JSONParser
+public class JSONParser2
 {
     @ScannerSingle
     public static String structureChars = "[]{},:";
@@ -81,9 +83,6 @@ public class JSONParser
     {
         List<JSONPair> pairs;
 
-        public JSONObject()
-        {
-        }
 
         public JSONObject(List<JSONPair> pairs)
         {
@@ -95,13 +94,15 @@ public class JSONParser
         {
             StringBuilder sb = new StringBuilder();
             sb.append('{');
-            for (JSONPair pair : pairs)
-            {
-                if (sb.length() > 1)
+            if(pairs != null){
+                for (JSONPair pair : pairs)
                 {
-                    sb.append(',');
+                    if (sb.length() > 1)
+                    {
+                        sb.append(',');
+                    }
+                    sb.append(pair);
                 }
-                sb.append(pair);
             }
             sb.append('}');
             return sb.toString();
@@ -157,24 +158,24 @@ public class JSONParser
     }
 
     @ParserRule("root -> value")
-    public static JSONObject start(JSONObject object)
+    public static JSONValue start(JSONValue object)
     {
         return object;
     }
 
-    @ParserRule("object -> '{' members:pair[','] '}'")
+    @ParserRule("object -> '{' pair[','] '}'")
     public static JSONObject nonEmptyObject(List<JSONPair> members)
     {
         return new JSONObject(members);
     }
 
-    @ParserRule("pair -> key:string ':' value")
+    @ParserRule("pair -> string ':' value")
     public static JSONPair pair(String key, JSONValue value)
     {
         return new JSONPair(key, value);
     }
 
-    @ParserRule("array -> '[' elements:value[','] ']'")
+    @ParserRule("array -> '[' value[','] ']'")
     public static JSONList nonEmptyArray(List<JSONValue> elements)
     {
         return new JSONList(elements);
@@ -201,7 +202,6 @@ public class JSONParser
     @ParserRule("value -> number")
     public static JSONValue numberValue(String number)
     {
-        System.out.println(number);
         return new JSONNumber(Double.parseDouble(number));
     }
 

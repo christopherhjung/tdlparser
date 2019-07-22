@@ -43,7 +43,6 @@ public class Parser
 
         for (; ; )
         {
-            System.out.println(currentToken);
             ParserTable.Entry entry = table.getEntry(currentPosition);
 
             if (path.size() > tokens.size())
@@ -74,6 +73,7 @@ public class Parser
                         {
                             Token restoreToken = tokens.pop();
                             modifier.register(i, restoreToken.getValue());
+
                             path.pop();
                         }
 

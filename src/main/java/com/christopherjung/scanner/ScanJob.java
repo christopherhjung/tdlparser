@@ -47,7 +47,7 @@ public class ScanJob
 
                     if (current.getToken() == null)
                     {
-                        throw new RuntimeException("Unknown token " + str );
+                        throw new RuntimeException("Unknown token " + str + " - " + current );
                     }
 
                     return new Token(current.getToken(), str);

@@ -113,8 +113,6 @@ public class ReflectTLDGenerator
         }
         TreeNode<String> tree = new RuleParser().parse(components);
 
-        System.out.println(tree.toRegEx());
-
         Mapper mapper = new Mapper(method.getParameterCount())
         {
             @Override
@@ -131,18 +129,10 @@ public class ReflectTLDGenerator
             }
         };
 
-        HashMap<String, Integer> nameMapping = new HashMap<>();
-
-        int i = 0;
-        for (Parameter parameter : method.getParameters())
-        {
-            nameMapping.put(parameter.getName(), i++);
-        }
-
-        addModifier(name, mapper, nameMapping, tree);
+        addModifier(name, mapper, tree);
     }
 
-    private void addModifier(String name, Mapper mapper, HashMap<String, Integer> nameMapping, TreeNode<String> ruleTree)
+    private void addModifier(String name, Mapper mapper, TreeNode<String> ruleTree)
     {
         List<Permutation> permutations = generatePermutations(ruleTree);
 
@@ -155,21 +145,21 @@ public class ReflectTLDGenerator
 
             Mapper currentMapper = mapper;
 
-            Rule rule = builder.addRule(name, permutation.rule.toArray(new String[0]));
+            Rule rule = builder.addRule(name, permutation.rule.stream().map(test -> test.replace("'","")).collect(Collectors.toList()).toArray(new String[0]));
             HashMap<Integer, Integer> mapping = new HashMap<>();
 
+            int index = 0;
             for (int i : permutation.mapping.keySet())
             {
-                Integer target = nameMapping.get(permutation.mapping.get(i));
-                if (target != null)
-                {
-                    mapping.put(i, target);
+                if(!permutation.mapping.get(i).startsWith("'") && !permutation.mapping.get(i).startsWith("EOF")){
+                    mapping.put(i, index++);
                 }
             }
 
-
             if (permutation.defaultValues.size() > 0)
             {
+                throw new RuntimeException("ohje");
+                /*
 
                 HashMap<Integer, Supplier<?>> defaultValues = new HashMap<>();
 
@@ -190,7 +180,7 @@ public class ReflectTLDGenerator
 
                         return mapper.map(parser, values);
                     }
-                };
+                };*/
             }
 
             modifiers.put(rule, new ReflectModifier(currentMapper, mapping));
@@ -414,9 +404,6 @@ public class ReflectTLDGenerator
 
         listNode = new ConcatNode<>(listNode, new NameNode<>("element", subTree));
 
-        HashMap<String, Integer> nameMapper = new HashMap<>();
-        nameMapper.put(name, 0);
-        nameMapper.put("element", 1);
         addModifier(name, new Mapper(2)
         {
             @Override
@@ -426,11 +413,10 @@ public class ReflectTLDGenerator
                 list.add(values[1]);
                 return list;
             }
-        }, nameMapper, listNode);
+        }, listNode);
 
 
         HashMap<String, Integer> nameMapperRight = new HashMap<>();
-        nameMapperRight.put("element", 0);
         addModifier(name, new Mapper(1)
         {
             @Override
@@ -440,7 +426,7 @@ public class ReflectTLDGenerator
                 list.add(values[0]);
                 return list;
             }
-        }, nameMapperRight, new NameNode<>("element", subTree));
+        }, new NameNode<>("element", subTree));
 
         return permutations;
     }
@@ -508,7 +494,7 @@ public class ReflectTLDGenerator
         {
             Integer objIndex = mapping.get(index);
 
-            if (objIndex == null)
+            if (objIndex == null )
             {
                 return;
             }

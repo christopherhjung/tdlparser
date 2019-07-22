@@ -61,7 +61,7 @@ public class RuleParser extends Parser<TreeNode<String>>
 
                 String value = parseNameOrString();
 
-                if (!eat('}'))
+                if (!eat(']'))
                 {
                     throw new RuntimeException("kfdhbsn");
                 }
@@ -109,7 +109,7 @@ public class RuleParser extends Parser<TreeNode<String>>
         eatWhitespace();
         if (eat('\''))
         {
-            return fetchOver("\'");
+            return "'" + fetchOver("\'")  + "'";
         }
         else
         {
